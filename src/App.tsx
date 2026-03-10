@@ -6,10 +6,13 @@ import {
   CheckCircle2, 
   Clock, 
   AlertCircle, 
+  AlertTriangle,
   Plus, 
   ChevronRight, 
   ChevronLeft,
+  Check,
   Filter,
+  GripVertical,
   MoreVertical,
   Github,
   Trello,
@@ -23,7 +26,8 @@ import {
   Target,
   Users2,
   Zap,
-  Briefcase
+  Briefcase,
+  Star
 } from 'lucide-react';
 import { 
   DndContext, 
@@ -44,8 +48,9 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Task, ColumnId, TaskCategory, TeamMember } from './types';
-import { INITIAL_TASKS, COLUMNS, TEAM_MEMBERS } from './constants';
+import { INITIAL_TASKS, COLUMNS, TEAM_MEMBERS, INITIAL_DOCS } from './constants';
 
 type AppTab = 'kanban' | 'timeline' | 'docs' | 'team';
 
@@ -58,14 +63,7 @@ export default function App() {
   const [loginData, setLoginData] = useState({ user: '', pass: '' });
   
   // Documentation state
-  const [docs, setDocs] = useState<Record<string, string>>({
-    'Project Model Canvas': '### Project Model Canvas\n\n**Justificativa:** \n**Objetivo:** \n**Benefícios:** \n**Produto:** \n**Requisitos:** ',
-    'Personas & Stakeholders': '### Personas\n\n- **Persona 1:** Nome, idade, dores e necessidades.\n\n### Stakeholders\n\n- **Professor:** Orientador\n- **Equipe:** Desenvolvedores',
-    'Descrição da Problemática': '### O Problema\n\nDescreva aqui o desafio que motivou o projeto...',
-    'Análise de Concorrentes': '### Concorrentes\n\n| Nome | Pontos Fortes | Pontos Fracos |\n|------|---------------|---------------|\n| App A | Interface | Preço |\n| App B | Funcionalidade | UX |',
-    'Protótipo Figma': 'https://figma.com/...',
-    'Análise SWOT': '### SWOT\n\n- **Forças:** \n- **Fraquezas:** \n- **Oportunidades:** \n- **Ameaças:** '
-  });
+  const [docs, setDocs] = useState<Record<string, string>>(INITIAL_DOCS);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDocModalOpen, setIsDocModalOpen] = useState(false);
@@ -77,6 +75,7 @@ export default function App() {
   const [activeDoc, setActiveDoc] = useState<{ title: string, content: string } | null>(null);
   const [docMode, setDocMode] = useState<'edit' | 'preview'>('preview');
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'info' | 'error' } | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
@@ -144,11 +143,29 @@ export default function App() {
     description: '',
     poFeedback: '',
     userStories: [],
+    checklist: [],
     category: TaskCategory.PROCESSO,
     priority: 'Média',
+    startDate: new Date().toISOString().split('T')[0],
     dueDate: new Date().toISOString().split('T')[0],
+    assignedTo: [],
     columnId: ColumnId.BACKLOG_SR1
   });
+
+  const toggleChecklistItem = (taskId: string, itemId: string) => {
+    const updatedTasks = tasks.map(t => {
+      if (t.id === taskId && t.checklist) {
+        return {
+          ...t,
+          checklist: t.checklist.map(item => 
+            item.id === itemId ? { ...item, completed: !item.completed } : item
+          )
+        };
+      }
+      return t;
+    });
+    syncTasks(updatedTasks);
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -183,7 +200,9 @@ export default function App() {
         userStories: newTask.userStories,
         category: newTask.category as TaskCategory,
         priority: newTask.priority as 'Baixa' | 'Média' | 'Alta',
+        startDate: newTask.startDate || '',
         dueDate: newTask.dueDate || '',
+        assignedTo: newTask.assignedTo || [],
         columnId: newTask.columnId as ColumnId,
       };
       syncTasks([...tasks, task]);
@@ -202,9 +221,12 @@ export default function App() {
       description: '',
       poFeedback: '',
       userStories: [],
+      checklist: [],
       category: TaskCategory.PROCESSO,
       priority: 'Média',
+      startDate: new Date().toISOString().split('T')[0],
       dueDate: new Date().toISOString().split('T')[0],
+      assignedTo: [],
       columnId: ColumnId.BACKLOG_SR1
     });
   };
@@ -299,6 +321,7 @@ export default function App() {
       reader.onloadend = () => {
         const imgTag = `\n\n![Imagem](${reader.result})\n\n`;
         setActiveDoc({ ...activeDoc, content: activeDoc.content + imgTag });
+        showToast('Imagem inserida no rascunho');
       };
       reader.readAsDataURL(file);
     }
@@ -398,20 +421,68 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm">
-                  <Plus className="w-4 h-4" /> Nova Tarefa
-                </button>
+                <div className="flex items-center gap-3">
+                  <div className="hidden lg:flex items-center gap-2 text-gray-400 text-[10px] font-medium italic bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                    <Zap className="w-3 h-3 text-yellow-500" />
+                    <span>Fluxo manual: marque o checklist e arraste os cards</span>
+                  </div>
+                  <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm">
+                    <Plus className="w-4 h-4" /> Nova Tarefa
+                  </button>
+                </div>
               </div>
 
               <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+                  {/* Status Summary Column */}
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between px-2">
+                      <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider">Resumo de Status</h2>
+                      <div className="flex items-center gap-1.5 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">
+                        <div className="w-1 h-1 bg-indigo-500 rounded-full animate-pulse" />
+                        <span className="text-[8px] font-black text-indigo-700 uppercase tracking-widest">Manual</span>
+                      </div>
+                    </div>
+                    <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm h-fit">
+                      <div className="space-y-4">
+                        {COLUMNS.map((column) => {
+                          const count = filteredTasks.filter(t => t.columnId === column.id).length;
+                          const percentage = filteredTasks.length > 0 ? (count / filteredTasks.length) * 100 : 0;
+                          return (
+                            <div key={column.id} className="space-y-1">
+                              <div className="flex justify-between text-xs">
+                                <span className="text-gray-500 font-medium">{column.title}</span>
+                                <span className="font-bold text-indigo-600">{count}</span>
+                              </div>
+                              <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <motion.div 
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${percentage}%` }}
+                                  className="h-full bg-indigo-500"
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                        <div className="pt-4 border-t border-gray-100 mt-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-bold text-gray-900">Total de Tarefas</span>
+                            <span className="bg-gray-900 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{filteredTasks.length}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   {COLUMNS.map((column) => (
                     <KanbanColumn 
                       key={column.id} 
                       column={column} 
                       tasks={filteredTasks.filter(t => t.columnId === column.id)} 
+                      team={team}
                       onEdit={openEditModal}
                       onDelete={deleteTask}
+                      onToggleChecklist={toggleChecklistItem}
                       confirmDeleteId={confirmDeleteId}
                       setConfirmDeleteId={setConfirmDeleteId}
                     />
@@ -423,23 +494,23 @@ export default function App() {
 
           {activeTab === 'timeline' && (
             <motion.div key="timeline" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-gray-100 bg-gray-50/50">
-                <h2 className="text-xl font-bold">Linha do Tempo do Projeto</h2>
-                <p className="text-sm text-gray-500">Marcos de entrega e prazos críticos</p>
-              </div>
-              <div className="p-8">
-                <div className="relative">
-                  <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200 md:left-1/2 md:-ml-px" />
-                  <div className="space-y-12">
-                    {tasks
-                      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
-                      .filter((t, i, self) => self.findIndex(x => x.dueDate === t.dueDate) === i)
-                      .map((task, idx) => (
-                        <TimelineItem key={task.dueDate} task={task} idx={idx} tasks={tasks} />
-                      ))}
+              <div className="p-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-bold">Cronograma de Acompanhamento</h2>
+                  <p className="text-sm text-gray-500">Visualização diária: Previsto vs Realizado</p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-indigo-100 border border-indigo-200 rounded-full" />
+                    <span className="text-[10px] font-bold text-gray-500 uppercase">Previsto</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-emerald-500 rounded-full" />
+                    <span className="text-[10px] font-bold text-gray-500 uppercase">Realizado</span>
                   </div>
                 </div>
               </div>
+              <GanttChart tasks={tasks} team={team} />
             </motion.div>
           )}
 
@@ -556,6 +627,53 @@ export default function App() {
                           <button type="button" onClick={() => setNewTask(prev => ({ ...prev, userStories: [...(prev.userStories || []), ''] }))} className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1"><Plus className="w-3 h-3" /> Adicionar História</button>
                         </div>
                       </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Check-list de Tarefas</label>
+                        <div className="space-y-2">
+                          {newTask.checklist?.map((item, i) => (
+                            <div key={item.id} className="flex gap-2 items-center">
+                              <input 
+                                type="checkbox" 
+                                checked={item.completed} 
+                                onChange={e => {
+                                  const list = [...(newTask.checklist || [])];
+                                  list[i] = { ...list[i], completed: e.target.checked };
+                                  setNewTask(prev => ({ ...prev, checklist: list }));
+                                }}
+                                className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                              />
+                              <input 
+                                type="text" 
+                                value={item.text} 
+                                onChange={e => {
+                                  const list = [...(newTask.checklist || [])];
+                                  list[i] = { ...list[i], text: e.target.value };
+                                  setNewTask(prev => ({ ...prev, checklist: list }));
+                                }} 
+                                className="flex-1 px-3 py-1.5 text-sm rounded-lg border border-gray-200" 
+                                placeholder="Item do check-list..."
+                              />
+                              <button 
+                                type="button" 
+                                onClick={() => setNewTask(prev => ({ ...prev, checklist: prev.checklist?.filter((_, idx) => idx !== i) }))} 
+                                className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                          <button 
+                            type="button" 
+                            onClick={() => setNewTask(prev => ({ 
+                              ...prev, 
+                              checklist: [...(prev.checklist || []), { id: Math.random().toString(36).substr(2, 9), text: '', completed: false }] 
+                            }))} 
+                            className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+                          >
+                            <Plus className="w-3 h-3" /> Adicionar Item
+                          </button>
+                        </div>
+                      </div>
                     </div>
 
                     <div className="space-y-4">
@@ -573,9 +691,42 @@ export default function App() {
                           </select>
                         </div>
                       </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Data de Início</label>
+                          <input type="date" required value={newTask.startDate} onChange={e => setNewTask(prev => ({ ...prev, startDate: e.target.value }))} className="w-full px-4 py-2 rounded-xl border border-gray-200" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Data de Entrega</label>
+                          <input type="date" required value={newTask.dueDate} onChange={e => setNewTask(prev => ({ ...prev, dueDate: e.target.value }))} className="w-full px-4 py-2 rounded-xl border border-gray-200" />
+                        </div>
+                      </div>
+
                       <div>
-                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Data de Entrega</label>
-                        <input type="date" required value={newTask.dueDate} onChange={e => setNewTask(prev => ({ ...prev, dueDate: e.target.value }))} className="w-full px-4 py-2 rounded-xl border border-gray-200" />
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Responsáveis</label>
+                        <div className="flex flex-wrap gap-2 p-2 border border-gray-200 rounded-xl bg-gray-50/50">
+                          {team.map(member => (
+                            <button
+                              key={member.id}
+                              type="button"
+                              onClick={() => {
+                                const current = newTask.assignedTo || [];
+                                const updated = current.includes(member.id)
+                                  ? current.filter(id => id !== member.id)
+                                  : [...current, member.id];
+                                setNewTask(prev => ({ ...prev, assignedTo: updated }));
+                              }}
+                              className={`flex items-center gap-2 px-2 py-1 rounded-lg border transition-all ${
+                                (newTask.assignedTo || []).includes(member.id)
+                                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm'
+                                  : 'bg-white border-gray-200 text-gray-600 hover:border-indigo-300'
+                              }`}
+                            >
+                              <img src={member.photo} alt={member.name} className="w-5 h-5 rounded-full" />
+                              <span className="text-[10px] font-bold">{member.name}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
                       <div>
                         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Coluna</label>
@@ -666,8 +817,39 @@ export default function App() {
                       />
                     </>
                   ) : (
-                    <div className="prose prose-sm max-w-none prose-indigo bg-gray-50/50 p-6 rounded-2xl border border-gray-100 min-h-[400px]">
-                      <Markdown>{activeDoc.content}</Markdown>
+                    <div className="prose prose-sm max-w-none prose-indigo bg-gray-50/50 p-6 rounded-2xl border border-gray-100 min-h-[400px] overflow-x-auto">
+                      <Markdown 
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          img: ({ ...props }) => (
+                            <div className="my-6 flex flex-col items-center gap-2">
+                              <img 
+                                src={props.src}
+                                alt={props.alt}
+                                className="rounded-xl shadow-lg cursor-zoom-in hover:opacity-95 transition-all max-h-[500px] w-auto object-contain border border-gray-200 bg-white" 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setZoomedImage(props.src || null);
+                                }}
+                                referrerPolicy="no-referrer"
+                              />
+                              {props.alt && props.alt !== 'Imagem' && (
+                                <span className="text-[10px] text-gray-400 italic">{props.alt}</span>
+                              )}
+                              <span className="text-[9px] text-indigo-400 font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Clique para ampliar</span>
+                            </div>
+                          ),
+                          table: ({ ...props }) => (
+                            <div className="overflow-x-auto my-6">
+                              <table {...props} className="min-w-full border-collapse border border-gray-200 rounded-lg overflow-hidden" />
+                            </div>
+                          ),
+                          th: ({ ...props }) => <th {...props} className="bg-gray-100 px-4 py-2 border border-gray-200 text-left font-bold text-gray-700" />,
+                          td: ({ ...props }) => <td {...props} className="px-4 py-2 border border-gray-200 text-gray-600" />
+                        }}
+                      >
+                        {activeDoc.content}
+                      </Markdown>
                     </div>
                   )}
                   <div className="flex gap-3 mt-4">
@@ -760,6 +942,36 @@ export default function App() {
             </div>
           )}
         </AnimatePresence>
+        {/* Zoom Modal */}
+        <AnimatePresence>
+          {zoomedImage && (
+            <div 
+              className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md cursor-zoom-out"
+              onClick={() => setZoomedImage(null)}
+            >
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="relative max-w-full max-h-full"
+              >
+                <img 
+                  src={zoomedImage} 
+                  alt="Zoomed" 
+                  className="max-w-full max-h-[90vh] rounded-lg shadow-2xl object-contain"
+                  referrerPolicy="no-referrer"
+                />
+                <button 
+                  onClick={() => setZoomedImage(null)}
+                  className="absolute -top-12 right-0 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
         {/* Toast Notification */}
         <AnimatePresence>
           {toast && (
@@ -793,7 +1005,16 @@ function TabButton({ active, onClick, icon, label }: { active: boolean, onClick:
   );
 }
 
-const KanbanColumn: React.FC<{ column: any, tasks: Task[], onEdit: (t: Task) => void, onDelete: (id: string) => void, confirmDeleteId: string | null, setConfirmDeleteId: (id: string | null) => void }> = ({ column, tasks, onEdit, onDelete, confirmDeleteId, setConfirmDeleteId }) => {
+const KanbanColumn: React.FC<{ 
+  column: any, 
+  tasks: Task[], 
+  team: TeamMember[],
+  onEdit: (t: Task) => void, 
+  onDelete: (id: string) => void, 
+  onToggleChecklist: (taskId: string, itemId: string) => void,
+  confirmDeleteId: string | null, 
+  setConfirmDeleteId: (id: string | null) => void 
+}> = ({ column, tasks, team, onEdit, onDelete, onToggleChecklist, confirmDeleteId, setConfirmDeleteId }) => {
   const { setNodeRef } = useDroppable({
     id: column.id,
   });
@@ -813,8 +1034,10 @@ const KanbanColumn: React.FC<{ column: any, tasks: Task[], onEdit: (t: Task) => 
             <SortableTaskCard 
               key={task.id} 
               task={task} 
+              team={team}
               onEdit={onEdit} 
               onDelete={onDelete} 
+              onToggleChecklist={onToggleChecklist}
               isConfirmingDelete={confirmDeleteId === task.id}
               setConfirmDeleteId={setConfirmDeleteId}
             />
@@ -839,11 +1062,13 @@ function getDocIcon(title: string) {
 
 const SortableTaskCard: React.FC<{ 
   task: Task, 
+  team: TeamMember[],
   onEdit: (t: Task) => void, 
   onDelete: (id: string) => void,
+  onToggleChecklist: (taskId: string, itemId: string) => void,
   isConfirmingDelete: boolean,
   setConfirmDeleteId: (id: string | null) => void
-}> = ({ task, onEdit, onDelete, isConfirmingDelete, setConfirmDeleteId }) => {
+}> = ({ task, team, onEdit, onDelete, onToggleChecklist, isConfirmingDelete, setConfirmDeleteId }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
   
   const style = {
@@ -861,13 +1086,22 @@ const SortableTaskCard: React.FC<{
     <div 
       ref={setNodeRef} 
       style={style} 
-      {...attributes} 
-      {...listeners} 
       onClick={() => onEdit(task)}
-      className={`bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all group relative cursor-grab active:cursor-grabbing ${isDone ? 'opacity-75' : ''}`}
+      className={`bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg hover:border-indigo-200 transition-all duration-200 group relative ${isDone ? 'opacity-75' : ''}`}
     >
       <div className="flex justify-between items-start mb-3">
-        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${categoryColor}`}>{task.category}</span>
+        <div className="flex items-center gap-2">
+          <div 
+            {...attributes} 
+            {...listeners}
+            className="p-1 cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500"
+            title="Arraste para mover"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <GripVertical className="w-3.5 h-3.5" />
+          </div>
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${categoryColor}`}>{task.category}</span>
+        </div>
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           {isConfirmingDelete ? (
             <button 
@@ -914,6 +1148,42 @@ const SortableTaskCard: React.FC<{
       <h3 className={`text-sm font-bold text-gray-900 mb-2 leading-tight ${isDone ? 'line-through text-gray-400' : ''}`}>{task.title}</h3>
       {task.description && <p className="text-[10px] text-gray-500 line-clamp-2 mb-3">{task.description}</p>}
       
+      {task.checklist && task.checklist.length > 0 && (
+        <div className="mb-3 space-y-1.5">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Progresso</span>
+            <span className="text-[9px] font-bold text-indigo-600">
+              {task.checklist.filter(i => i.completed).length}/{task.checklist.length}
+            </span>
+          </div>
+          <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-indigo-500 transition-all duration-500" 
+              style={{ width: `${(task.checklist.filter(i => i.completed).length / task.checklist.length) * 100}%` }} 
+            />
+          </div>
+          <div className="space-y-1 max-h-24 overflow-y-auto pr-1 custom-scrollbar">
+            {task.checklist.map(item => (
+              <div 
+                key={item.id} 
+                className="flex items-center gap-2 group/item cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleChecklist(task.id, item.id);
+                }}
+              >
+                <div className={`w-3 h-3 rounded border flex items-center justify-center shrink-0 transition-colors ${item.completed ? 'bg-indigo-500 border-indigo-500' : 'border-gray-300 bg-white'}`}>
+                  {item.completed && <Check className="w-2 h-2 text-white" />}
+                </div>
+                <span className={`text-[10px] truncate ${item.completed ? 'text-gray-400 line-through' : 'text-gray-600'}`}>
+                  {item.text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {task.poFeedback && (
         <div className="mb-3 p-2 bg-indigo-50 rounded-lg border border-indigo-100 relative">
           <div className="absolute -top-2 left-2 bg-indigo-600 text-white text-[8px] font-bold px-1 rounded">P.O.</div>
@@ -922,9 +1192,20 @@ const SortableTaskCard: React.FC<{
       )}
 
       <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-50">
-        <div className="flex items-center gap-1.5 text-gray-400">
-          <Calendar className="w-3 h-3" />
-          <span className="text-[10px] font-medium">{new Date(task.dueDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</span>
+        <div className="flex -space-x-2 overflow-hidden">
+          {(task.assignedTo || []).map(memberId => {
+            const member = team.find(m => m.id === memberId);
+            if (!member) return null;
+            return (
+              <img
+                key={member.id}
+                className="inline-block h-5 w-5 rounded-full ring-2 ring-white"
+                src={member.photo}
+                alt={member.name}
+                title={member.name}
+              />
+            );
+          })}
         </div>
         <div className="flex items-center gap-2">
           <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${priorityColor}`}>{task.priority}</span>
@@ -935,28 +1216,353 @@ const SortableTaskCard: React.FC<{
   );
 };
 
-const TimelineItem: React.FC<{ task: Task, idx: number, tasks: Task[] }> = ({ task, idx, tasks }) => {
+const GanttChart: React.FC<{ tasks: Task[], team: TeamMember[] }> = ({ tasks, team }) => {
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+
+  // Calculate date range
+  const allDates = tasks.flatMap(t => [new Date(t.startDate), new Date(t.dueDate)]);
+  if (allDates.length === 0) return <div className="p-8 text-center text-gray-500">Nenhuma tarefa cadastrada.</div>;
+
+  const minDate = new Date(Math.min(...allDates.map(d => d.getTime())));
+  const maxDate = new Date(Math.max(...allDates.map(d => d.getTime())));
+  
+  // Add some padding to the range
+  minDate.setDate(minDate.getDate() - 5);
+  maxDate.setDate(maxDate.getDate() + 10);
+
+  const days: Date[] = [];
+  let current = new Date(minDate);
+  while (current <= maxDate) {
+    days.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+
+  // Group days by month for the header
+  const months: { name: string, daysCount: number }[] = [];
+  days.forEach(day => {
+    const monthName = day.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+    if (months.length === 0 || months[months.length - 1].name !== monthName) {
+      months.push({ name: monthName, daysCount: 1 });
+    } else {
+      months[months.length - 1].daysCount++;
+    }
+  });
+
+  const getDayStatus = (date: Date) => {
+    const d = date.getDay();
+    if (d === 6) return 'bg-indigo-50/30 border-x border-indigo-100/50'; // Saturday
+    if (d === 0) return 'bg-gray-50/50'; // Sunday
+    return '';
+  };
+
+  const HOLIDAY_SATURDAYS = [
+    '2026-02-07', // Semana 1: Carnaval
+    '2026-02-14', // Semana 2: Imprensado
+    '2026-03-07', // Semana 4: Data Magna
+    '2026-04-04', // Semana 8: Imprensado
+  ];
+
   return (
-    <div className="relative">
-      <div className="flex flex-col md:flex-row items-center">
-        <div className={`flex-1 w-full md:w-1/2 ${idx % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:order-last md:pl-12'}`}>
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-indigo-300 transition-colors">
-            <time className="text-xs font-bold text-indigo-600 uppercase tracking-widest block mb-1">{new Date(task.dueDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' })}</time>
-            <h3 className="font-bold text-gray-900 mb-2">Marco {idx + 1}: {task.dueDate === '2026-06-19' ? 'Entrega Final' : 'Entrega Parcial'}</h3>
-            <div className="space-y-2">
-              {tasks.filter(t => t.dueDate === task.dueDate).map(t => (
-                <div key={t.id} className="flex items-center gap-2 text-sm text-gray-600">
-                  <div className={`w-1.5 h-1.5 rounded-full ${t.columnId === ColumnId.DONE ? 'bg-green-500' : 'bg-gray-300'}`} />
-                  <span className={t.columnId === ColumnId.DONE ? 'line-through opacity-50' : ''}>{t.title}</span>
-                </div>
-              ))}
+    <div className="relative flex flex-col h-[650px] border border-gray-200 rounded-xl bg-white overflow-hidden shadow-inner">
+      {/* Scrollable Area */}
+      <div className="flex-1 overflow-auto custom-scrollbar scroll-smooth">
+        <div className="min-w-max relative">
+          {/* Sticky Header */}
+          <div className="sticky top-0 z-40 bg-gray-50 border-b border-gray-200">
+            {/* Months Row */}
+            <div className="flex border-b border-gray-100">
+              <div className="w-80 shrink-0 border-r border-gray-200 bg-gray-50 sticky left-0 z-50" />
+              <div className="flex flex-1">
+                {months.map((m, i) => (
+                  <div 
+                    key={i} 
+                    style={{ width: `${m.daysCount * 40}px` }} 
+                    className="shrink-0 border-r border-gray-200 py-1.5 px-3 text-[10px] font-black uppercase text-gray-400 bg-gray-50/80 backdrop-blur-sm"
+                  >
+                    {m.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Days Row */}
+            <div className="flex">
+              <div className="w-16 shrink-0 p-4 font-bold text-[8px] uppercase tracking-widest text-gray-400 border-r border-gray-100 bg-gray-50 sticky left-0 z-50 flex items-center justify-center">
+                Sem.
+              </div>
+              <div className="w-64 shrink-0 p-4 font-bold text-[10px] uppercase tracking-widest text-gray-400 border-r border-gray-200 bg-gray-50 sticky left-16 z-50">
+                Atividades do Projeto
+              </div>
+              <div className="flex flex-1">
+                {days.map((day, i) => {
+                  const dateStr = day.toISOString().split('T')[0];
+                  const isSaturday = day.getDay() === 6;
+                  const isHolidaySaturday = isSaturday && HOLIDAY_SATURDAYS.includes(dateStr);
+                  const isToday = dateStr === todayStr;
+                  const hasTaskEnding = tasks.some(t => t.dueDate === dateStr);
+
+                  return (
+                    <div 
+                      key={i} 
+                      className={`w-10 shrink-0 border-r border-gray-100 flex flex-col items-center justify-center py-2 relative ${getDayStatus(day)} ${isToday ? 'bg-indigo-50 ring-1 ring-inset ring-indigo-200' : ''}`}
+                    >
+                      <span className={`text-[8px] font-bold uppercase mb-0.5 ${isSaturday ? 'text-indigo-600' : 'text-gray-400'}`}>
+                        {day.toLocaleDateString('pt-BR', { weekday: 'short' }).charAt(0)}
+                      </span>
+                      <span className={`text-[11px] font-black ${isToday ? 'text-indigo-600' : isSaturday ? 'text-indigo-700' : 'text-gray-700'}`}>
+                        {day.getDate()}
+                      </span>
+                      {isSaturday && !isHolidaySaturday && (
+                        <div className="absolute -bottom-1 flex flex-col items-center z-10">
+                          <div className={`w-1.5 h-1.5 rounded-full shadow-sm ${hasTaskEnding ? 'bg-indigo-600 scale-125' : 'bg-indigo-300'}`} />
+                          <div className={`absolute top-8 w-px h-[1000px] pointer-events-none ${hasTaskEnding ? 'bg-indigo-300/50' : 'bg-indigo-100/30'}`} />
+                          {hasTaskEnding && (
+                            <span className="absolute -bottom-6 text-[6px] font-black text-white whitespace-nowrap bg-indigo-600 px-1 py-0.5 rounded shadow-sm uppercase tracking-tighter">Entrega</span>
+                          )}
+                        </div>
+                      )}
+                      {isHolidaySaturday && (
+                        <div className="absolute -bottom-1 flex flex-col items-center z-10">
+                          <div className="w-1.5 h-1.5 bg-gray-400 rounded-full shadow-sm" />
+                          <span className="absolute -bottom-6 text-[6px] font-black text-gray-400 whitespace-nowrap bg-gray-100 px-1 py-0.5 rounded border border-gray-200 uppercase tracking-tighter">Feriado</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
+
+          {/* Rows */}
+          <div className="divide-y divide-gray-100">
+            {tasks
+              .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+              .map(task => {
+                const startIdx = days.findIndex(d => d.toISOString().split('T')[0] === task.startDate);
+                const endIdx = days.findIndex(d => d.toISOString().split('T')[0] === task.dueDate);
+                
+                const totalItems = task.checklist?.length || 0;
+                const completedItems = task.checklist?.filter(item => item.completed).length || 0;
+                const progress = totalItems > 0 ? completedItems / totalItems : (task.columnId === ColumnId.DONE ? 1 : 0);
+                
+                const duration = Math.max(1, endIdx - startIdx + 1);
+                const realizedDuration = Math.max(1, Math.floor(duration * progress));
+                const weekNum = task.id.split('-')[0].replace('w', '');
+                const isOverdue = task.dueDate < todayStr && task.columnId !== ColumnId.DONE;
+                const isCritical = task.priority === 'Alta';
+
+                return (
+                  <div key={task.id} className={`flex group hover:bg-gray-50/50 transition-colors ${isOverdue ? 'bg-red-50/30' : ''}`}>
+                    {/* Sticky Week Column */}
+                    <div className={`w-16 shrink-0 border-r border-gray-100 sticky left-0 z-30 flex items-center justify-center group-hover:bg-gray-100 transition-colors ${isOverdue ? 'bg-red-50/50' : 'bg-gray-50/30'}`}>
+                      <div className="flex flex-col items-center">
+                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-tighter">Sem.</span>
+                        <span className={`text-xs font-black ${isOverdue ? 'text-red-600' : 'text-indigo-600'}`}>{weekNum}</span>
+                      </div>
+                    </div>
+
+                    {/* Sticky Task Name Column */}
+                    <div className={`w-64 shrink-0 p-4 border-r border-gray-200 sticky left-16 z-30 shadow-[2px_0_8px_-4px_rgba(0,0,0,0.1)] group-hover:bg-gray-50 transition-colors ${isOverdue ? 'bg-red-50/50' : 'bg-white'}`}>
+                      <div className="flex items-center gap-2 mb-1">
+                        {isOverdue && <AlertTriangle className="w-3 h-3 text-red-600 shrink-0" />}
+                        {isCritical && !isOverdue && <Star className="w-3 h-3 text-yellow-500 shrink-0 fill-yellow-500" />}
+                        <span className={`text-xs font-bold block truncate ${isOverdue ? 'text-red-700' : 'text-gray-900'}`} title={task.title}>{task.title}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`text-[8px] font-black px-1 py-0.5 rounded uppercase ${isOverdue ? 'bg-red-100 text-red-700' : task.priority === 'Alta' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600'}`}>
+                            {isOverdue ? 'Atrasada' : task.priority}
+                          </span>
+                          <span className={`text-[8px] font-bold uppercase tracking-tighter ${isOverdue ? 'text-red-400' : 'text-gray-400'}`}>
+                            {new Date(task.startDate).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} - {new Date(task.dueDate).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                          </span>
+                        </div>
+                        <div className="flex -space-x-1.5">
+                          {(task.assignedTo || []).map(memberId => {
+                            const member = team.find(m => m.id === memberId);
+                            if (!member) return null;
+                            return (
+                              <img
+                                key={member.id}
+                                className="w-4 h-4 rounded-full ring-1 ring-white shadow-sm"
+                                src={member.photo}
+                                alt={member.name}
+                                title={member.name}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Gantt Bars Area */}
+                    <div className="flex flex-1 relative py-5">
+                      {/* Grid Lines */}
+                      <div className="absolute inset-0 flex pointer-events-none">
+                        {days.map((day, i) => {
+                          const isSaturday = day.getDay() === 6;
+                          return (
+                            <div 
+                              key={i} 
+                              className={`w-10 shrink-0 border-r border-gray-50 h-full ${getDayStatus(day)} ${isSaturday ? 'ring-1 ring-inset ring-indigo-100/20' : ''}`} 
+                            />
+                          );
+                        })}
+                      </div>
+
+                      {/* Bars Container */}
+                      <div className="relative w-full flex flex-col gap-2 justify-center">
+                        {/* Planned Bar (Previsto) */}
+                        <div 
+                          className={`h-3 rounded-full relative group/bar shadow-inner ${isOverdue ? 'bg-red-100/60' : isCritical ? 'bg-yellow-100/60' : 'bg-indigo-100/60'}`}
+                          style={{ 
+                            marginLeft: `${startIdx * 40}px`, 
+                            width: `${duration * 40}px` 
+                          }}
+                        >
+                          <div className={`absolute -top-4 left-0 text-[7px] font-black uppercase tracking-widest opacity-0 group-hover/bar:opacity-100 transition-opacity ${isOverdue ? 'text-red-400' : isCritical ? 'text-yellow-600' : 'text-indigo-400'}`}>Planejado</div>
+                          <div className={`absolute inset-0 border rounded-full ${isOverdue ? 'border-red-200/50' : isCritical ? 'border-yellow-300/50' : 'border-indigo-200/50'}`} />
+                        </div>
+
+                        {/* Realized Bar (Realizado) */}
+                        <div 
+                          className={`h-3 rounded-full relative group/realized shadow-sm transition-all duration-500 flex items-center justify-end px-1 ${isOverdue ? 'bg-red-500' : isCritical ? 'bg-yellow-400' : progress >= 1 ? 'bg-emerald-500' : 'bg-emerald-400'}`}
+                          style={{ 
+                            marginLeft: `${startIdx * 40}px`, 
+                            width: `${realizedDuration * 40}px` 
+                          }}
+                        >
+                          <div className={`absolute -bottom-4 left-0 text-[7px] font-black uppercase tracking-widest opacity-0 group-hover/realized:opacity-100 transition-opacity ${isOverdue ? 'text-red-600' : isCritical ? 'text-yellow-700' : 'text-emerald-600'}`}>Realizado ({Math.round(progress * 100)}%)</div>
+                          {isOverdue && <AlertTriangle className="w-2 h-2 text-white" />}
+                          {isCritical && !isOverdue && <Star className="w-2 h-2 text-yellow-900 fill-yellow-900" />}
+                          {progress < 1 && progress > 0 && !isOverdue && !isCritical && (
+                            <div className="absolute inset-0 bg-white/20 animate-pulse rounded-full" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
         </div>
-        <div className="absolute left-4 md:left-1/2 w-8 h-8 bg-white border-4 border-indigo-600 rounded-full -ml-4 flex items-center justify-center z-10">
-          <div className="w-2 h-2 bg-indigo-600 rounded-full" />
+      </div>
+    </div>
+  );
+};
+
+const TimelineItem: React.FC<{ task: Task, idx: number, tasks: Task[] }> = ({ task, idx, tasks }) => {
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  
+  const groupTasks = tasks.filter(t => t.dueDate === task.dueDate);
+  const hasOverdue = groupTasks.some(t => t.dueDate < todayStr && t.columnId !== ColumnId.DONE);
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-6">
+      <div className={`p-4 border-b border-gray-100 flex justify-between items-center ${hasOverdue ? 'bg-red-50/50' : 'bg-gray-50/30'}`}>
+        <div className="flex items-center gap-3">
+          <div className={`p-2 rounded-lg ${hasOverdue ? 'bg-red-100 text-red-600' : 'bg-indigo-100 text-indigo-600'}`}>
+            <Calendar className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="font-bold text-gray-900">Entrega: {new Date(task.dueDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' })}</h3>
+            <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Prazo Final</p>
+          </div>
         </div>
-        <div className="flex-1 hidden md:block" />
+        {hasOverdue && (
+          <span className="bg-red-100 text-red-700 text-[10px] font-black px-2 py-1 rounded-full uppercase animate-pulse">
+            Atrasado
+          </span>
+        )}
+      </div>
+      
+      <div className="p-4 space-y-6">
+        {groupTasks.map(t => {
+          const start = new Date(t.startDate + 'T12:00:00');
+          const end = new Date(t.dueDate + 'T12:00:00');
+          const totalDuration = end.getTime() - start.getTime();
+          
+          // Planned Progress
+          let plannedProgress = 0;
+          if (today.getTime() > end.getTime()) {
+            plannedProgress = 100;
+          } else if (today.getTime() > start.getTime()) {
+            plannedProgress = ((today.getTime() - start.getTime()) / totalDuration) * 100;
+          }
+          
+          // Executed Progress
+          const totalItems = t.checklist?.length || 0;
+          const completedItems = t.checklist?.filter(item => item.completed).length || 0;
+          let executedProgress = totalItems > 0 ? (completedItems / totalItems) * 100 : (t.columnId === ColumnId.DONE ? 100 : 0);
+          
+          const isOverdue = t.dueDate < todayStr && t.columnId !== ColumnId.DONE;
+          const isCritical = t.priority === 'Alta';
+
+          return (
+            <div key={t.id} className="space-y-3 p-3 rounded-xl border border-gray-100 hover:border-indigo-100 transition-colors">
+              <div className="flex justify-between items-start gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`font-bold text-sm ${t.columnId === ColumnId.DONE ? 'text-gray-400 line-through' : 'text-gray-900'}`}>{t.title}</span>
+                    {isCritical && <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />}
+                  </div>
+                  <div className="flex items-center gap-3 text-[10px] text-gray-500">
+                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {new Date(t.startDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })} - {new Date(t.dueDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</span>
+                    <span className={`px-1.5 py-0.5 rounded font-bold uppercase ${t.priority === 'Alta' ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-gray-600'}`}>{t.priority}</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className={`text-[10px] font-black px-2 py-1 rounded-lg ${t.columnId === ColumnId.DONE ? 'bg-green-100 text-green-700' : 'bg-indigo-50 text-indigo-600'}`}>
+                    {t.columnId === ColumnId.DONE ? 'CONCLUÍDO' : t.columnId === ColumnId.DOING ? 'EM ANDAMENTO' : 'BACKLOG'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                {/* Planned Bar */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-[10px] font-bold">
+                    <span className="text-gray-500 uppercase tracking-wider">Previsto (Tempo)</span>
+                    <span className="text-indigo-600">{Math.round(plannedProgress)}%</span>
+                  </div>
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${plannedProgress}%` }}
+                      className={`h-full ${plannedProgress === 100 ? 'bg-gray-400' : 'bg-indigo-500'}`}
+                    />
+                  </div>
+                </div>
+
+                {/* Executed Bar */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-[10px] font-bold">
+                    <span className="text-gray-500 uppercase tracking-wider">Realizado (Execução)</span>
+                    <span className={executedProgress >= plannedProgress ? 'text-emerald-600' : 'text-red-600'}>
+                      {Math.round(executedProgress)}%
+                    </span>
+                  </div>
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${executedProgress}%` }}
+                      className={`h-full ${executedProgress >= plannedProgress ? 'bg-emerald-500' : 'bg-red-500'}`}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {executedProgress < plannedProgress && t.columnId !== ColumnId.DONE && todayStr > t.startDate && (
+                <div className="flex items-center gap-1.5 text-[9px] font-bold text-red-600 bg-red-50 p-1.5 rounded-lg">
+                  <AlertTriangle className="w-3 h-3" />
+                  Atenção: A execução está abaixo do previsto para o tempo decorrido.
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

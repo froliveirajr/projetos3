@@ -2,7 +2,7 @@ import express from 'express';
 import { createServer as createViteServer } from 'vite';
 import { WebSocketServer, WebSocket } from 'ws';
 import http from 'http';
-import { INITIAL_TASKS, TEAM_MEMBERS } from './src/constants';
+import { INITIAL_TASKS, TEAM_MEMBERS, INITIAL_DOCS } from './src/constants';
 import { Task, TeamMember } from './src/types';
 
 async function startServer() {
@@ -13,7 +13,7 @@ async function startServer() {
   // Server-side state (Source of Truth)
   let tasks: Task[] = [...INITIAL_TASKS];
   let team: TeamMember[] = [...TEAM_MEMBERS];
-  let documents: { [id: string]: string } = {};
+  let documents: { [id: string]: string } = { ...INITIAL_DOCS };
 
   // WebSocket connection handling
   wss.on('connection', (ws: WebSocket) => {

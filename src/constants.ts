@@ -1,195 +1,402 @@
 import { Task, ColumnId, TaskCategory, TeamMember } from './types';
 
 export const INITIAL_TASKS: Task[] = [
-  // Marco 1: 14/03
+  // SEMANA 3: ONBOARDING (23/02 - 28/02)
   {
-    id: 'm1-1',
-    title: 'Project Model Canvas (Kickoff) + Apresentação',
-    description: 'Definição estratégica do projeto usando o framework PMC.',
-    userStories: ['Como stakeholder, quero entender a proposta de valor do projeto.'],
-    dueDate: '2026-03-14',
-    columnId: ColumnId.BACKLOG_SR1,
-    category: TaskCategory.KICKOFF,
-    priority: 'Alta'
-  },
-  // ... (rest of tasks will be updated in App.tsx state if needed, but I'll keep them simple here)
-  {
-    id: 'm1-2',
-    title: 'Cronograma Macro / Road Map',
-    dueDate: '2026-03-14',
-    columnId: ColumnId.BACKLOG_SR1,
+    id: 'w3-1',
+    title: 'Definição dos Grupos',
+    startDate: '2026-02-23',
+    dueDate: '2026-02-28',
+    assignedTo: ['1', '2'],
+    columnId: ColumnId.DONE,
     category: TaskCategory.PROCESSO,
     priority: 'Média'
   },
   {
-    id: 'm1-3',
-    title: 'Análise de Concorrentes',
-    dueDate: '2026-03-14',
-    columnId: ColumnId.BACKLOG_SR1,
-    category: TaskCategory.KICKOFF,
+    id: 'w3-2',
+    title: 'Organização dos Atendimentos',
+    startDate: '2026-02-23',
+    dueDate: '2026-02-28',
+    assignedTo: ['1'],
+    columnId: ColumnId.DONE,
+    category: TaskCategory.PROCESSO,
     priority: 'Baixa'
   },
   {
-    id: 'm1-4',
-    title: 'Personas',
-    dueDate: '2026-03-14',
-    columnId: ColumnId.BACKLOG_SR1,
+    id: 'w3-3',
+    title: 'Apresentação dos Problemas',
+    startDate: '2026-02-23',
+    dueDate: '2026-02-28',
+    assignedTo: ['1', '2', '3', '4', '5'],
+    columnId: ColumnId.DONE,
     category: TaskCategory.KICKOFF,
-    priority: 'Média'
+    priority: 'Alta'
+  },
+
+  // SEMANA 4: FERIADO (02/03 - 07/03) - DATA MAGNA
+  {
+    id: 'w4-1',
+    title: 'Feriado - Data Magna (Sem Entrega)',
+    startDate: '2026-03-02',
+    dueDate: '2026-03-07',
+    assignedTo: [],
+    columnId: ColumnId.DONE,
+    category: TaskCategory.PROCESSO,
+    priority: 'Baixa'
+  },
+
+  // SEMANA 5: KICKOFF (09/03 - 14/03) - SEMANA ATUAL
+  {
+    id: 'w5-1',
+    title: 'Project Model Canvas',
+    startDate: '2026-03-09',
+    dueDate: '2026-03-14',
+    assignedTo: ['1', '2'],
+    columnId: ColumnId.DOING,
+    category: TaskCategory.KICKOFF,
+    priority: 'Alta'
   },
   {
-    id: 'm1-5',
+    id: 'w5-2',
     title: 'Descrição da Problemática',
+    startDate: '2026-03-09',
     dueDate: '2026-03-14',
+    assignedTo: ['2', '3'],
+    columnId: ColumnId.DOING,
+    category: TaskCategory.KICKOFF,
+    priority: 'Média'
+  },
+  {
+    id: 'w5-3',
+    title: 'Análise de Concorrentes',
+    startDate: '2026-03-09',
+    dueDate: '2026-03-14',
+    assignedTo: ['3'],
+    columnId: ColumnId.DOING,
+    category: TaskCategory.KICKOFF,
+    priority: 'Média'
+  },
+  {
+    id: 'w5-4',
+    title: 'Cronograma Macro / Roadmap',
+    startDate: '2026-03-09',
+    dueDate: '2026-03-14',
+    assignedTo: ['1'],
+    columnId: ColumnId.DOING,
+    category: TaskCategory.PROCESSO,
+    priority: 'Média'
+  },
+  {
+    id: 'w5-5',
+    title: 'Fluxo de Versionamento (GitHub)',
+    startDate: '2026-03-09',
+    dueDate: '2026-03-14',
+    assignedTo: ['3', '4'],
+    columnId: ColumnId.DOING,
+    category: TaskCategory.TECNICO,
+    priority: 'Alta'
+  },
+  {
+    id: 'w5-6',
+    title: 'Google Sites + README',
+    startDate: '2026-03-09',
+    dueDate: '2026-03-14',
+    assignedTo: ['4', '5'],
+    columnId: ColumnId.DOING,
+    category: TaskCategory.PROCESSO,
+    priority: 'Baixa'
+  },
+  {
+    id: 'w5-7',
+    title: 'Entrega: Kickoff + Apresentação',
+    description: 'Evento de entrega que reúne as atividades da semana.',
+    startDate: '2026-03-14',
+    dueDate: '2026-03-14',
+    assignedTo: ['1', '2', '3', '4', '5'],
+    columnId: ColumnId.BACKLOG_SR1,
+    category: TaskCategory.KICKOFF,
+    priority: 'Alta',
+    checklist: [
+      { id: 'c51', text: 'Slides prontos', completed: false },
+      { id: 'c52', text: 'PMC validado', completed: false },
+      { id: 'c53', text: 'Repositório configurado', completed: false }
+    ]
+  },
+
+  // SEMANA 6: APROFUNDAMENTO (16/03 - 21/03)
+  {
+    id: 'w6-1',
+    title: 'Personas',
+    startDate: '2026-03-16',
+    dueDate: '2026-03-21',
+    assignedTo: ['2'],
     columnId: ColumnId.BACKLOG_SR1,
     category: TaskCategory.KICKOFF,
     priority: 'Média'
   },
   {
-    id: 'm1-6',
-    title: 'Criar Google Sites do Projeto',
-    dueDate: '2026-03-14',
+    id: 'w6-2',
+    title: 'User Story Mapping',
+    startDate: '2026-03-16',
+    dueDate: '2026-03-21',
+    assignedTo: ['1', '2'],
+    columnId: ColumnId.BACKLOG_SR1,
+    category: TaskCategory.PROCESSO,
+    priority: 'Alta'
+  },
+  {
+    id: 'w6-3',
+    title: 'Detalhamento das Histórias',
+    startDate: '2026-03-16',
+    dueDate: '2026-03-21',
+    assignedTo: ['3', '4', '5'],
+    columnId: ColumnId.BACKLOG_SR1,
+    category: TaskCategory.PROCESSO,
+    priority: 'Média'
+  },
+  {
+    id: 'w6-4',
+    title: 'Protótipo de Baixa Fidelidade',
+    startDate: '2026-03-16',
+    dueDate: '2026-03-21',
+    assignedTo: ['4'],
+    columnId: ColumnId.BACKLOG_SR1,
+    category: TaskCategory.TECNICO,
+    priority: 'Alta'
+  },
+  {
+    id: 'w6-5',
+    title: 'Screencast do Protótipo',
+    startDate: '2026-03-16',
+    dueDate: '2026-03-21',
+    assignedTo: ['5'],
+    columnId: ColumnId.BACKLOG_SR1,
+    category: TaskCategory.PROCESSO,
+    priority: 'Média'
+  },
+  {
+    id: 'w6-6',
+    title: 'Entrega: Aprofundamento',
+    startDate: '2026-03-21',
+    dueDate: '2026-03-21',
+    assignedTo: ['1', '2', '3', '4', '5'],
+    columnId: ColumnId.BACKLOG_SR1,
+    category: TaskCategory.PROCESSO,
+    priority: 'Alta'
+  },
+
+  // SEMANA 7: IMPLEMENTAÇÃO (23/03 - 28/03)
+  {
+    id: 'w7-1',
+    title: 'Validação das Histórias de Usuário',
+    startDate: '2026-03-23',
+    dueDate: '2026-03-28',
+    assignedTo: ['1', '2', '3'],
+    columnId: ColumnId.BACKLOG_SR1,
+    category: TaskCategory.TECNICO,
+    priority: 'Alta'
+  },
+
+  // SEMANA 8: IMPRENSADO (30/03 - 04/04)
+  {
+    id: 'w8-1',
+    title: 'Semana de Imprensado',
+    startDate: '2026-03-30',
+    dueDate: '2026-04-04',
+    assignedTo: [],
     columnId: ColumnId.BACKLOG_SR1,
     category: TaskCategory.PROCESSO,
     priority: 'Baixa'
   },
-  {
-    id: 'm1-7',
-    title: 'Criar Readme inicial do Projeto',
-    dueDate: '2026-03-14',
-    columnId: ColumnId.BACKLOG_SR1,
-    category: TaskCategory.TECNICO,
-    priority: 'Média'
-  },
 
-  // Marco 2: 21/03
+  // SEMANA 9: SR1 (06/04 - 11/04)
   {
-    id: 'm2-1',
-    title: 'Definir Fluxo de Versionamento (GitFlow)',
-    dueDate: '2026-03-21',
-    columnId: ColumnId.BACKLOG_SR1,
-    category: TaskCategory.TECNICO,
-    priority: 'Alta'
-  },
-  {
-    id: 'm2-2',
-    title: 'User Story Mapping (INVEST)',
-    dueDate: '2026-03-21',
-    columnId: ColumnId.BACKLOG_SR1,
-    category: TaskCategory.PROCESSO,
-    priority: 'Alta'
-  },
-  {
-    id: 'm2-3',
-    title: 'Detalhamento BDD',
-    dueDate: '2026-03-21',
-    columnId: ColumnId.BACKLOG_SR1,
-    category: TaskCategory.PROCESSO,
-    priority: 'Média'
-  },
-  {
-    id: 'm2-4',
-    title: 'Protótipo de Baixa Fidelidade (Figma)',
-    dueDate: '2026-03-21',
-    columnId: ColumnId.BACKLOG_SR1,
-    category: TaskCategory.TECNICO,
-    priority: 'Alta'
-  },
-
-  // Marco 3: 30/03
-  {
-    id: 'm3-1',
-    title: 'Implementação 2 HUs Prioritárias (Spring Boot)',
-    dueDate: '2026-03-30',
-    columnId: ColumnId.BACKLOG_SR1,
-    category: TaskCategory.TECNICO,
-    priority: 'Alta'
-  },
-  {
-    id: 'm3-2',
-    title: 'Gravar Screencast da Aplicação',
-    dueDate: '2026-03-30',
-    columnId: ColumnId.BACKLOG_SR1,
-    category: TaskCategory.PROCESSO,
-    priority: 'Média'
-  },
-
-  // Marco 4: 11/04
-  {
-    id: 'm4-1',
+    id: 'w9-1',
     title: 'Detalhamento Pontos Fortes e Melhorias',
+    startDate: '2026-04-06',
     dueDate: '2026-04-11',
+    assignedTo: ['1', '2'],
+    columnId: ColumnId.BACKLOG_SR1,
+    category: TaskCategory.PROCESSO,
+    priority: 'Média'
+  },
+  {
+    id: 'w9-2',
+    title: 'Análise SWOT',
+    startDate: '2026-04-06',
+    dueDate: '2026-04-11',
+    assignedTo: ['1', '2'],
     columnId: ColumnId.BACKLOG_SR1,
     category: TaskCategory.PROCESSO,
     priority: 'Baixa'
   },
   {
-    id: 'm4-2',
-    title: 'Elaborar Análise SWOT',
+    id: 'w9-3',
+    title: 'Aplicação Rodando + Screencast',
+    startDate: '2026-04-06',
     dueDate: '2026-04-11',
+    assignedTo: ['3', '4'],
     columnId: ColumnId.BACKLOG_SR1,
-    category: TaskCategory.PROCESSO,
-    priority: 'Baixa'
+    category: TaskCategory.TECNICO,
+    priority: 'Alta'
   },
-
-  // Marco 5: 18/04
   {
-    id: 'm5-1',
-    title: 'Apresentação SR1',
-    dueDate: '2026-04-18',
+    id: 'w9-4',
+    title: 'Entrega Oficial SR1',
+    startDate: '2026-04-11',
+    dueDate: '2026-04-11',
+    assignedTo: ['1', '2', '3', '4', '5'],
     columnId: ColumnId.BACKLOG_SR1,
     category: TaskCategory.SR1,
     priority: 'Alta'
   },
+
+  // SEMANA 10: FEEDBACK SR1 (13/04 - 18/04)
   {
-    id: 'm5-2',
-    title: 'Realizar Retrospectiva',
+    id: 'w10-1',
+    title: 'Ajustar Planejamento (Feedback SR1)',
+    startDate: '2026-04-13',
     dueDate: '2026-04-18',
-    columnId: ColumnId.BACKLOG_SR1,
+    assignedTo: ['1', '2'],
+    columnId: ColumnId.BACKLOG_SR2,
     category: TaskCategory.PROCESSO,
     priority: 'Média'
   },
 
-  // SR2 Tasks
+  // SEMANA 11-16: ACOMPANHAMENTO - IMPLEMENTAÇÃO
   {
-    id: 'sr2-1',
-    title: 'Implementar restante das HUs (Mín. 5)',
-    dueDate: '2026-06-19',
+    id: 'w11-1',
+    title: 'Implementação: Ciclo 1',
+    startDate: '2026-04-20',
+    dueDate: '2026-04-25',
+    assignedTo: ['3', '4'],
     columnId: ColumnId.BACKLOG_SR2,
     category: TaskCategory.TECNICO,
     priority: 'Alta'
   },
   {
-    id: 'sr2-2',
-    title: 'Criar Testes Automatizados',
-    dueDate: '2026-06-19',
+    id: 'w12-1',
+    title: 'Implementação: Ciclo 2',
+    startDate: '2026-04-27',
+    dueDate: '2026-05-02',
+    assignedTo: ['3', '4'],
     columnId: ColumnId.BACKLOG_SR2,
     category: TaskCategory.TECNICO,
     priority: 'Alta'
   },
   {
-    id: 'sr2-3',
-    title: 'Uso do Bug Tracker do GitHub',
-    dueDate: '2026-06-19',
+    id: 'w13-1',
+    title: 'Implementação: Ciclo 3',
+    startDate: '2026-05-04',
+    dueDate: '2026-05-09',
+    assignedTo: ['3', '4'],
     columnId: ColumnId.BACKLOG_SR2,
-    category: TaskCategory.PROCESSO,
+    category: TaskCategory.TECNICO,
+    priority: 'Alta'
+  },
+  {
+    id: 'w14-1',
+    title: 'Implementação: Ciclo 4',
+    startDate: '2026-05-11',
+    dueDate: '2026-05-16',
+    assignedTo: ['3', '4'],
+    columnId: ColumnId.BACKLOG_SR2,
+    category: TaskCategory.TECNICO,
+    priority: 'Alta'
+  },
+  {
+    id: 'w15-1',
+    title: 'Implementação: Ciclo 5',
+    startDate: '2026-05-18',
+    dueDate: '2026-05-23',
+    assignedTo: ['3', '4'],
+    columnId: ColumnId.BACKLOG_SR2,
+    category: TaskCategory.TECNICO,
+    priority: 'Alta'
+  },
+  {
+    id: 'w16-1',
+    title: 'Implementação: Ciclo 6',
+    startDate: '2026-05-25',
+    dueDate: '2026-05-30',
+    assignedTo: ['3', '4'],
+    columnId: ColumnId.BACKLOG_SR2,
+    category: TaskCategory.TECNICO,
+    priority: 'Alta'
+  },
+
+  // SEMANA 17: PREPARAÇÃO SR2 (01/06 - 06/06)
+  {
+    id: 'w17-1',
+    title: 'Restante das Histórias Implementadas',
+    startDate: '2026-06-01',
+    dueDate: '2026-06-06',
+    assignedTo: ['3', '4'],
+    columnId: ColumnId.BACKLOG_SR2,
+    category: TaskCategory.TECNICO,
+    priority: 'Alta'
+  },
+  {
+    id: 'w17-2',
+    title: 'Ambiente e Versionamento Funcionando',
+    startDate: '2026-06-01',
+    dueDate: '2026-06-06',
+    assignedTo: ['3', '4'],
+    columnId: ColumnId.BACKLOG_SR2,
+    category: TaskCategory.TECNICO,
+    priority: 'Alta'
+  },
+  {
+    id: 'w17-3',
+    title: 'Evidências Técnicas',
+    startDate: '2026-06-01',
+    dueDate: '2026-06-06',
+    assignedTo: ['4', '5'],
+    columnId: ColumnId.BACKLOG_SR2,
+    category: TaskCategory.TECNICO,
     priority: 'Média'
   },
   {
-    id: 'sr2-4',
-    title: 'Persistência de 3 Entidades de Domínio',
-    dueDate: '2026-06-19',
+    id: 'w17-4',
+    title: 'Apresentação do SR2',
+    startDate: '2026-06-06',
+    dueDate: '2026-06-06',
+    assignedTo: ['1', '2', '3', '4', '5'],
+    columnId: ColumnId.BACKLOG_SR2,
+    category: TaskCategory.SR2,
+    priority: 'Alta'
+  },
+
+  // SEMANA 18: SR2 (08/06 - 13/06)
+  {
+    id: 'w18-1',
+    title: 'Apresentação Final SR2',
+    startDate: '2026-06-08',
+    dueDate: '2026-06-13',
+    assignedTo: ['1', '2', '3', '4', '5'],
+    columnId: ColumnId.BACKLOG_SR2,
+    category: TaskCategory.SR2,
+    priority: 'Alta'
+  },
+  {
+    id: 'w18-2',
+    title: 'Demonstração Completa',
+    startDate: '2026-06-08',
+    dueDate: '2026-06-13',
+    assignedTo: ['3', '4'],
     columnId: ColumnId.BACKLOG_SR2,
     category: TaskCategory.TECNICO,
     priority: 'Alta'
   },
   {
-    id: 'sr2-5',
-    title: 'Apresentação Final SR2',
-    dueDate: '2026-06-19',
+    id: 'w18-3',
+    title: 'Retrospectiva',
+    startDate: '2026-06-08',
+    dueDate: '2026-06-13',
+    assignedTo: ['1', '2', '3', '4', '5'],
     columnId: ColumnId.BACKLOG_SR2,
-    category: TaskCategory.SR2,
-    priority: 'Alta'
+    category: TaskCategory.PROCESSO,
+    priority: 'Média'
   }
 ];
 
@@ -208,3 +415,12 @@ export const COLUMNS = [
   { id: ColumnId.REVIEW, title: 'Revisão/Testes' },
   { id: ColumnId.DONE, title: 'Concluído' }
 ];
+
+export const INITIAL_DOCS: Record<string, string> = {
+  'Project Model Canvas': '### Project Model Canvas\n\n**Justificativa:** \n**Objetivo:** \n**Benefícios:** \n**Produto:** \n**Requisitos:** ',
+  'Personas & Stakeholders': '### Personas\n\n- **Persona 1:** Nome, idade, dores e necessidades.\n\n### Stakeholders\n\n- **Professor:** Orientador\n- **Equipe:** Desenvolvedores',
+  'Descrição da Problemática': '### O Problema\n\nDescreva aqui o desafio que motivou o projeto...',
+  'Análise de Concorrentes': '### Concorrentes\n\n| Nome | Pontos Fortes | Pontos Fracos |\n|------|---------------|---------------|\n| App A | Interface | Preço |\n| App B | Funcionalidade | UX |',
+  'Protótipo Figma': 'https://figma.com/...',
+  'Análise SWOT': '### SWOT\n\n- **Forças:** \n- **Fraquezas:** \n- **Oportunidades:** \n- **Ameaças:** '
+};

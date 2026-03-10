@@ -14,13 +14,22 @@ export enum TaskCategory {
   SR2 = 'SR2'
 }
 
+export interface ChecklistItem {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
 export interface Task {
   id: string;
   title: string;
   description?: string;
   poFeedback?: string;
   userStories?: string[];
+  checklist?: ChecklistItem[];
+  startDate: string;
   dueDate: string;
+  assignedTo: string[]; // Member IDs
   columnId: ColumnId;
   category: TaskCategory;
   priority: 'Baixa' | 'Média' | 'Alta';
