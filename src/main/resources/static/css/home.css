@@ -136,28 +136,24 @@ body.home-body {
 .home-btn-primary {
     background: var(--color-primary-action);
     color: var(--white);
-    box-shadow: none;
 }
 
 .home-btn-secondary {
     background: var(--white);
     color: var(--color-primary-action);
     border: 1px solid var(--color-primary-action);
-    box-shadow: none;
 }
 
 .home-btn-inverse {
     background-color: var(--white);
     color: var(--color-primary-action);
     border: 1px solid var(--white);
-    box-shadow: none;
 }
 
 .hero-card {
     position: relative;
     padding: 0;
     background: transparent;
-    box-shadow: none;
     backdrop-filter: none;
 }
 
@@ -301,7 +297,6 @@ body.home-body {
     padding: var(--space-3xl);
     border-radius: 30px;
     background: var(--white);
-    box-shadow: none;
     border: 1px solid var(--color-primary-action);
 }
 
@@ -341,7 +336,6 @@ body.home-body {
     border-radius: 38px;
     background: var(--color-primary-action);
     color: var(--white);
-    box-shadow: none;
 }
 
 .calculator-preview h2 {
@@ -500,7 +494,6 @@ body.home-body {
     background: var(--white);
     border: 1px solid var(--color-primary-action);
     border-left: 8px solid var(--color-primary-action);
-    box-shadow: var(--shadow-none);
 }
 
 .proof-card h3 {
@@ -525,7 +518,6 @@ body.home-body {
     background: var(--eden-red-deep);
     color: var(--white);
     text-align: center;
-    box-shadow: var(--shadow-none);
 }
 
 .cta h2 {

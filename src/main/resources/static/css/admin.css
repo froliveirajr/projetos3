@@ -70,7 +70,6 @@
     background: var(--white);
     padding: var(--space-xl);
     border-radius: 16px;
-    box-shadow: var(--shadow-card);
     border-left: 5px solid var(--green-dark);
 }
 
@@ -95,7 +94,6 @@
     backdrop-filter: blur(10px);
     border-radius: 16px;
     padding: var(--space-2xl);
-    box-shadow: var(--shadow-panel);
     margin-bottom: var(--space-4xl);
     border: 1px solid var(--color-overlay-white-border);
 }
@@ -172,7 +170,6 @@
 .admin-submit:hover {
     background: var(--color-green-hover);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-green-soft);
 }
 
 /* Tabela Elegante */
@@ -182,7 +179,6 @@
     background: var(--color-surface-muted);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: var(--shadow-card);
 }
 
 .empresas-table th {

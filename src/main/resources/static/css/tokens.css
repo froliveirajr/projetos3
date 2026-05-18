@@ -61,6 +61,8 @@
     --color-warning: #D35400;
     --color-warning-light: #E67E22;
     --color-warning-label: #ffd8b1;
+    --color-piora-bg: #B85900;
+    --color-piora-strong: #8F4500;
 
     /* Transparências e efeitos */
     --color-overlay-white-92: rgba(255, 255, 255, 0.92);
@@ -88,7 +90,7 @@
     /* Tela de impacto */
     --color-impact-title: var(--color-primary-action);
     --color-impact-card-high: var(--color-primary-action);
-    --color-impact-card-low: #CC6300;
+    --color-impact-card-low: var(--color-piora-bg);
     --color-impact-alert-high-bg: var(--color-forest-soft-text);
     --color-impact-alert-low-bg: #FFEAD6;
     --color-impact-alert-low-text: var(--color-impact-card-low);
@@ -122,27 +124,6 @@
     --radius-pill: 30px;
     --radius-button: 50px;
     --radius-round: 50%;
-
-    /* Sombras */
-    --shadow: 0 24px 70px rgba(29, 43, 36, 0.13);
-    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
-    --shadow-panel: 0 4px 24px rgba(0, 0, 0, 0.08);
-    --shadow-form: 0 8px 30px rgba(0, 0, 0, 0.08);
-    --shadow-green: 0 4px 15px rgba(0, 129, 10, 0.3);
-    --shadow-primary-action: 0 16px 36px rgba(36, 66, 41, 0.28);
-    --shadow-green-soft: 0 6px 16px rgba(0, 129, 10, 0.2);
-    --shadow-green-muted: 0 6px 16px rgba(0, 129, 10, 0.25);
-    --shadow-forest: 0 4px 15px rgba(35, 64, 42, 0.15);
-    --shadow-forest-button: 0 4px 6px rgba(35, 64, 42, 0.2);
-    --shadow-forest-hover: 0 6px 12px rgba(35, 64, 42, 0.3);
-    --shadow-table: 0 4px 12px rgba(0, 0, 0, 0.06);
-    --shadow-thumb: 0 2px 10px rgba(0, 0, 0, 0.2);
-    --shadow-home-brand: 0 8px 18px rgba(47, 111, 78, 0.25);
-    --shadow-home-red: 0 16px 36px rgba(239, 65, 54, 0.28);
-    --shadow-home-red-large: 0 24px 70px rgba(239, 65, 54, 0.26);
-    --shadow-home-soft: 0 18px 50px rgba(29, 43, 36, 0.08);
-    --shadow-home-muted: 0 14px 40px rgba(29, 43, 36, 0.10);
-    --shadow-none: none;
 
     /* Transições */
     --transition-fast: 0.2s ease;

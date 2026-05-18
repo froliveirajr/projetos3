@@ -11,38 +11,21 @@
 
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/simulacao.css?v=2">
-
-    <style>
-        .topbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 28px; z-index: 100; position: relative; }
-        .topbar-right { display: flex; gap: 12px; align-items: center; }
-        .topbar-right span { color: rgba(255,255,255,0.9) !important; font-weight: 600; }
-        .btn-logout-sm { padding: 6px 16px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.1); color: #fff; font-size: 0.8rem; font-weight: 600; text-decoration: none; }
-        .btn-logout-sm:hover { background: rgba(255,255,255,0.2); }
-        
-        .status-badge { padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
-        .badge-melhora { background: #e8f5e9; color: #2e7d32; }
-        .badge-piora { background: #fff3e0; color: #e65100; }
-        
-        .equiv-item { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 1rem; font-weight: 700; margin-bottom: 8px; transition: all 0.5s ease; }
-        .equiv-icon { width: 40px; height: auto; transition: all 0.5s ease; }
-        
-        /* Ajuste fino CSS das árvores que falhou no replace anterior */
-        .arvore-svg {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-    </style>
 </head>
 <body>
 <main class="simulacao-page">
+    <div class="home-bg-art home-bg-art-left-mid" aria-hidden="true">
+        <div class="home-bg-circle home-left-mid-back"></div>
+        <div class="home-bg-circle home-left-mid-front"></div>
+        <div class="home-bg-circle home-left-mid-detail"></div>
+    </div>
     <header class="topbar">
         <a href="/" class="brand brand-logo" aria-label="Eden">
             <img src="/images/eden-logo.png" alt="Eden">
         </a>
         <div class="topbar-right">
-            <span style="font-size: 0.8rem; color: #666;" th:text="${nomeEmpresa}">Empresa</span>
-            <a href="/logout" class="btn-logout-sm">Sair</a>
+            <span style="font-size: 0.8rem;" th:text="${nomeEmpresa}">Empresa</span>
+            <a href="/logout" class="btn-logout-sm">SAIR</a>
         </div>
     </header>
 
@@ -50,16 +33,15 @@
 
     <section class="sim-content" id="sim-container">
         <div class="sim-header">
-            <div id="badge-status" class="status-badge" style="display:none;">Mudança de cenário</div>
             <h1 class="sim-title">Simule a adoção de <strong>benefícios digitais</strong></h1>
-            <p class="sim-subtitle">Compare o seu nível atual (<strong th:text="${digitalAtual + '%'}">20.0%</strong>) com o cenário alvo e veja como o impacto ambiental muda </p>
+            <p class="sim-subtitle">Compare o seu nível atual (<strong th:text="${#numbers.formatDecimal(digitalAtual, 1, 0) + '%'}">20%</strong>) com o cenário alvo e veja como o impacto ambiental muda </p>
         </div>
 
         <div class="main-layout">
             <div class="terrain-side">
                 <div class="terrain-container" id="terrain-figma">
                     <!-- Terreno Isométrico Estilo Figma -->
-                    <svg viewBox="0 0 500 300" width="100%" height="auto">
+                    <svg viewBox="0 0 500 245" width="100%" height="auto">
                         <!-- Base do Terreno -->
                         <path class="terrain-base" d="M100,150 L250,80 L400,150 L250,220 Z" fill="#91C392" />
                         <path class="terrain-side-left" d="M100,150 L250,220 L250,240 L100,170 Z" fill="#76A877" />
@@ -87,7 +69,7 @@
                     <div class="slider-track">
                         <span>0%</span>
                         <input type="range" id="sim-slider" class="sim-slider" min="0" max="100" th:value="${digitalAtual}">
-                        <span id="slider-valor" th:text="${digitalAtual + '%'}">0%</span>
+                        <span id="slider-valor" th:text="${#numbers.formatDecimal(digitalAtual, 1, 0) + '%'}">0%</span>
                     </div>
                 </div>
             </div>
@@ -123,29 +105,45 @@
                         <span class="sub-label">por ano</span>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="extra-info">
-                    <p class="equiv-title" id="equiv-intro">Esse impacto <strong>equivale</strong> a:</p>
-                    <div class="equiv-box-stacked">
-                        <div class="equiv-item" id="item-tree">
-                            <svg class="equiv-icon equiv-icon-tree" id="tree-icon" viewBox="0 0 100 100"><circle cx="50" cy="40" r="25" fill="#1A9A24"/><rect x="45" y="60" width="10" height="30" fill="#4A3424"/></svg>
-                            <span class="equiv-text"><span id="val-arvores">0</span> <span id="lbl-arvores-txt">árvores plantadas</span></span>
-                        </div>
-                        <div class="equiv-item" id="item-car">
-                            <svg class="equiv-icon" viewBox="0 0 100 100">
-                                <circle class="smoke-particle" cx="20" cy="40" r="5" />
-                                <path d="M20 50 L30 35 L70 35 L80 50 L90 50 L90 70 L10 70 L10 50 Z" fill="#FFC107"/>
-                                <circle cx="25" cy="70" r="12" fill="#333"/><circle cx="75" cy="70" r="12" fill="#333"/>
-                            </svg>
-                            <span class="equiv-text"><span id="lbl-carro-txt">1 carro fora da estrada</span> por <span id="val-meses">0</span> meses</span>
-                        </div>
+        <div class="extra-info">
+            <p class="equiv-title" id="equiv-intro">Esse impacto <strong>equivale</strong> a:</p>
+            <div class="equiv-box-stacked">
+                <div class="equiv-item" id="item-tree">
+                    <div class="equiv-icons">
+                        <svg class="equiv-icon equiv-tree" viewBox="0 0 100 100"><circle class="tree-foliage" cx="50" cy="40" r="25"/><rect class="tree-trunk" x="45" y="60" width="10" height="30"/></svg>
+                        <svg class="equiv-icon equiv-tree" viewBox="0 0 100 100"><circle class="tree-foliage" cx="50" cy="40" r="25"/><rect class="tree-trunk" x="45" y="60" width="10" height="30"/></svg>
+                        <svg class="equiv-icon equiv-tree" viewBox="0 0 100 100"><circle class="tree-foliage" cx="50" cy="40" r="25"/><rect class="tree-trunk" x="45" y="60" width="10" height="30"/></svg>
                     </div>
+                    <span class="equiv-text"><span id="val-arvores">0</span> <span id="lbl-arvores-txt">plantar árvores</span></span>
+                </div>
+                <div class="equiv-item" id="item-car">
+                    <div class="equiv-icons">
+                        <svg class="equiv-icon equiv-car" viewBox="0 0 100 100">
+                            <circle class="smoke-particle" cx="20" cy="40" r="5" />
+                            <path class="car-body" d="M20 50 L30 35 L70 35 L80 50 L90 50 L90 70 L10 70 L10 50 Z"/>
+                            <circle cx="25" cy="70" r="12" fill="#333"/><circle cx="75" cy="70" r="12" fill="#333"/>
+                        </svg>
+                        <svg class="equiv-icon equiv-car" viewBox="0 0 100 100">
+                            <circle class="smoke-particle" cx="20" cy="40" r="5" />
+                            <path class="car-body" d="M20 50 L30 35 L70 35 L80 50 L90 50 L90 70 L10 70 L10 50 Z"/>
+                            <circle cx="25" cy="70" r="12" fill="#333"/><circle cx="75" cy="70" r="12" fill="#333"/>
+                        </svg>
+                        <svg class="equiv-icon equiv-car" viewBox="0 0 100 100">
+                            <circle class="smoke-particle" cx="20" cy="40" r="5" />
+                            <path class="car-body" d="M20 50 L30 35 L70 35 L80 50 L90 50 L90 70 L10 70 L10 50 Z"/>
+                            <circle cx="25" cy="70" r="12" fill="#333"/><circle cx="75" cy="70" r="12" fill="#333"/>
+                        </svg>
+                    </div>
+                    <span class="equiv-text"><span id="lbl-carro-txt">1 carro fora da estrada</span> por <span id="val-meses">0</span> meses</span>
                 </div>
             </div>
         </div>
 
         <!-- Tabela Comparativa Figma Centralizada na Página -->
-        <div class="comparison-table-container">
+        <div class="comparison-table-container" id="comparison-table" style="display: none;">
             <table class="comparison-table">
                 <thead>
                     <tr>
@@ -199,11 +197,6 @@
             </div>
         </div>
     </section>
-
-    <div class="bg-art bg-art-top" aria-hidden="true">
-        <div class="bg-circle top-dark"></div>
-        <div class="bg-circle top-medium"></div>
-    </div>
 </main>
 
 <script th:inline="javascript">
@@ -211,7 +204,6 @@
     const slider = document.getElementById('sim-slider');
     const sliderValor = document.getElementById('slider-valor');
     const simContainer = document.getElementById('sim-container');
-    const badgeStatus = document.getElementById('badge-status');
     const arvoresSVG = document.querySelectorAll('.arvore-svg');
 
     async function buscarSimulacao(porcentagem) {
@@ -227,11 +219,7 @@
                     document.querySelector('.terrain-base').setAttribute('fill', '#D2B48C'); // Marrom
                     document.querySelector('.terrain-side-left').setAttribute('fill', '#A68A64');
                     document.querySelector('.terrain-side-right').setAttribute('fill', '#8B6B40');
-                    
-                    badgeStatus.textContent = "Cenário de Piora";
-                    badgeStatus.className = "status-badge badge-piora";
-                    badgeStatus.style.display = "inline-block";
-                    
+
                     // Labels Negativos
                     document.getElementById('lbl-co2').textContent = "Aumento de emissões";
                     document.getElementById('lbl-residuos').textContent = "Aumento de resíduos";
@@ -246,10 +234,6 @@
                     document.querySelector('.terrain-base').setAttribute('fill', '#91C392'); // Verde
                     document.querySelector('.terrain-side-left').setAttribute('fill', '#76A877');
                     document.querySelector('.terrain-side-right').setAttribute('fill', '#5D8F5E');
-
-                    badgeStatus.textContent = "Cenário de Melhora";
-                    badgeStatus.className = "status-badge badge-melhora";
-                    badgeStatus.style.display = porcentagem == digitalAtual ? "none" : "inline-block";
 
                     // Labels Positivos
                     document.getElementById('lbl-co2').textContent = "Emissões reduzidas";
@@ -317,14 +301,15 @@
     slider.addEventListener('input', function(e) {
         const val = parseInt(e.target.value);
         sliderValor.textContent = val + '%';
-        
+
         atualizarArvores(val);
+
+        document.getElementById('comparison-table').style.display = 'block';
 
         if (val != digitalAtual) {
             buscarSimulacao(val);
         } else {
             simContainer.classList.remove('piorou');
-            badgeStatus.style.display = "none";
         }
     });
 
