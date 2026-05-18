@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/simulacao.css">
+    <link rel="stylesheet" href="/css/simulacao.css?v=2">
 
     <style>
         .topbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 28px; z-index: 100; position: relative; }
@@ -18,8 +18,6 @@
         .topbar-right span { color: rgba(255,255,255,0.9) !important; font-weight: 600; }
         .btn-logout-sm { padding: 6px 16px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.1); color: #fff; font-size: 0.8rem; font-weight: 600; text-decoration: none; }
         .btn-logout-sm:hover { background: rgba(255,255,255,0.2); }
-        .btn-back { padding: 8px 20px; border-radius: 30px; border: 2px solid var(--green-dark); background: #fff; color: var(--green-dark); font-size: 0.9rem; font-weight: 700; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .btn-back:hover { background: var(--green-dark); color: #fff; }
         
         .status-badge { padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
         .badge-melhora { background: #e8f5e9; color: #2e7d32; }
@@ -41,17 +39,35 @@
     <header class="topbar">
         <a href="/" class="brand" style="font-size: 2.2rem;">Eden</a>
         <div class="topbar-right">
-            <a href="/impacto" class="btn-back">← Voltar</a>
             <span style="font-size: 0.8rem; color: #666;" th:text="${nomeEmpresa}">Empresa</span>
             <a href="/logout" class="btn-logout-sm">Sair</a>
         </div>
     </header>
 
+    <nav class="progress-breadcrumb" aria-label="Etapas da jornada">
+        <ol class="progress-steps">
+            <li class="progress-step progress-step-done">
+                <a href="/impacto" class="progress-link">
+                    <span class="progress-marker">1</span>
+                    <span class="progress-label">Visualizar impacto</span>
+                </a>
+            </li>
+            <li class="progress-step progress-step-active" aria-current="step">
+                <span class="progress-marker">2</span>
+                <span class="progress-label">Simular digitalização</span>
+            </li>
+            <li class="progress-step progress-step-next" aria-disabled="true">
+                <span class="progress-marker">3</span>
+                <span class="progress-label">Exportar documento</span>
+            </li>
+        </ol>
+    </nav>
+
     <section class="sim-content" id="sim-container">
         <div class="sim-header">
             <div id="badge-status" class="status-badge" style="display:none;">Mudança de cenário</div>
-            <h1 class="sim-title">Simulação <strong>Digital</strong></h1>
-            <p class="sim-subtitle">Compare o seu nível atual (<strong th:text="${digitalAtual + '%'}">15%</strong>) com o cenário alvo.</p>
+            <h1 class="sim-title">Simule a adoção de <strong>benefícios digitais</strong></h1>
+            <p class="sim-subtitle">Compare o seu nível atual (<strong th:text="${digitalAtual + '%'}">20.0%</strong>) com o cenário alvo e veja como o impacto ambiental muda </p>
         </div>
 
         <div class="main-layout">
