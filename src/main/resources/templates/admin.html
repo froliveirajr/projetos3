@@ -3,33 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Edenred - Cadastro de Empresas</title>
+    <title>Painel Edenred - Visão Geral</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/admin.css?v=1">
+    <link rel="stylesheet" href="/css/admin.css?v=2">
 </head>
 <body>
 <main class="admin-page">
 
+    <div class="home-bg-art home-bg-art-left-mid" aria-hidden="true">
+        <div class="home-bg-circle home-left-mid-back"></div>
+        <div class="home-bg-circle home-left-mid-front"></div>
+        <div class="home-bg-circle home-left-mid-detail"></div>
+    </div>
+
+    <div class="home-bg-art home-bg-art-left-side" aria-hidden="true">
+        <div class="home-bg-circle home-left-mid-back"></div>
+        <div class="home-bg-circle home-left-mid-front"></div>
+        <div class="home-bg-circle home-left-mid-detail"></div>
+    </div>
+
     <header class="topbar">
-        <a href="/admin" class="brand" aria-label="Eden">
+        <a href="/admin" class="brand brand-logo" aria-label="Eden">
             <img src="/images/eden-logo.png" alt="Eden">
         </a>
-        <div class="topbar-actions">
-            <span style="font-size: 0.85rem; color: #666;">Painel Administrativo</span>
-            <a href="/logout" class="btn-logout">Sair</a>
+        <div class="topbar-right">
+            <span style="font-size: 0.85rem;">Painel Administrativo</span>
+            <a href="/logout" class="btn-logout-sm">SAIR</a>
         </div>
     </header>
 
     <section class="admin-content">
-        <h1 class="admin-title">Cadastro de Empresas</h1>
-        <p class="admin-subtitle">Preencha os dados da empresa cliente para habilitar o acesso à calculadora de impacto.</p>
+        <h1 class="admin-title">Painel <strong>EDEN</strong>Red</h1>
+        <p class="admin-subtitle">Visão geral da carteira e oportunidades de cross-sell</p>
 
-        <!-- Resumo do Dashboard -->
+        <div th:if="${param.cadastrado}" class="msg-sucesso">
+            Empresa <strong th:text="${param.cadastrado}">X</strong> cadastrada com sucesso!
+        </div>
+        <div th:if="${sucesso}" class="msg-sucesso" th:text="${sucesso}"></div>
+
+        <!-- Cards de métricas da carteira -->
         <div class="dashboard-summary">
             <div class="summary-card">
                 <span class="summary-label">Empresas Ativas</span>
@@ -40,97 +57,76 @@
                 <h2 class="summary-value" th:text="${totalColaboradores}">0</h2>
             </div>
             <div class="summary-card">
-                <span class="summary-label">Status do Sistema</span>
-                <h2 class="summary-value" style="color: #4caf50; font-size: 1.2rem;">OPERACIONAL</h2>
+                <span class="summary-label">Digitalização Média</span>
+                <h2 class="summary-value" th:text="${#numbers.formatDecimal(digitalizacaoMedia, 1, 0) + '%'}">0%</h2>
+            </div>
+            <div class="summary-card">
+                <span class="summary-label">Cartões Físicos na Carteira</span>
+                <h2 class="summary-value" th:text="${cartoesFisicosTotais}">0</h2>
             </div>
         </div>
 
-        <!-- Mensagens -->
-        <div th:if="${sucesso}" class="msg-sucesso" th:text="${sucesso}"></div>
-        <div th:if="${erro}" class="msg-erro" th:text="${erro}"></div>
+        <!-- Oportunidades qualificadas -->
+        <section class="oportunidades-section">
+            <h2 class="section-block-title">Oportunidades Qualificadas</h2>
+            <p class="section-block-subtitle has-info">Top 5 empresas com maior potencial de cross-sell, ordenadas por score</p>
+            <p class="section-block-info">
+                <span class="info-icon" aria-hidden="true">ⓘ</span>
+                colaboradores × lacuna digital × lacunas de portfólio
+            </p>
 
-        <!-- Formulário de Cadastro -->
-        <form class="admin-form" action="/admin/cadastrar" method="POST">
-
-            <h3 class="section-title">Dados da Empresa</h3>
-
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="nome">Nome da empresa</label>
-                    <input type="text" id="nome" name="nome" placeholder="Ex: Tech Solutions Ltda" required>
-                </div>
-                <div class="form-field">
-                    <label for="cnpj">CNPJ</label>
-                    <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required>
-                </div>
+            <div th:if="${#lists.isEmpty(oportunidades)}" class="empty-msg">
+                Nenhuma empresa cadastrada ainda.
             </div>
 
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="senha">Senha de acesso</label>
-                    <input type="text" id="senha" name="senha" placeholder="Senha para a empresa" required>
-                    <span class="hint">A empresa usará esta senha + CNPJ para fazer login</span>
-                </div>
-                <div class="form-field">
-                    <label for="colaboradores">Nº de colaboradores</label>
-                    <input type="number" id="colaboradores" name="colaboradores" min="1" placeholder="1000" required>
+            <ul th:if="${!#lists.isEmpty(oportunidades)}" class="oportunidades-list">
+                <li th:each="op : ${oportunidades}" class="oportunidade-card">
+                    <div class="oportunidade-header">
+                        <h3 th:text="${op.empresa.nome}">Empresa</h3>
+                        <span class="oportunidade-prioridade"
+                              th:classappend="'oportunidade-prioridade-' + ${op.prioridadeKey}"
+                              th:text="${op.prioridade}">Alta</span>
+                    </div>
+                    <div class="oportunidade-meta">
+                        <span><strong th:text="${op.empresa.colaboradores}">0</strong> colaboradores</span>
+                        <span>•</span>
+                        <span><strong th:text="${#numbers.formatDecimal(op.empresa.porcentagemDigitalAtual, 1, 0) + '%'}">0%</strong> digital</span>
+                        <span>•</span>
+                        <span><strong th:text="${op.empresa.numeroBeneficios}">0</strong> benefícios</span>
+                        <span>•</span>
+                        <span>multi: <strong th:text="${op.empresa.multibeneficio ? 'sim' : 'não'}">não</strong></span>
+                    </div>
+                    <p class="oportunidade-recomendacao">
+                        <strong>Recomendação:</strong> <span th:text="${op.recomendacao}"></span>
+                    </p>
+                    <p class="oportunidade-impacto">
+                        <strong>Impacto potencial:</strong>
+                        ↓ <span th:text="${#numbers.formatDecimal(op.co2EvitavelKg, 1, 1)}">0</span> kg CO₂/ano
+                    </p>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Histograma de digitalização -->
+        <section class="histograma-section">
+            <h2 class="section-block-title">Distribuição de Digitalização</h2>
+            <p class="section-block-subtitle">Quantas empresas estão em cada faixa de adoção digital.</p>
+
+            <div class="histograma">
+                <div class="histograma-bar" th:each="count, iter : ${histograma}">
+                    <span class="histograma-count" th:text="${count}">0</span>
+                    <div class="histograma-fill"
+                         th:style="'height: ' + ${(count * 100) / histogramaMax} + '%;'"></div>
+                    <span class="histograma-label"
+                          th:text="${iter.index == 0 ? '0–25%' : (iter.index == 1 ? '25–50%' : (iter.index == 2 ? '50–75%' : '75–100%'))}">0–25%</span>
                 </div>
             </div>
+        </section>
 
-            <h3 class="section-title" style="margin-top: 28px;">Dados dos Benefícios</h3>
-
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="numeroBeneficios">Quantos tipos de benefício?</label>
-                    <input type="number" id="numeroBeneficios" name="numeroBeneficios" min="1" max="10" placeholder="4" required>
-                    <span class="hint">Ex: VA, VR, VT, combustível = 4 benefícios</span>
-                </div>
-                <div class="form-field checkbox-field">
-                    <input type="checkbox" id="multibeneficio" name="multibeneficio" value="true">
-                    <label for="multibeneficio">Usa cartão multibenefícios? (1 cartão para todos)</label>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="transacoesMensais">Transações mensais por colaborador</label>
-                    <input type="number" id="transacoesMensais" name="transacoesMensais" min="1" max="50" placeholder="13" required>
-                    <span class="hint">Média de uso do cartão por mês (sugestão: 10 a 22)</span>
-                </div>
-                <div class="form-field">
-                    <label for="vidaUtilCartaoAnos">Vida útil do cartão (anos)</label>
-                    <input type="number" id="vidaUtilCartaoAnos" name="vidaUtilCartaoAnos" min="0.5" max="10" step="0.5" placeholder="3.5" required>
-                </div>
-            </div>
-
-            <h3 class="section-title" style="margin-top: 28px;">Taxas Anuais (para cálculo ESG)</h3>
-
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="taxaTurnover">Taxa de turnover anual</label>
-                    <input type="number" id="taxaTurnover" name="taxaTurnover" min="0" max="1" step="0.01" placeholder="0.20" required>
-                    <span class="hint">Ex: 0.20 = 20% dos colaboradores saem por ano</span>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="taxaReemissao">Taxa de reemissão anual</label>
-                    <input type="number" id="taxaReemissao" name="taxaReemissao" min="0" max="1" step="0.01" placeholder="0.05" required>
-                    <span class="hint">Ex: 0.05 = 5% de 2ª via</span>
-                </div>
-                <div class="form-field">
-                    <label for="porcentagemDigitalAtual">Nível Digital Atual (%)</label>
-                    <input type="number" id="porcentagemDigitalAtual" name="porcentagemDigitalAtual" min="0" max="100" placeholder="15" required>
-                    <span class="hint">Quanto a empresa já usa de digital hoje?</span>
-                </div>
-            </div>
-
-            <button type="submit" class="admin-submit">Cadastrar Empresa</button>
-        </form>
-
-        <!-- Lista de empresas cadastradas -->
+        <!-- Botão de cadastro + tabela de empresas -->
         <section class="empresas-section">
-            <h2>Empresas Cadastradas</h2>
+            <h2 class="section-block-title">Empresas Cadastradas</h2>
+            <p class="section-block-subtitle">Lista das empresas registradas no sistema da Edenred.</p>
 
             <div th:if="${#lists.isEmpty(empresas)}" class="empty-msg">
                 Nenhuma empresa cadastrada ainda.
@@ -142,10 +138,10 @@
                         <th>Empresa</th>
                         <th>CNPJ</th>
                         <th>Colaboradores</th>
+                        <th>Digital.</th>
                         <th>Benefícios</th>
                         <th>Tipo</th>
-                        <th>Cartões/Colab</th>
-                        <th>Ações</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -153,56 +149,26 @@
                         <td th:text="${emp.nome}"></td>
                         <td th:text="${emp.cnpj}"></td>
                         <td th:text="${emp.colaboradores}"></td>
+                        <td th:text="${#numbers.formatDecimal(emp.porcentagemDigitalAtual, 1, 0) + '%'}"></td>
                         <td th:text="${emp.numeroBeneficios}"></td>
-                        <td th:text="${emp.multibeneficio ? 'Multibenefício' : 'Separados'}"></td>
-                        <td th:text="${emp.cartoesPorColaborador}"></td>
+                        <td th:text="${emp.multibeneficio ? 'Multi' : 'Separados'}"></td>
                         <td>
                             <form action="/admin/remover" method="POST" style="display:inline;">
                                 <input type="hidden" name="cnpj" th:value="${emp.cnpj}">
-                                <button type="submit" class="btn-remover" onclick="return confirm('Tem certeza que deseja remover esta empresa?')">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                                    Excluir
+                                <button type="submit" class="btn-remover" aria-label="Excluir empresa" onclick="return confirm('Tem certeza que deseja remover esta empresa?')">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
                                 </button>
                             </form>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
+            <div class="cadastrar-cta">
+                <a href="/admin/cadastrar" class="btn-cadastrar">CADASTRAR NOVA EMPRESA</a>
+            </div>
         </section>
     </section>
-
-    <!-- Fundo decorativo -->
-    <div class="bg-art bg-art-top" aria-hidden="true">
-        <div class="bg-circle top-dark"></div>
-        <div class="bg-circle top-medium"></div>
-        <div class="bg-circle top-light"></div>
-    </div>
-
-    <div class="bg-art bg-art-bottom" aria-hidden="true">
-        <div class="bg-circle bottom-back"></div>
-        <div class="bg-circle bottom-middle"></div>
-        <div class="bg-circle bottom-front"></div>
-        <div class="bg-circle bottom-detail"></div>
-    </div>
 </main>
-
-<script>
-    const cnpjInput = document.getElementById('cnpj');
-    cnpjInput.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 14) value = value.slice(0, 14);
-        
-        if (value.length > 12) {
-            value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, '$1.$2.$3/$4-$5');
-        } else if (value.length > 8) {
-            value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*/, '$1.$2.$3/$4');
-        } else if (value.length > 5) {
-            value = value.replace(/^(\d{2})(\d{3})(\d{0,3}).*/, '$1.$2.$3');
-        } else if (value.length > 2) {
-            value = value.replace(/^(\d{2})(\d{0,3}).*/, '$1.$2');
-        }
-        e.target.value = value;
-    });
-</script>
 </body>
 </html>
