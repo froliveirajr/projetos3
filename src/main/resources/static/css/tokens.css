@@ -2,6 +2,7 @@
     /* Tipografia */
     --font-sans: "Montserrat", sans-serif;
     --letter-spacing-heading: 0;
+    --text-page-title: 2.5rem;
 
     /* Cores base */
     --color-bg: #f3f3f3;
@@ -147,8 +148,23 @@
     --transition-fast: 0.2s ease;
     --transition-base: 0.3s ease;
 
-    /* Espaçamentos */
-    --space-metric-label: 12px;
+    /* Camadas (z-index) */
+    --z-behind: -1;
+    --z-base: 1;
+    --z-content: 10;
+    --z-elevated: 20;
+    --z-overlay: 1000;
+
+    /* Espaçamentos (4pt grid) */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 20px;
+    --space-2xl: 24px;
+    --space-3xl: 28px;
+    --space-4xl: 32px;
+    --space-metric-label: var(--space-md);
 
     /* Aliases usados pelo CSS atual */
     --bg: var(--color-bg);

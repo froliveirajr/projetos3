@@ -40,11 +40,11 @@ select {
 /* Topbar Global */
 .topbar { 
     position: relative; 
-    z-index: 1000; 
+    z-index: var(--z-overlay);
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
-    padding: 20px 30px; 
+    padding: var(--space-xl) var(--space-4xl);
 }
 .topbar .brand { 
     font-size: 2.2rem; 
@@ -54,7 +54,7 @@ select {
 }
 .topbar-right { 
     display: flex; 
-    gap: 15px; 
+    gap: var(--space-lg);
     align-items: center; 
 }
 .topbar-right span { 
@@ -65,7 +65,7 @@ select {
 /* Botões Globais */
 .btn {
     display: inline-block;
-    padding: 14px 32px;
+    padding: var(--space-lg) var(--space-4xl);
     border-radius: var(--radius-button);
     font-weight: 700;
     text-align: center;
@@ -97,7 +97,7 @@ select {
 }
 
 .btn-login-sm {
-    padding: 8px 20px;
+    padding: var(--space-sm) var(--space-xl);
     border-radius: var(--radius-button);
     border: 1.5px solid var(--green-dark);
     color: var(--green-dark) !important;

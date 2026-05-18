@@ -14,8 +14,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    padding: 22px 28px;
-    z-index: 20;
+    padding: var(--space-2xl) var(--space-3xl);
+    z-index: var(--z-elevated);
 }
 
 .brand {
@@ -44,9 +44,9 @@
 ========================= */
 .progress-breadcrumb {
     position: relative;
-    z-index: 10;
+    z-index: var(--z-content);
     width: min(860px, calc(100% - 48px));
-    margin: 42px auto 44px;
+    margin: 44px auto 44px;
 }
 
 .progress-steps {
@@ -63,7 +63,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-md);
     min-width: 0;
     color: var(--color-progress-next);
     text-align: center;
@@ -85,7 +85,7 @@
 
 .progress-marker {
     position: relative;
-    z-index: 1;
+    z-index: var(--z-base);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -130,26 +130,26 @@
 ========================= */
 .form-section {
     position: relative;
-    z-index: 10;
+    z-index: var(--z-content);
     width: 100%;
     max-width: 800px;
     height: auto !important;
     margin: 0 auto;
-    padding: 10px 32px 10px; /* Reduzido drasticamente pois a topbar já ocupa espaço (position: relative) */
+    padding: var(--space-md) var(--space-4xl) var(--space-md); /* Reduzido drasticamente pois a topbar já ocupa espaço (position: relative) */
     display: flex;
     flex-direction: column;
 }
 
 .form-header {
     text-align: center;
-    margin-bottom: 20px; /* Metade do original */
+    margin-bottom: var(--space-xl); /* Metade do original */
 }
 
 .form-header .title {
-    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    font-size: var(--text-page-title);
     font-weight: 500;
     color: var(--color-impact-title);
-    margin-bottom: 4px;
+    margin-bottom: var(--space-xs);
 }
 
 .form-header .title span {
@@ -158,32 +158,32 @@
 
 .form-header .subtitle {
     font-size: 1rem;
-    color: var(--muted);
+    color: var(--eden-body-text);
 }
 
 .impact-form fieldset {
     border: none;
-    margin-bottom: 30px;
+    margin-bottom: var(--space-4xl);
 }
 
 .group-title {
     font-size: 1.1rem;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-lg);
     color: var(--text);
 }
 
 /* Campos de Input de Texto */
 .input-row {
     display: flex;
-    gap: 20px;
+    gap: var(--space-xl);
 }
 
 .input-box {
     display: flex;
     flex-direction: column;
     flex: 1;
-    gap: 8px;
+    gap: var(--space-sm);
 }
 
 .input-box label, 
@@ -193,7 +193,7 @@
 }
 
 .input-box input {
-    padding: 12px 20px;
+    padding: var(--space-md) var(--space-xl);
     border-radius: 30px;
     border: 1px solid var(--color-border-strong);
     background: transparent;
@@ -207,14 +207,14 @@
 
 /* Sliders */
 .control-box {
-    margin-bottom: 24px;
+    margin-bottom: var(--space-2xl);
 }
 
 .slider-container {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-top: 12px;
+    gap: var(--space-lg);
+    margin-top: var(--space-md);
 }
 
 .slider-container span {
@@ -231,13 +231,13 @@
 /* Botões de Benefícios (Pills) */
 .pills-container {
     display: flex;
-    gap: 12px;
-    margin-top: 12px;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
     flex-wrap: wrap;
 }
 
 .pill {
-    padding: 8px 16px;
+    padding: var(--space-sm) var(--space-lg);
     border-radius: 30px;
     border: 1px solid var(--color-border-strong);
     background: transparent;
@@ -280,7 +280,7 @@
 .bg-art {
     position: absolute;
     pointer-events: none;
-    z-index: 1;
+    z-index: var(--z-base);
 }
 
 .bg-circle {
@@ -291,7 +291,7 @@
 .home-bg-art {
     position: absolute;
     pointer-events: none;
-    z-index: 1;
+    z-index: var(--z-base);
 }
 
 .home-bg-circle {
@@ -409,9 +409,9 @@
    ADICIONADO: MENSAGENS DE ALERTA
 ========================= */
 .mensagem-alerta {
-    padding: 8px 12px;
+    padding: var(--space-sm) var(--space-md);
     border-radius: 8px;
-    margin-top: 12px;
+    margin-top: var(--space-md);
     font-size: 0.9rem;
     font-weight: 600;
     text-align: center;
@@ -437,7 +437,7 @@
 ========================= */
 .results-grid {
     display: flex;
-    gap: 15px; /* Reduzido de 20px */
+    gap: var(--space-lg); /* Reduzido de 20px */
     justify-content: center;
     flex-wrap: wrap;
 }
@@ -446,7 +446,7 @@
     background-color: var(--color-impact-card-high);
     color: var(--white);
     border-radius: 12px;
-    padding: 16px 15px; /* Reduzido de 24px 20px */
+    padding: var(--space-lg); /* Reduzido de 24px 20px */
     text-align: center;
     flex: 1;
     min-width: 180px;
@@ -458,7 +458,7 @@
 
 .result-card .card-label {
     font-size: 0.85rem;
-    margin-bottom: 8px; /* Reduzido de 16px */
+    margin-bottom: var(--space-sm); /* Reduzido de 16px */
     font-weight: 400;
     color: var(--color-forest-label);
 }
@@ -466,7 +466,7 @@
 .result-card .card-value {
     font-size: 1.8rem; /* Reduzido de 2.2rem */
     font-weight: 700;
-    margin-bottom: 4px; /* Reduzido de 8px */
+    margin-bottom: var(--space-xs); /* Reduzido de 8px */
     line-height: 1;
 }
 
@@ -477,7 +477,7 @@
 }
 
 .actions {
-    margin-top: 32px;
+    margin-top: var(--space-4xl);
     text-align: center;
 }
 
@@ -494,7 +494,7 @@
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
     letter-spacing: 0;
-    padding: 14px 36px;
+    padding: var(--space-lg) 36px;
     border-radius: 50px;
     border: none;
     cursor: pointer;
@@ -511,22 +511,22 @@
 @media (max-width: 768px) {
     .progress-breadcrumb {
         width: min(100% - 28px, 520px);
-        margin: 26px auto 30px;
-        padding: 8px 0;
+        margin: var(--space-3xl) auto var(--space-4xl);
+        padding: var(--space-sm) 0;
     }
 
     .progress-breadcrumb::before {
         content: "";
         position: absolute;
         inset: -2px -8px;
-        z-index: -1;
+        z-index: var(--z-behind);
         border-radius: 999px;
         background: var(--color-overlay-white-86);
         backdrop-filter: blur(2px);
     }
 
     .progress-step {
-        gap: 8px;
+        gap: var(--space-sm);
     }
 
     .progress-step:not(:last-child)::after {
