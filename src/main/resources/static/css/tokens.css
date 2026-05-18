@@ -63,6 +63,8 @@
 
     /* Transparências e efeitos */
     --color-overlay-white-92: rgba(255, 255, 255, 0.92);
+    --color-overlay-white-90: rgba(255, 255, 255, 0.9);
+    --color-overlay-white-86: rgba(255, 255, 255, 0.86);
     --color-overlay-white-96: rgba(255, 255, 255, 0.96);
     --color-overlay-white-78: rgba(255, 255, 255, 0.78);
     --color-overlay-white-60: rgba(255, 255, 255, 0.6);
@@ -81,6 +83,20 @@
     --color-overlay-green-light-soft: rgba(18, 175, 25, 0.3);
     --color-overlay-green-detail: rgba(10, 150, 18, 0.38);
     --color-overlay-green-detail-soft: rgba(10, 150, 18, 0.2);
+
+    /* Tela de impacto */
+    --color-impact-title: var(--color-primary-action);
+    --color-impact-card-high: var(--color-primary-action);
+    --color-impact-card-low: #CC6300;
+    --color-impact-alert-high-bg: var(--color-forest-soft-text);
+    --color-impact-alert-low-bg: #FFEAD6;
+    --color-impact-alert-low-text: var(--color-impact-card-low);
+    --color-impact-low-label: #fff3e0;
+    --color-impact-low-muted: #ffe0b2;
+    --color-progress-active: var(--color-highlight-green);
+    --color-progress-done: var(--color-card-body-text);
+    --color-progress-next: var(--color-muted-light);
+    --color-progress-line-next: #cfcfcf;
 
     /* Cores translúcidas usadas na home */
     --eden-leaf-14: rgba(117, 184, 67, 0.14);

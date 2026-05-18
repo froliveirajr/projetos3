@@ -26,6 +26,105 @@
     color: var(--text);
 }
 
+.brand-logo {
+    display: inline-flex;
+    align-items: center;
+    width: 113px;
+    height: auto;
+}
+
+.brand-logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* =========================
+   BREADCRUMB DE ETAPAS
+========================= */
+.progress-breadcrumb {
+    position: relative;
+    z-index: 10;
+    width: min(860px, calc(100% - 48px));
+    margin: 42px auto 44px;
+}
+
+.progress-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.progress-step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    color: var(--color-progress-next);
+    text-align: center;
+}
+
+.progress-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: calc(50% + 24px);
+    width: calc(100% - 48px);
+    border-top: 2px dashed var(--color-progress-line-next);
+}
+
+.progress-step-done:not(:last-child)::after {
+    border-top-style: solid;
+    border-top-color: var(--color-progress-done);
+}
+
+.progress-marker {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--color-progress-next);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.progress-label {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.25;
+}
+
+.progress-step-active {
+    color: var(--color-progress-active);
+}
+
+.progress-step-active .progress-marker {
+    background: var(--color-progress-active);
+}
+
+.progress-step-done {
+    color: var(--color-progress-done);
+}
+
+.progress-step-done .progress-marker {
+    background: var(--color-progress-done);
+}
+
+.progress-step-next {
+    color: var(--color-progress-next);
+}
+
 /* =========================
    ESTILOS DO FORMULÁRIO
 ========================= */
@@ -49,8 +148,12 @@
 .form-header .title {
     font-size: clamp(1.8rem, 3.5vw, 2.5rem);
     font-weight: 500;
-    color: var(--text);
+    color: var(--color-impact-title);
     margin-bottom: 4px;
+}
+
+.form-header .title span {
+    font-weight: 800;
 }
 
 .form-header .subtitle {
@@ -185,6 +288,49 @@
     border-radius: 50%;
 }
 
+.home-bg-art {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.home-bg-circle {
+    position: absolute;
+    border-radius: var(--radius-round);
+}
+
+.impact-page .home-bg-art-left-mid {
+    top: -120px;
+    right: -160px;
+    left: auto;
+    width: 560px;
+    height: 560px;
+}
+
+.impact-page .home-left-mid-back {
+    width: 460px;
+    height: 460px;
+    background: var(--eden-sand-90);
+    left: 0;
+    top: 0;
+}
+
+.impact-page .home-left-mid-front {
+    width: 320px;
+    height: 320px;
+    background: var(--eden-leaf-18);
+    left: 120px;
+    top: 150px;
+}
+
+.impact-page .home-left-mid-detail {
+    width: 140px;
+    height: 140px;
+    background: var(--eden-red-14);
+    left: 330px;
+    top: 90px;
+}
+
 /* topo direito */
 .bg-art-top {
     top: 0;
@@ -297,14 +443,14 @@
 }
 
 .result-card {
-    background-color: var(--color-forest);
+    background-color: var(--color-impact-card-high);
     color: var(--white);
     border-radius: 12px;
     padding: 16px 15px; /* Reduzido de 24px 20px */
     text-align: center;
     flex: 1;
     min-width: 180px;
-    box-shadow: var(--shadow-forest);
+    box-shadow: none;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -330,24 +476,73 @@
     color: var(--color-forest-muted);
 }
 
+.actions {
+    margin-top: 32px;
+    text-align: center;
+}
+
 /* Novo botão escuro do design */
 .btn-dark {
-    background-color: var(--color-forest);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary-action);
     color: var(--white);
-    box-shadow: var(--shadow-forest-button);
+    box-shadow: none;
     text-transform: uppercase;
     font-size: 0.85rem;
-    letter-spacing: 0.5px;
-    padding: 12px 24px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+    padding: 14px 36px;
     border-radius: 50px;
     border: none;
     cursor: pointer;
-    font-weight: bold;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 
 .btn-dark:hover {
-    background-color: var(--color-forest-dark);
+    background-color: var(--color-primary-action);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-forest-hover);
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .progress-breadcrumb {
+        width: min(100% - 28px, 520px);
+        margin: 26px auto 30px;
+        padding: 8px 0;
+    }
+
+    .progress-breadcrumb::before {
+        content: "";
+        position: absolute;
+        inset: -2px -8px;
+        z-index: -1;
+        border-radius: 999px;
+        background: var(--color-overlay-white-86);
+        backdrop-filter: blur(2px);
+    }
+
+    .progress-step {
+        gap: 8px;
+    }
+
+    .progress-step:not(:last-child)::after {
+        top: 12px;
+        left: calc(50% + 19px);
+        width: calc(100% - 38px);
+    }
+
+    .progress-marker {
+        width: 26px;
+        height: 26px;
+        font-size: 0.9rem;
+    }
+
+    .progress-label {
+        max-width: 110px;
+        font-size: 0.78rem;
+    }
 }
