@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Edenred</title>
+    <title>Login Administrativo - Edenred</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,36 +17,28 @@
 
     <div class="login-container">
         <div class="login-header">
-            <span class="brand">EDEN</span>
-            <p class="subtitle">Acesse com os dados da sua empresa</p>
+            <span class="brand">EDEN Admin</span>
+            <p class="subtitle">Entre com seu login e senha administrativos</p>
         </div>
 
-        <!-- Mensagem de erro -->
-        <div th:if="${erro}" class="login-erro" th:text="${erro}" style="color: #e65100; margin-bottom: 15px; font-weight: 600;"></div>
+        <div th:if="${erro}" class="login-erro" th:text="${erro}"></div>
 
-        <form class="login-form" action="/login" method="POST">
+        <form class="login-form" action="/admin/login" method="POST">
             <div class="form-group">
-                <label for="cnpj">CNPJ</label>
+                <label for="cnpj">CNPJ ADMINISTRATIVO</label>
                 <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required>
             </div>
 
             <div class="form-group">
-                <label for="senha">Senha</label>
+                <label for="senha">SENHA ADMINISTRATIVA</label>
                 <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
             </div>
 
-            <button type="submit" class="login-btn">ENTRAR</button>
+            <button type="submit" class="login-btn">ENTRAR NO PAINEL</button>
         </form>
 
         <div class="login-footer">
-            <a href="/" class="link-voltar">VOLTAR</a>
-        </div>
-
-        <div class="admin-access">
-            <div class="admin-divider">
-                <span>ou</span>
-            </div>
-            <a href="/admin/login" class="btn-admin-login">LOGIN ADMINISTRATIVO</a>
+            <a href="/login" class="link-voltar">VOLTAR AO LOGIN DA EMPRESA</a>
         </div>
     </div>
 
@@ -68,7 +60,7 @@
     cnpjInput.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 14) value = value.slice(0, 14);
-        
+
         if (value.length > 12) {
             value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, '$1.$2.$3/$4-$5');
         } else if (value.length > 8) {

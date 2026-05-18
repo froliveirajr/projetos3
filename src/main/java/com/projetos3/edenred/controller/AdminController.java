@@ -27,7 +27,7 @@ public class AdminController {
     @GetMapping("/admin")
     public String telaAdmin(HttpSession session, Model model) {
         if (!isAdmin(session)) {
-            return "redirect:/login";
+            return "redirect:/admin/login";
         }
         popularDadosAdmin(model);
         return "admin";
@@ -55,7 +55,7 @@ public class AdminController {
                                    Model model) {
 
         if (!isAdmin(session)) {
-            return "redirect:/login";
+            return "redirect:/admin/login";
         }
 
         try {
@@ -79,7 +79,7 @@ public class AdminController {
     @PostMapping("/admin/remover")
     public String removerEmpresa(@RequestParam String cnpj, HttpSession session, Model model) {
         if (!isAdmin(session)) {
-            return "redirect:/login";
+            return "redirect:/admin/login";
         }
 
         empresaService.removerEmpresa(cnpj);

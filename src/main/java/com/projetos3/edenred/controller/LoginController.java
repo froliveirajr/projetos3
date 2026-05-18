@@ -21,9 +21,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String telaLogin(HttpSession session) {
-        if (session.getAttribute("admin") != null && (Boolean) session.getAttribute("admin")) {
-            return "redirect:/admin";
-        }
         if (session.getAttribute("empresaLogada") != null) {
             return "redirect:/impacto";
         }
@@ -36,14 +33,6 @@ public class LoginController {
                              HttpSession session,
                              Model model) {
 
-        // Primeiro verifica se é o admin Edenred
-        if (loginService.autenticarAdmin(cnpj, senha)) {
-            session.setAttribute("admin", true);
-            session.setAttribute("empresaLogada", null);
-            return "redirect:/admin";
-        }
-
-        // Se não é admin, tenta autenticar como empresa
         try {
             Empresa empresa = loginService.autenticarEmpresa(cnpj, senha);
             session.setAttribute("empresaLogada", empresa);
@@ -53,6 +42,30 @@ public class LoginController {
             model.addAttribute("erro", e.getMessage());
             return "login";
         }
+    }
+
+    @GetMapping("/admin/login")
+    public String telaLoginAdmin(HttpSession session) {
+        if (session.getAttribute("admin") != null && (Boolean) session.getAttribute("admin")) {
+            return "redirect:/admin";
+        }
+        return "admin-login";
+    }
+
+    @PostMapping("/admin/login")
+    public String fazerLoginAdmin(@RequestParam String cnpj,
+                                  @RequestParam String senha,
+                                  HttpSession session,
+                                  Model model) {
+
+        if (loginService.autenticarAdmin(cnpj, senha)) {
+            session.setAttribute("admin", true);
+            session.setAttribute("empresaLogada", null);
+            return "redirect:/admin";
+        }
+
+        model.addAttribute("erro", "CNPJ ou senha administrativa inválidos.");
+        return "admin-login";
     }
 
     @GetMapping("/logout")

@@ -20,9 +20,17 @@
 }
 
 .topbar .brand {
-    font-size: 3rem;
-    font-weight: 800;
-    color: var(--green-dark);
+    display: flex;
+    align-items: center;
+    width: 141px;
+    height: 48px;
+}
+
+.topbar .brand img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* Conteúdo */
@@ -36,15 +44,17 @@
 }
 
 .admin-title {
-    font-size: 1.8rem;
+    font-size: 3rem;
     font-weight: 800;
-    color: var(--text);
-    margin-bottom: 2px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--color-primary-action);
+    margin-bottom: 12px;
 }
 
 .admin-subtitle {
     font-size: 0.9rem;
-    color: var(--muted);
+    color: var(--eden-body-text);
     margin-bottom: 20px;
 }
 
