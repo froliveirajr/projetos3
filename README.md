@@ -35,6 +35,10 @@
 <a href="https://www.youtube.com/watch?v=1DBaahSdahs">
     <img src="https://img.shields.io/badge/Screencast Entrega 3-b50404?style=for-the-badge&logo=youtube&logoColor=white"/>
 </a>
+  
+<a href="https://youtu.be/">
+    <img src="https://img.shields.io/badge/Screencast Entrega 4-b50404?style=for-the-badge&logo=youtube&logoColor=white"/>
+</a>
 
 </div>
 
@@ -146,6 +150,52 @@ Além disso, as correções reduzem a dependência exclusiva do frontend para va
   <summary><strong>Entrega 4 🚀</strong></summary>
 
   <br>
+
+  **Status:**  
+  As seguintes histórias foram implementadas:
+   1. Comparar impacto entre transações físicas e digitais
+   2. Traduzir impacto ambiental em equivalências
+   3. Identificar oportunidades de cross-selling sustentável
+
+**Screencast:** 
+  
+<a href="">
+    <img src="https://img.shields.io/badge/Screencast Entrega 4-b50404?style=for-the-badge&logo=youtube&logoColor=white"/>
+</a>
+
+**Issues/Bugs:**
+
+As issues abertas durante essa sprint são relacionadas a melhoria das funcionalidades existentes. Sã tarefas relacionadas a comportamentos que devemos atualizar.
+
+As issues que ainda estão abertas são de tratamento de erros, que ainda será implementada para o SR2. Bem como algumas issues que precisam ser checadas com o novo fluxo e analisadas.
+
+<img width="1245" height="561" alt="Screenshot 2026-05-18 at 21 36 21" src="https://github.com/user-attachments/assets/4f8e7215-a105-4b23-8644-c280edbe56b2" />
+
+As issues fechadas durante esse periodo da quarta entrega foram:
+<img width="1233" height="263" alt="Screenshot 2026-05-18 at 21 38 33" src="https://github.com/user-attachments/assets/710fc3f8-96ca-405e-9a28-b87218688d59" />
+<img width="1237" height="782" alt="Screenshot 2026-05-18 at 21 37 48" src="https://github.com/user-attachments/assets/29374d9e-a753-4ecc-8126-ab039d8e6642" />
+
+São relacionadas à melhoria de design system, funcionamento adequado das funcionalidades e melhoria de fluxo.
+
+
+**Foto das Histórias**
+- 1. Comparar impacto entre transações físicas e digitais
+     <img width="963" height="238" alt="Screenshot 2026-05-18 at 21 43 52" src="https://github.com/user-attachments/assets/356d4a34-e8e0-4625-996d-5680c6cc0810" />
+     <img width="958" height="217" alt="Screenshot 2026-05-18 at 21 44 11" src="https://github.com/user-attachments/assets/32d71a79-7971-43be-b714-b0b55065652b" />
+
+
+     
+- 2. Traduzir impacto ambiental em equivalências
+     <img width="960" height="245" alt="Screenshot 2026-05-18 at 21 43 08" src="https://github.com/user-attachments/assets/3edfb03d-22a6-41b7-ba55-08938d600dc5" />
+     <img width="586" height="169" alt="Screenshot 2026-05-18 at 21 44 25" src="https://github.com/user-attachments/assets/e317fd6d-50a9-44a5-aaa4-40f147b7f367" />
+
+     
+- 3. Identificar oportunidades de cross-selling sustentável
+     <img width="1728" height="847" alt="Screenshot 2026-05-18 at 21 40 59" src="https://github.com/user-attachments/assets/eba5973a-d0e9-4eba-8088-4fa8b4e57313" />
+     <img width="1726" height="743" alt="Screenshot 2026-05-18 at 21 41 17" src="https://github.com/user-attachments/assets/fdb501ad-d849-498b-949e-c91f22039c09" />
+
+
+
 
 </details>
 
