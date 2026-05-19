@@ -156,8 +156,9 @@ Além disso, as correções reduzem a dependência exclusiva do frontend para va
    1. Comparar impacto entre transações físicas e digitais
    2. Traduzir impacto ambiental em equivalências
    3. Identificar oportunidades de cross-selling sustentável
-
-**[Acesse aqui o Guia de Execução Completo](./GUIA_DE_EXECUCAO.md)**
+   
+**Documentação Clara:**
+**[Acesse aqui o Guia de Execução Completo](./GUIA-DE-EXECUCAO.md)**
 
 **Screencast:** 
   
