@@ -1,32 +1,23 @@
+@import url("/css/tokens.css");
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-:root {
-    --bg: #f3f3f3;
-    --text: #111111;
-    --muted: #5c5c5c;
-
-    --green-dark: #00810a;
-    --green-medium: #08a60d;
-    --green-light: #0bb80f;
-    --green-detail: #1e8f24;
-
-    --white: #ffffff;
-}
-
 html, body {
     width: 100%;
-    height: 100%;
-    font-family: "Montserrat", sans-serif;
+    min-height: 100vh;
+    font-family: var(--font-sans);
     background: var(--bg);
     color: var(--text);
+    overflow-x: hidden;
 }
 
-body {
-    overflow: hidden;
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
 }
 
 a {
@@ -41,28 +32,236 @@ select {
     font: inherit;
 }
 
-html {
-    overflow-y: scroll !important;
-    height: auto !important;
-}
-
-body {
-    overflow-y: visible !important;
-    height: auto !important;
-    min-height: 100vh;
-    display: block !important;
-}
-
 .impact-page {
-    position: relative !important;
-    width: 100% !important;
-    height: auto !important; /* ISSO AQUI TIRA A TRAVA DOS 100VH */
-    min-height: 100vh !important;
-    overflow: visible !important; /* LIBERA O MOUSE */
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
 }
 
 .form-section {
-    height: auto !important;
     min-height: 100vh;
-    display: block !important; /* Flex às vezes trava o scroll se mal configurado */
+}
+
+/* Topbar Global */
+.topbar { 
+    position: relative; 
+    z-index: var(--z-overlay);
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: var(--space-xl) var(--space-4xl);
+}
+.topbar .brand { 
+    font-size: 2.2rem; 
+    font-weight: 800; 
+    color: var(--green-dark); 
+    text-decoration: none; 
+}
+.topbar-right { 
+    display: flex; 
+    gap: var(--space-lg);
+    align-items: center; 
+}
+.topbar-right span { 
+    font-weight: 700; 
+    color: var(--text); 
+}
+
+/* Botões Globais */
+.btn {
+    display: inline-block;
+    padding: var(--space-lg) var(--space-4xl);
+    border-radius: var(--radius-button);
+    font-weight: 700;
+    text-align: center;
+    transition: all var(--transition-base);
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--green-dark);
+    color: var(--white) !important;
+}
+
+.btn-primary:hover {
+    background: var(--green-medium);
+    transform: translateY(-2px);
+}
+
+.btn-dark {
+    background: var(--color-forest);
+    color: var(--white) !important;
+}
+
+.btn-dark:hover {
+    background: var(--color-forest-dark);
+    transform: translateY(-2px);
+}
+
+.btn-login-sm {
+    padding: var(--space-sm) var(--space-xl);
+    border-radius: var(--radius-button);
+    border: 1.5px solid var(--green-dark);
+    color: var(--green-dark) !important;
+    font-weight: 700;
+    background: transparent;
+}
+
+.btn-login-sm:hover {
+    background: var(--green-dark);
+    color: var(--white) !important;
+}
+
+/* =========================
+   BRAND / LOGO
+========================= */
+.brand-logo {
+    display: inline-flex;
+    align-items: center;
+    width: 113px;
+    height: auto;
+}
+
+.brand-logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* =========================
+   BREADCRUMB DE ETAPAS
+========================= */
+.progress-breadcrumb {
+    position: relative;
+    z-index: var(--z-content);
+    width: min(860px, calc(100% - 48px));
+    margin: 44px auto 44px;
+}
+
+.progress-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.progress-step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    min-width: 0;
+    color: var(--color-progress-next);
+    text-align: center;
+}
+
+.progress-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: calc(50% + 24px);
+    width: calc(100% - 48px);
+    border-top: 2px dashed var(--color-progress-line-next);
+}
+
+.progress-step-done:not(:last-child)::after {
+    border-top-style: solid;
+    border-top-color: var(--color-progress-done);
+}
+
+.progress-link {
+    display: contents;
+    color: inherit;
+    text-decoration: none;
+}
+
+.progress-link:focus-visible .progress-marker {
+    outline: 3px solid var(--color-progress-active);
+    outline-offset: 3px;
+}
+
+.progress-marker {
+    position: relative;
+    z-index: var(--z-base);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--color-progress-next);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.progress-label {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.25;
+}
+
+.progress-step-active {
+    color: var(--color-progress-active);
+}
+
+.progress-step-active .progress-marker {
+    background: var(--color-progress-active);
+}
+
+.progress-step-done {
+    color: var(--color-progress-done);
+}
+
+.progress-step-done .progress-marker {
+    background: var(--color-progress-done);
+}
+
+.progress-step-next {
+    color: var(--color-progress-next);
+}
+
+@media (max-width: 768px) {
+    .progress-breadcrumb {
+        width: min(100% - 28px, 520px);
+        margin: var(--space-3xl) auto var(--space-4xl);
+        padding: var(--space-sm) 0;
+    }
+
+    .progress-breadcrumb::before {
+        content: "";
+        position: absolute;
+        inset: -2px -8px;
+        z-index: var(--z-behind);
+        border-radius: 999px;
+        background: var(--color-overlay-white-86);
+        backdrop-filter: blur(2px);
+    }
+
+    .progress-step {
+        gap: var(--space-sm);
+    }
+
+    .progress-step:not(:last-child)::after {
+        top: 12px;
+        left: calc(50% + 19px);
+        width: calc(100% - 38px);
+    }
+
+    .progress-marker {
+        width: 26px;
+        height: 26px;
+        font-size: 0.9rem;
+    }
+
+    .progress-label {
+        max-width: 110px;
+        font-size: 0.78rem;
+    }
 }

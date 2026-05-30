@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrativo - Edenred</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/login.css?v=8">
+</head>
+<body>
+<main class="login-page">
+
+    <div class="login-container">
+        <div class="login-header">
+            <span class="brand">EDEN Admin</span>
+            <p class="subtitle">Entre com seu login e senha administrativos</p>
+        </div>
+
+        <div th:if="${erro}" class="login-erro" th:text="${erro}"></div>
+
+        <form class="login-form" action="/admin/login" method="POST">
+            <div class="form-group">
+                <label for="cnpj">CNPJ ADMINISTRATIVO</label>
+                <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required>
+            </div>
+
+            <div class="form-group">
+                <label for="senha">SENHA ADMINISTRATIVA</label>
+                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+            </div>
+
+            <button type="submit" class="login-btn">ENTRAR NO PAINEL</button>
+        </form>
+
+        <div class="login-footer">
+            <a href="/login" class="link-voltar">VOLTAR AO LOGIN DA EMPRESA</a>
+        </div>
+    </div>
+
+    <div class="home-bg-art home-bg-art-login-top" aria-hidden="true">
+        <div class="home-bg-circle home-login-top-back"></div>
+        <div class="home-bg-circle home-login-top-front"></div>
+        <div class="home-bg-circle home-login-top-detail"></div>
+    </div>
+
+    <div class="home-bg-art home-bg-art-left-mid" aria-hidden="true">
+        <div class="home-bg-circle home-left-mid-back"></div>
+        <div class="home-bg-circle home-left-mid-front"></div>
+        <div class="home-bg-circle home-left-mid-detail"></div>
+    </div>
+</main>
+
+<script>
+    const cnpjInput = document.getElementById('cnpj');
+    cnpjInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 14) value = value.slice(0, 14);
+
+        if (value.length > 12) {
+            value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, '$1.$2.$3/$4-$5');
+        } else if (value.length > 8) {
+            value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*/, '$1.$2.$3/$4');
+        } else if (value.length > 5) {
+            value = value.replace(/^(\d{2})(\d{3})(\d{0,3}).*/, '$1.$2.$3');
+        } else if (value.length > 2) {
+            value = value.replace(/^(\d{2})(\d{0,3}).*/, '$1.$2');
+        }
+        e.target.value = value;
+    });
+</script>
+</body>
+</html>

@@ -1,5 +1,15 @@
 # Projeto Edenred Brasil - CESAR School
 
+## Deploy e banco de dados
+
+O projeto esta preparado para usar Supabase como banco PostgreSQL e uma hospedagem com suporte a Java/Docker. Veja o passo a passo em [DEPLOYMENT.md](DEPLOYMENT.md).
+
+Principais arquivos:
+
+- `.env.example`: variaveis esperadas para Supabase, admin e deploy.
+- `Dockerfile`: build da aplicacao Spring Boot para hospedagens Docker.
+- `render.yaml`: configuracao opcional para deploy na Render.
+
 ---
 
 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">

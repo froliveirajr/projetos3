@@ -1,55 +1,304 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edenred</title>
+    <title>Projeto Eden | Edenred</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+    <!-- Estilos globais primeiro (se existirem) -->
     <link rel="stylesheet" href="/css/global.css">
+    <!-- Estilos específicos da página Home -->
     <link rel="stylesheet" href="/css/home.css">
 </head>
-<body>
+<body class="home-body">
 <main class="home-page">
-    <header class="topbar">
-        <div class="brand">Eden</div>
+    <header class="home-topbar">
+        <div class="topbar-content">
+            <a href="#topo" class="home-brand" aria-label="Projeto Eden">
+                <img src="/images/eden-logo.png" alt="Eden">
+            </a>
+
+            <nav class="home-nav" aria-label="Navegação principal">
+                <a href="#por-que">Por que mudar</a>
+                <a href="#calculadora">Calculadora</a>
+                <a href="#como-funciona">Como funciona</a>
+                <a href="#fontes">Fontes</a>
+            </nav>
+        </div>
     </header>
 
-    <section class="hero">
-        <p class="eyebrow">Transformação digital com impacto mensurável</p>
+    <section id="topo" class="hero">
+        <div class="hero-copy">
+            <h1 class="home-title">
+                Um novo jardim para os <span>benefícios digitais</span>
+            </h1>
 
-        <h1 class="title">
-            Do físico ao digital, com <span>menos impacto ambiental</span>.
-        </h1>
+            <p class="description">
+                O Projeto Eden ajuda gestores a reduzirem o uso de cartões físicos de benefício
+                e a migrarem para transações eletrônicas com impacto ambiental mensurável,
+                menos logística e uma experiência mais simples para os colaboradores.
+            </p>
 
-        <p class="description">
-            Uma solução que compara, de forma objetiva, o impacto ambiental de transações
-            físicas e digitais, ajudando a Edenred a reduzir plástico, papel e logística,
-            além de fortalecer sua estratégia digital.
-        </p>
+            <div class="home-actions">
+                <a href="#calculadora" class="home-btn home-btn-primary">CALCULAR IMPACTO</a>
+                <a href="#por-que" class="home-btn home-btn-secondary">ENTENDER A SOLUÇÃO</a>
+            </div>
+        </div>
 
-        <div class="actions">
-            <a href="/impacto" class="btn btn-primary">Ver solução</a>
+        <aside class="hero-card" aria-label="Resumo de impacto ambiental">
+            <div class="impact-card">
+                <h2>Menos plástico. Menos logística. Mais controle.</h2>
+                <p>
+                    A cada cartão físico que deixa de ser emitido, a empresa reduz materiais,
+                    embalagem, transporte e descarte associados à operação de benefícios.
+                </p>
+
+                <div class="impact-grid">
+                    <div class="metric">
+                        <strong>150g</strong>
+                        <span>CO₂e estimado por cartão físico evitado</span>
+                    </div>
+                    <div class="metric">
+                        <strong>5g</strong>
+                        <span>plástico estimado por cartão físico</span>
+                    </div>
+                    <div class="metric">
+                        <strong>1,5t</strong>
+                        <span>CO₂e evitado a cada 10 mil cartões</span>
+                    </div>
+                    <div class="metric">
+                        <strong>50kg</strong>
+                        <span>plástico evitado a cada 10 mil cartões</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="seed-note">
+                A semente do Eden: transformar benefícios que antes dependiam de plástico
+                em uma jornada digital, rastreável e alinhada à agenda ESG.
+            </div>
+        </aside>
+    </section>
+
+    <section id="por-que" class="section">
+        <div class="section-heading">
+            <p class="section-kicker">Por que gestores devem agir agora<span class="question-mark">?</span></p>
+            <h2 class="section-title">Cartões físicos parecem pequenos, mas a <span>operação por trás</span> deles é grande</h2>
+            <p class="section-text">
+                Emissão, personalização, envelopes, transporte, reentrega, segunda via,
+                troca por perda, vencimento e descarte. O Projeto Eden traduz essa cadeia
+                em indicadores simples para apoiar decisões mais sustentáveis.
+            </p>
+        </div>
+
+        <div class="cards">
+            <article class="home-card">
+                <div class="card-icon">🌱</div>
+                <h3>Redução de materiais</h3>
+                <p>
+                    Menos cartões físicos significam menos plástico, chips, impressão,
+                    envelopes e embalagens associados à gestão de benefícios.
+                </p>
+            </article>
+
+            <article class="home-card">
+                <div class="card-icon">🚚</div>
+                <h3>Menos logística</h3>
+                <p>
+                    A migração digital reduz entregas, reentregas, armazenagem, devoluções
+                    e processos manuais que consomem tempo e recursos.
+                </p>
+            </article>
+
+            <article class="home-card">
+                <div class="card-icon">📊</div>
+                <h3>Impacto mensurável</h3>
+                <p>
+                    A calculadora converte cartões evitados em CO₂e, plástico e equivalências
+                    fáceis de comunicar para liderança, RH e ESG.
+                </p>
+            </article>
         </div>
     </section>
 
-    <!-- Fundo decorativo superior direito -->
-    <div class="bg-art bg-art-top" aria-hidden="true">
-        <div class="bg-circle top-dark"></div>
-        <div class="bg-circle top-medium"></div>
-        <div class="bg-circle top-light"></div>
+    <section id="calculadora" class="section">
+        <div class="calculator-preview">
+            <div>
+                <p class="section-kicker">Calculadora Eden</p>
+                <h2>Mostre o impacto ambiental da decisão em poucos segundos</h2>
+                <p>
+                    O gestor informa o número de colaboradores, quantos cartões físicos são
+                    usados hoje por pessoa e escolhe uma meta de digitalização em percentual.
+                    A ferramenta calcula cartões evitados,
+                    plástico reduzido e CO₂e estimado.
+                </p>
+                <div class="home-actions">
+                    <a href="/impacto" class="home-btn home-btn-inverse">ABRIR CALCULADORA</a>
+                </div>
+            </div>
+
+            <div class="calc-box" aria-label="Exemplo de cálculo da calculadora">
+                <div class="scenario-header">
+                    <span>Exemplo de cenário</span>
+                    <strong>Meta: 100% digital</strong>
+                </div>
+
+                <div class="scenario-list">
+                    <div class="scenario-row">
+                        <span>Colaboradores</span>
+                        <strong>1.000</strong>
+                    </div>
+                    <div class="scenario-row">
+                        <span>Cartões físicos por colaborador</span>
+                        <strong>4</strong>
+                    </div>
+                    <div class="scenario-row">
+                        <span>Cartões físicos no cenário digital</span>
+                        <strong>0</strong>
+                    </div>
+                </div>
+
+                <div class="result-strip">
+                    <div class="result">
+                        <strong>4.000</strong>
+                        <span>cartões evitados</span>
+                    </div>
+                    <div class="result">
+                        <strong>600kg</strong>
+                        <span>CO₂e evitado</span>
+                    </div>
+                    <div class="result">
+                        <strong>20kg</strong>
+                        <span>plástico evitado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="como-funciona" class="section">
+        <div class="section-heading">
+            <p class="section-kicker">Jornada de adoção</p>
+            <h2 class="section-title">Do cartão físico ao <span>ecossistema digital</span></h2>
+            <p class="section-text">
+                A proposta não é apenas trocar um meio de pagamento. É criar uma jornada
+                progressiva para reduzir dependência de plástico, melhorar a operação e
+                apoiar metas de sustentabilidade.
+            </p>
+        </div>
+
+        <div class="steps">
+            <article class="step">
+                <h3>Diagnosticar</h3>
+                <p>Mapear colaboradores, benefícios ofertados e cartões físicos emitidos por pessoa.</p>
+            </article>
+            <article class="step">
+                <h3>Calcular</h3>
+                <p>Converter cartões evitados em CO₂e, plástico e equivalências compreensíveis.</p>
+            </article>
+            <article class="step">
+                <h3>Migrar</h3>
+                <p>Priorizar transações eletrônicas, carteiras digitais e modelos multibenefícios.</p>
+            </article>
+            <article class="step">
+                <h3>Reportar</h3>
+                <p>Usar os resultados como evidência para RH, financeiro, ESG e comunicação interna.</p>
+            </article>
+        </div>
+    </section>
+
+    <section id="fontes" class="section">
+        <div class="section-heading">
+            <p class="section-kicker">Transparência</p>
+            <h2 class="section-title">A origem dos <span>dados e métricas</span> utilizadas</h2>
+            <p class="section-text">
+                Todos os cálculos baseiam-se em referências da indústria para garantir a precisão do impacto reportado e fortalecer sua comunicação ESG.
+            </p>
+        </div>
+
+        <div class="proof">
+            <article class="proof-card">
+                <h3>Banco Central Holandês</h3>
+                <p>
+                    Avaliação do impacto ambiental de pagamentos com cartões, considerando emissão, logística e descarte de materiais.<br><br>
+                    <a href="https://www.dnb.nl/media/a3sk2oob/574-evaluating-the-environmental-impact-of-debit-card-payments.pdf" target="_blank" style="color: var(--eden-green); font-weight: 700; text-decoration: underline;">Visualizar Documento (PDF)</a>
+                </p>
+            </article>
+
+            <article class="proof-card">
+                <h3>Riksbank</h3>
+                <p>
+                    Relatório climático que aborda as metas e os cenários para transações financeiras mais limpas e digitais.<br><br>
+                    <a href="https://www.riksbank.se/globalassets/media/rapporter/klimatrapport/2025/klimatrapport-pdf/the-riksbanks-climate-report-2025.pdf" target="_blank" style="color: var(--eden-green); font-weight: 700; text-decoration: underline;">Visualizar Documento (PDF)</a>
+                </p>
+            </article>
+
+            <article class="proof-card">
+                <h3>Documento Técnico JCB</h3>
+                <p>
+                    Artigo detalhando inovações na indústria de pagamentos para redução da pegada de carbono de plásticos físicos.<br><br>
+                    <a href="https://www.acnnewswire.com/docs/files/JCB_White_Paper_20240214.pdf" target="_blank" style="color: var(--eden-green); font-weight: 700; text-decoration: underline;">Visualizar Documento (PDF)</a>
+                </p>
+            </article>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Plante uma nova forma de gerir benefícios.</h2>
+        <p>
+            Com o Projeto Eden, cada gestor consegue visualizar o impacto de reduzir cartões
+            físicos e acelerar a adoção de transações eletrônicas na empresa.
+        </p>
+        <a href="/impacto" class="home-btn">COMEÇAR AGORA</a>
+    </section>
+
+    <div class="home-bg-art home-bg-art-top" aria-hidden="true">
+        <div class="home-bg-circle home-top-dark"></div>
+        <div class="home-bg-circle home-top-medium"></div>
+        <div class="home-bg-circle home-top-light"></div>
     </div>
 
-    <!-- Fundo decorativo inferior esquerdo -->
-    <div class="bg-art bg-art-bottom" aria-hidden="true">
-        <div class="bg-circle bottom-back"></div>
-        <div class="bg-circle bottom-middle"></div>
-        <div class="bg-circle bottom-front"></div>
-        <div class="bg-circle bottom-detail"></div>
+    <div class="home-bg-art home-bg-art-bottom" aria-hidden="true">
+        <div class="home-bg-circle home-bottom-back"></div>
+        <div class="home-bg-circle home-bottom-middle"></div>
+        <div class="home-bg-circle home-bottom-front"></div>
+        <div class="home-bg-circle home-bottom-detail"></div>
+    </div>
+
+    <div class="home-bg-art home-bg-art-bottom-2" aria-hidden="true">
+        <div class="home-bg-circle home-bottom-2-back"></div>
+        <div class="home-bg-circle home-bottom-2-middle"></div>
+        <div class="home-bg-circle home-bottom-2-front"></div>
+        <div class="home-bg-circle home-bottom-2-detail"></div>
+    </div>
+
+    <div class="home-bg-art home-bg-art-left-mid" aria-hidden="true">
+        <div class="home-bg-circle home-left-mid-back"></div>
+        <div class="home-bg-circle home-left-mid-front"></div>
+        <div class="home-bg-circle home-left-mid-detail"></div>
+    </div>
+
+    <div class="home-bg-art home-bg-art-mid" aria-hidden="true">
+        <div class="home-bg-circle home-mid-back"></div>
+        <div class="home-bg-circle home-mid-front"></div>
+        <div class="home-bg-circle home-mid-detail"></div>
     </div>
 </main>
+
+<script>
+    // Controle da barra superior (navbar) ao rolar a página
+    window.addEventListener('scroll', function() {
+        const topbar = document.querySelector('.home-topbar');
+        if (window.scrollY > 40) {
+            topbar.classList.add('scrolled');
+        } else {
+            topbar.classList.remove('scrolled');
+        }
+    });
+</script>
 </body>
 </html>

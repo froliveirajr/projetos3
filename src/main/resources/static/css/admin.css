@@ -1,0 +1,549 @@
+/* =========================
+   PÁGINA ADMIN PREMIUM (COMPACTA)
+========================= */
+.admin-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: var(--white);
+    overflow-x: hidden;
+}
+
+.topbar {
+    position: relative;
+    width: 100%;
+    padding: var(--space-2xl) var(--space-3xl);
+    z-index: var(--z-elevated);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar-right {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+.topbar-right span {
+    color: var(--color-primary-action) !important;
+    font-weight: 600;
+}
+
+.btn-logout-sm {
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-primary-action);
+    background: transparent;
+    color: var(--color-primary-action);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+/* Conteúdo */
+.admin-content {
+    position: relative;
+    z-index: var(--z-content);
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: var(--space-md) var(--space-4xl) 40px;
+}
+
+.admin-title {
+    font-size: var(--text-page-title);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--color-primary-action);
+    margin-bottom: var(--space-title-subtitle-less);
+    text-align: center;
+}
+
+.admin-title strong {
+    font-weight: 800;
+}
+
+.admin-subtitle {
+    font-size: 0.9rem;
+    color: var(--eden-body-text);
+    margin-bottom: var(--space-subtitle-content);
+    text-align: center;
+}
+
+/* Resumo do Dashboard */
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-4xl);
+}
+
+.summary-card {
+    background: transparent;
+    padding: var(--space-lg);
+    border: 1.5px solid var(--color-primary-action);
+    border-radius: 22px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.summary-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--color-card-body-text);
+    text-transform: uppercase;
+}
+
+.summary-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-highlight-green);
+}
+
+/* Formulário de Cadastro Compacto */
+.admin-form {
+    margin-bottom: var(--space-4xl);
+}
+
+.admin-form .section-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--eden-body-text);
+    margin-bottom: var(--space-lg);
+}
+
+.admin-form .section-title:not(:first-of-type) {
+    margin-top: var(--space-subtitle-content);
+}
+
+.form-row {
+    display: flex;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: var(--space-sm);
+}
+
+.form-field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--eden-body-text);
+}
+
+.form-field input[type="text"],
+.form-field input[type="number"],
+.form-field input[type="password"],
+.form-field select {
+    width: 100%;
+    padding: var(--space-lg) var(--space-xl);
+    border-radius: 30px;
+    border: 1px solid var(--color-primary-action);
+    background: var(--white);
+    outline: none;
+    color: var(--eden-body-text);
+    font-size: 0.95rem;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    border-color: var(--color-highlight-green);
+}
+
+.form-field input[type="text"]:not(:placeholder-shown),
+.form-field input[type="number"]:not(:placeholder-shown),
+.form-field input[type="password"]:not(:placeholder-shown) {
+    background: var(--color-forest-soft-text);
+}
+
+.form-field input:-webkit-autofill,
+.form-field input:-webkit-autofill:hover,
+.form-field input:-webkit-autofill:focus {
+    border-color: var(--color-highlight-green);
+    -webkit-text-fill-color: var(--eden-body-text);
+    -webkit-box-shadow: 0 0 0 1000px var(--color-forest-soft-text) inset;
+    box-shadow: 0 0 0 1000px var(--color-forest-soft-text) inset;
+}
+
+.form-field .hint {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.7rem;
+    color: var(--color-muted);
+}
+
+.form-field .hint::before {
+    content: "ⓘ";
+    color: var(--color-icon-info);
+    font-size: 0.75rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* Checkbox */
+.checkbox-field {
+    flex-direction: row !important;
+    align-items: center;
+    gap: var(--space-sm) !important;
+    margin-top: var(--space-xl);
+}
+
+/* Tabela Elegante */
+.empresas-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-surface-muted);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.empresas-table th {
+    background: var(--color-forest);
+    color: var(--white);
+    padding: var(--space-md);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    text-align: left;
+}
+
+.empresas-table td {
+    padding: var(--space-md);
+    font-size: 0.8rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+
+/* =========================
+   FUNDO DECORATIVO (MESMO DA HOME/IMPACTO/SIMULACAO)
+========================= */
+.home-bg-art {
+    position: absolute;
+    pointer-events: none;
+    z-index: var(--z-base);
+}
+
+.home-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+}
+
+.admin-page .home-bg-art-left-mid {
+    top: -120px;
+    right: -160px;
+    left: auto;
+    width: 560px;
+    height: 560px;
+}
+
+.admin-page .home-bg-art-left-side {
+    top: 50%;
+    left: -300px;
+    transform: translateY(-50%);
+    width: 560px;
+    height: 560px;
+}
+
+.admin-page .home-left-mid-back {
+    width: 460px;
+    height: 460px;
+    background: var(--eden-sand-90);
+    left: 0;
+    top: 0;
+}
+
+.admin-page .home-left-mid-front {
+    width: 320px;
+    height: 320px;
+    background: var(--eden-leaf-18);
+    left: 120px;
+    top: 150px;
+}
+
+.admin-page .home-left-mid-detail {
+    width: 140px;
+    height: 140px;
+    background: var(--eden-red-14);
+    left: 330px;
+    top: 90px;
+}
+
+.btn-remover {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xs);
+    background: transparent;
+    color: var(--color-piora-strong);
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.btn-remover:hover {
+    opacity: 0.7;
+}
+
+.btn-remover svg {
+    flex-shrink: 0;
+}
+
+/* =========================
+   PAINEL: BLOCOS DE SEÇÃO
+========================= */
+.section-block-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--eden-body-text);
+    margin-bottom: var(--space-md);
+}
+
+.section-block-subtitle {
+    font-size: 0.9rem;
+    color: var(--eden-body-text);
+    margin-bottom: var(--space-subtitle-content);
+}
+
+.section-block-subtitle.has-info {
+    margin-bottom: var(--space-xs);
+}
+
+.section-block-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    margin: 0 0 var(--space-subtitle-content);
+}
+
+.section-block-info .info-icon {
+    color: var(--color-icon-info);
+    font-size: 0.8rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* =========================
+   OPORTUNIDADES QUALIFICADAS
+========================= */
+.oportunidades-section {
+    margin-bottom: var(--space-4xl);
+}
+
+.oportunidades-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.oportunidade-card {
+    padding: var(--space-lg) var(--space-xl);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--white);
+}
+
+.oportunidade-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+}
+
+.oportunidade-header h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--color-primary-action);
+}
+
+.oportunidade-prioridade {
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-pill);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.oportunidade-prioridade-alta {
+    background: var(--color-piora-bg);
+    color: var(--white);
+}
+
+.oportunidade-prioridade-media {
+    background: var(--color-warning-label);
+    color: var(--color-piora-strong);
+}
+
+.oportunidade-prioridade-baixa {
+    background: var(--color-border);
+    color: var(--color-muted);
+}
+
+.oportunidade-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.oportunidade-meta strong {
+    color: var(--eden-body-text);
+}
+
+.oportunidade-recomendacao,
+.oportunidade-impacto {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--eden-body-text);
+}
+
+.oportunidade-recomendacao {
+    margin-bottom: var(--space-xs);
+}
+
+/* =========================
+   HISTOGRAMA DE DIGITALIZAÇÃO
+========================= */
+.histograma-section {
+    margin-bottom: var(--space-4xl);
+}
+
+.histograma {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-lg);
+    height: 200px;
+    padding: var(--space-md) var(--space-md) 0;
+}
+
+.histograma-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.histograma-count {
+    font-weight: 800;
+    color: var(--color-primary-action);
+    margin-bottom: var(--space-xs);
+}
+
+.histograma-fill {
+    width: 100%;
+    background: var(--color-primary-action);
+    border-radius: 8px 8px 0 0;
+    min-height: 4px;
+    transition: height 0.4s ease;
+}
+
+.histograma-label {
+    margin-top: var(--space-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-muted);
+}
+
+/* =========================
+   EMPRESAS CADASTRADAS
+========================= */
+.empresas-section {
+    margin-bottom: var(--space-4xl);
+}
+
+.cadastrar-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-subtitle-content);
+}
+
+.btn-cadastrar {
+    padding: var(--space-lg) 36px;
+    background: var(--color-primary-action);
+    color: var(--white);
+    border-radius: var(--radius-pill);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    transition: transform 0.2s ease;
+}
+
+.btn-cadastrar:hover {
+    transform: translateY(-2px);
+}
+
+.empty-msg {
+    padding: var(--space-xl);
+    text-align: center;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+}
+
+/* =========================
+   MENSAGENS
+========================= */
+.msg-sucesso {
+    padding: var(--space-md) var(--space-lg);
+    border-radius: 8px;
+    background: var(--color-success-bg);
+    color: var(--color-success);
+    border: 1px solid var(--color-success-border);
+    margin-bottom: var(--space-xl);
+    font-size: 0.9rem;
+}
+
+.msg-erro {
+    padding: var(--space-md) var(--space-lg);
+    border-radius: 8px;
+    background: var(--color-danger-bg);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger-border);
+    margin-bottom: var(--space-xl);
+    font-size: 0.9rem;
+}
+
+/* =========================
+   PÁGINA DE CADASTRO
+========================= */
+.link-voltar-admin {
+    display: inline-block;
+    color: var(--color-primary-action);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: var(--space-lg);
+}
+
+.link-voltar-admin:hover {
+    text-decoration: underline;
+}

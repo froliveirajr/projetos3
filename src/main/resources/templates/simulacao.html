@@ -10,218 +10,312 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/impacto.css">
-    <link rel="stylesheet" href="/css/simulacao.css"> </head>
+    <link rel="stylesheet" href="/css/simulacao.css?v=2">
+</head>
 <body>
 <main class="simulacao-page">
+    <div class="home-bg-art home-bg-art-left-mid" aria-hidden="true">
+        <div class="home-bg-circle home-left-mid-back"></div>
+        <div class="home-bg-circle home-left-mid-front"></div>
+        <div class="home-bg-circle home-left-mid-detail"></div>
+    </div>
     <header class="topbar">
-        <a href="/" class="brand">Eden</a> 
+        <a href="/" class="brand brand-logo" aria-label="Eden">
+            <img src="/images/eden-logo.png" alt="Eden">
+        </a>
+        <div class="topbar-right">
+            <span style="font-size: 0.8rem;" th:text="${nomeEmpresa}">Empresa</span>
+            <a href="/logout" class="btn-logout-sm">SAIR</a>
+        </div>
     </header>
 
-    <section class="sim-content">
-        <h1 class="sim-title">Simule a <strong>adoção</strong> de benefícios <strong>digitais</strong></h1>
-        <p class="sim-subtitle">Ajuste o nível de digitalização para visualizar como o impacto ambiental muda.</p>
+    <th:block th:replace="~{fragments/breadcrumb :: progress(2)}"></th:block>
 
-        <div class="terrain-container">
-            <svg viewBox="0 0 500 250" width="100%" height="auto">
-                <polygon points="120,130 250,110 400,120 440,160 280,190 90,160" fill="#91C392" />
-                <polygon points="90,160 280,190 280,210 90,180" fill="#75B077" />
-                <polygon points="280,190 440,160 440,180 280,210" fill="#629A64" />
-                <polygon points="120,130 90,160 90,180 120,150" fill="#629A64" />
-                <polygon points="400,120 440,160 440,180 400,140" fill="#508351" />
-
-                <g class="arvore-svg" style="transform-origin: 180px 140px;">
-                    <rect x="178" y="140" width="4" height="20" fill="#4A3424"/>
-                    <circle cx="180" cy="130" r="15" fill="#13741A"/>
-                    <circle cx="170" cy="125" r="10" fill="#1A9A24"/>
-                    <circle cx="190" cy="128" r="12" fill="#0D5413"/>
-                </g>
-                <g class="arvore-svg" style="transform-origin: 250px 120px;">
-                    <rect x="248" y="120" width="4" height="25" fill="#4A3424"/>
-                    <circle cx="250" cy="105" r="18" fill="#1A9A24"/>
-                    <circle cx="238" cy="100" r="12" fill="#13741A"/>
-                    <circle cx="262" cy="108" r="14" fill="#0D5413"/>
-                </g>
-                <g class="arvore-svg" style="transform-origin: 320px 135px;">
-                    <rect x="318" y="135" width="4" height="18" fill="#4A3424"/>
-                    <circle cx="320" cy="125" r="14" fill="#13741A"/>
-                </g>
-                <g class="arvore-svg" style="transform-origin: 380px 150px;">
-                    <rect x="378" y="150" width="4" height="22" fill="#4A3424"/>
-                    <circle cx="380" cy="135" r="16" fill="#1A9A24"/>
-                    <circle cx="370" cy="130" r="10" fill="#13741A"/>
-                </g>
-                <g class="arvore-svg" style="transform-origin: 210px 165px;">
-                    <rect x="208" y="165" width="5" height="20" fill="#4A3424"/>
-                    <circle cx="210" cy="150" r="17" fill="#13741A"/>
-                </g>
-                <g class="arvore-svg" style="transform-origin: 290px 170px;">
-                    <rect x="288" y="170" width="4" height="15" fill="#4A3424"/>
-                    <circle cx="290" cy="160" r="12" fill="#1A9A24"/>
-                </g>
-                <g class="arvore-svg" style="transform-origin: 130px 150px;">
-                    <rect x="128" y="150" width="3" height="15" fill="#4A3424"/>
-                    <circle cx="130" cy="140" r="11" fill="#13741A"/>
-                </g>
-            </svg>
+    <section class="sim-content" id="sim-container">
+        <div class="sim-header">
+            <h1 class="sim-title">Simule a adoção de <strong>benefícios digitais</strong></h1>
+            <p class="sim-subtitle">Compare o seu nível atual (<strong th:text="${#numbers.formatDecimal(digitalAtual, 1, 0) + '%'}">20%</strong>) com o cenário alvo e veja como o impacto ambiental muda </p>
         </div>
 
-        <div class="slider-wrapper">
-            <label>Nível de digitalização desejada para <strong><span th:text="${nomeEmpresa}">Sua empresa</span></strong></label>
-            <div class="slider-track">
-                <span>0</span>
-                <input type="range" id="sim-slider" class="sim-slider" min="0" max="100" value="0">
-                <span>100%</span>
-            </div>
-        </div>
+        <div class="main-layout">
+            <div class="terrain-side">
+                <div class="terrain-container" id="terrain-figma">
+                    <!-- Terreno Isométrico Estilo Figma -->
+                    <svg viewBox="0 0 500 245" width="100%" height="auto">
+                        <!-- Base do Terreno -->
+                        <path class="terrain-base" d="M100,150 L250,80 L400,150 L250,220 Z" fill="#91C392" />
+                        <path class="terrain-side-left" d="M100,150 L250,220 L250,240 L100,170 Z" fill="#76A877" />
+                        <path class="terrain-side-right" d="M250,220 L400,150 L400,170 L250,240 Z" fill="#5D8F5E" />
 
-        <div id="results-box" class="results-box">
-            <div class="cards-row">
-                <div class="dark-card">
-                    <p class="label">Emissões reduzidas</p>
-                    <h2 class="value" id="val-co2">0 kg CO2</h2>
-                    <p class="sub">por ano</p>
+                        <!-- Árvores Espalhadas por Todo o Terreno -->
+                        <g id="grp-trees">
+                            <g class="arvore-svg" style="transform-origin: 150px 140px;"><rect x="148" y="140" width="4" height="20" fill="#4A3424"/><circle cx="150" cy="125" r="16" fill="#13741A"/></g>
+                            <g class="arvore-svg" style="transform-origin: 180px 120px;"><rect x="178" y="120" width="4" height="18" fill="#4A3424"/><circle cx="180" cy="105" r="14" fill="#1A9A24"/></g>
+                            <g class="arvore-svg" style="transform-origin: 220px 105px;"><rect x="218" y="105" width="4" height="22" fill="#4A3424"/><circle cx="220" cy="90" r="17" fill="#13741A"/></g>
+                            <g class="arvore-svg" style="transform-origin: 260px 100px;"><rect x="258" y="100" width="4" height="20" fill="#4A3424"/><circle cx="260" cy="85" r="15" fill="#1A9A24"/></g>
+                            <g class="arvore-svg" style="transform-origin: 300px 110px;"><rect x="298" y="110" width="4" height="24" fill="#4A3424"/><circle cx="300" cy="95" r="18" fill="#13741A"/></g>
+                            <g class="arvore-svg" style="transform-origin: 340px 130px;"><rect x="338" y="130" width="4" height="20" fill="#4A3424"/><circle cx="340" cy="115" r="15" fill="#1A9A24"/></g>
+                            <g class="arvore-svg" style="transform-origin: 190px 160px;"><rect x="188" y="160" width="4" height="22" fill="#4A3424"/><circle cx="190" cy="145" r="16" fill="#13741A"/></g>
+                            <g class="arvore-svg" style="transform-origin: 230px 140px;"><rect x="228" y="140" width="4" height="20" fill="#4A3424"/><circle cx="230" cy="125" r="15" fill="#1A9A24"/></g>
+                            <g class="arvore-svg" style="transform-origin: 270px 140px;"><rect x="268" y="140" width="4" height="24" fill="#4A3424"/><circle cx="270" cy="125" r="18" fill="#13741A"/></g>
+                            <g class="arvore-svg" style="transform-origin: 320px 160px;"><rect x="318" y="160" width="4" height="20" fill="#4A3424"/><circle cx="320" cy="145" r="16" fill="#13741A"/></g>
+                            <g class="arvore-svg" style="transform-origin: 240px 180px;"><rect x="238" y="180" width="4" height="22" fill="#4A3424"/><circle cx="240" cy="165" r="17" fill="#1A9A24"/></g>
+                            <g class="arvore-svg" style="transform-origin: 280px 175px;"><rect x="278" y="175" width="4" height="20" fill="#4A3424"/><circle cx="280" cy="160" r="15" fill="#13741A"/></g>
+                        </g>
+                    </svg>
                 </div>
-                <div class="dark-card">
-                    <p class="label">Resíduos Evitados</p>
-                    <h2 class="value" id="val-residuos">0 kg</h2>
-                    <p class="sub">por ano</p>
-                </div>
-                <div class="dark-card">
-                    <p class="label">Emissões logísticas evitadas</p>
-                    <h2 class="value" id="val-logistica">0 Kg CO2</h2>
-                    <p class="sub">por ano</p>
+
+                <div class="slider-section">
+                    <div class="slider-track">
+                        <span>0%</span>
+                        <input type="range" id="sim-slider" class="sim-slider" min="0" max="100" th:value="${digitalAtual}">
+                        <span id="slider-valor" th:text="${#numbers.formatDecimal(digitalAtual, 1, 0) + '%'}">0%</span>
+                    </div>
                 </div>
             </div>
-            
-            <div class="cards-row" style="max-width: 550px; margin: 0 auto;">
-                <div class="dark-card">
-                    <p class="label">Plástico evitado</p>
-                    <h2 class="value" id="val-plastico">0 kg</h2>
-                    <p class="sub">por ano</p>
+
+            <div class="results-side">
+                <!-- Grade de Cards Estilo Figma (2 em cima, 3 embaixo) -->
+                <div class="results-grid-figma row-top">
+                    <div class="dark-card">
+                        <p class="label" id="lbl-co2">Emissões reduzidas</p>
+                        <h2 class="value" id="val-co2">0 kg</h2>
+                        <span class="sub-label">por ano</span>
+                    </div>
+                    <div class="dark-card">
+                        <p class="label" id="lbl-residuos">Resíduos evitados</p>
+                        <h2 class="value" id="val-residuos">0 kg</h2>
+                        <span class="sub-label">por ano</span>
+                    </div>
                 </div>
-                <div class="dark-card">
-                    <p class="label">Papel evitado</p>
-                    <h2 class="value" id="val-papel">0 kg</h2>
-                    <p class="sub">por ano</p>
+                <div class="results-grid-figma">
+                    <div class="dark-card">
+                        <p class="label" id="lbl-co2-log">Emissões logísticas</p>
+                        <h2 class="value" id="val-co2-log">0 kg</h2>
+                        <span class="sub-label">por ano</span>
+                    </div>
+                    <div class="dark-card">
+                        <p class="label" id="lbl-plastico">Plástico evitado</p>
+                        <h2 class="value" id="val-plastico">0 kg</h2>
+                        <span class="sub-label">por ano</span>
+                    </div>
+                    <div class="dark-card">
+                        <p class="label" id="lbl-papel">Papel evitado</p>
+                        <h2 class="value" id="val-papel">0 kg</h2>
+                        <span class="sub-label">por ano</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="equivalency-box" class="equivalency-box">
-            <p class="equivalency-title">Esse impacto <strong>equivale</strong> a:</p>
-            
-            <div class="equiv-item">
-                <svg class="equiv-icon" viewBox="0 0 100 100">
-                    <circle cx="50" cy="40" r="25" fill="#1A9A24"/>
-                    <rect x="45" y="60" width="10" height="30" fill="#4A3424"/>
-                    <circle cx="25" cy="60" r="15" fill="#13741A"/>
-                    <rect x="22" y="70" width="6" height="20" fill="#4A3424"/>
-                    <circle cx="75" cy="55" r="18" fill="#0D5413"/>
-                    <rect x="71" y="70" width="8" height="20" fill="#4A3424"/>
-                </svg>
-                <span>Plantar <span id="val-arvores">0</span> árvores</span>
+        <div class="extra-info">
+            <p class="equiv-title" id="equiv-intro">Esse impacto <strong>equivale</strong> a:</p>
+            <div class="equiv-box-stacked">
+                <div class="equiv-item" id="item-tree">
+                    <div class="equiv-icons">
+                        <svg class="equiv-icon equiv-tree" viewBox="0 0 100 100"><circle class="tree-foliage" cx="50" cy="40" r="25"/><rect class="tree-trunk" x="45" y="60" width="10" height="30"/></svg>
+                        <svg class="equiv-icon equiv-tree" viewBox="0 0 100 100"><circle class="tree-foliage" cx="50" cy="40" r="25"/><rect class="tree-trunk" x="45" y="60" width="10" height="30"/></svg>
+                        <svg class="equiv-icon equiv-tree" viewBox="0 0 100 100"><circle class="tree-foliage" cx="50" cy="40" r="25"/><rect class="tree-trunk" x="45" y="60" width="10" height="30"/></svg>
+                    </div>
+                    <span class="equiv-text"><span id="val-arvores">0</span> <span id="lbl-arvores-txt">plantar árvores</span></span>
+                </div>
+                <div class="equiv-item" id="item-car">
+                    <div class="equiv-icons">
+                        <svg class="equiv-icon equiv-car" viewBox="0 0 100 100">
+                            <circle class="smoke-particle" cx="20" cy="40" r="5" />
+                            <path class="car-body" d="M20 50 L30 35 L70 35 L80 50 L90 50 L90 70 L10 70 L10 50 Z"/>
+                            <circle cx="25" cy="70" r="12" fill="#333"/><circle cx="75" cy="70" r="12" fill="#333"/>
+                        </svg>
+                        <svg class="equiv-icon equiv-car" viewBox="0 0 100 100">
+                            <circle class="smoke-particle" cx="20" cy="40" r="5" />
+                            <path class="car-body" d="M20 50 L30 35 L70 35 L80 50 L90 50 L90 70 L10 70 L10 50 Z"/>
+                            <circle cx="25" cy="70" r="12" fill="#333"/><circle cx="75" cy="70" r="12" fill="#333"/>
+                        </svg>
+                        <svg class="equiv-icon equiv-car" viewBox="0 0 100 100">
+                            <circle class="smoke-particle" cx="20" cy="40" r="5" />
+                            <path class="car-body" d="M20 50 L30 35 L70 35 L80 50 L90 50 L90 70 L10 70 L10 50 Z"/>
+                            <circle cx="25" cy="70" r="12" fill="#333"/><circle cx="75" cy="70" r="12" fill="#333"/>
+                        </svg>
+                    </div>
+                    <span class="equiv-text"><span id="lbl-carro-txt">1 carro fora da estrada</span> por <span id="val-meses">0</span> meses</span>
+                </div>
             </div>
+        </div>
 
-            <div class="equiv-item">
-                <svg class="equiv-icon" viewBox="0 0 100 100">
-                    <path d="M20 50 L30 35 L70 35 L80 50 L90 50 L90 70 L10 70 L10 50 Z" fill="#FFC107"/>
-                    <rect x="35" y="40" width="30" height="10" fill="#fff" opacity="0.8"/>
-                    <circle cx="25" cy="70" r="12" fill="#333"/>
-                    <circle cx="75" cy="70" r="12" fill="#333"/>
-                </svg>
-                <span>1 carro fora da estrada por <span id="val-carros">0</span> meses</span>
+        <!-- Tabela Comparativa Figma Centralizada na Página -->
+        <div class="comparison-table-container" id="comparison-table" style="display: none;">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Indicador</th>
+                        <th>Cenário Atual</th>
+                        <th>Cenário Simulado</th>
+                        <th>Comparativo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Emissões de CO₂</td>
+                        <td id="tab-co2-atual">0 kg</td>
+                        <td id="tab-co2-sim">0 kg</td>
+                        <td id="tab-co2-diff">0 kg</td>
+                    </tr>
+                    <tr>
+                        <td>Plástico utilizado</td>
+                        <td id="tab-plas-atual">0 kg</td>
+                        <td id="tab-plas-sim">0 kg</td>
+                        <td id="tab-plas-diff">0 kg</td>
+                    </tr>
+                    <tr>
+                        <td>Papel utilizado</td>
+                        <td id="tab-papel-atual">0 kg</td>
+                        <td id="tab-papel-sim">0 kg</td>
+                        <td id="tab-papel-diff">0 kg</td>
+                    </tr>
+                    <tr>
+                        <td>Emissões logísticas</td>
+                        <td id="tab-log-atual">0 kg</td>
+                        <td id="tab-log-sim">0 kg</td>
+                        <td id="tab-log-diff">0 kg</td>
+                    </tr>
+                    <tr>
+                        <td>Resíduos gerados</td>
+                        <td id="tab-res-atual">0 kg</td>
+                        <td id="tab-res-sim">0 kg</td>
+                        <td id="tab-res-diff">0 kg</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="studies-note" style="margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; font-size: 0.75rem; color: #aaa; text-align: center;">
+            <p>Os cálculos são fundamentados em metodologias de LCA (Life Cycle Assessment) reportadas por instituições como:</p>
+            <div style="margin-top: 10px;">
+                <a href="https://www.dnb.nl/media/a3sk2oob/574-evaluating-the-environmental-impact-of-debit-card-payments.pdf" target="_blank" style="color: var(--green-light); text-decoration: underline; margin: 0 10px;">Banco Central Holandês (DNB)</a> |
+                <a href="https://www.riksbank.se/globalassets/media/rapporter/klimatrapport/2025/klimatrapport-pdf/the-riksbanks-climate-report-2025.pdf" target="_blank" style="color: var(--green-light); text-decoration: underline; margin: 0 10px;">Riksbank</a> |
+                <a href="https://www.acnnewswire.com/docs/files/JCB_White_Paper_20240214.pdf" target="_blank" style="color: var(--green-light); text-decoration: underline; margin: 0 10px;">JCB</a>
             </div>
         </div>
     </section>
-
-    <div class="bg-art bg-art-top" aria-hidden="true">
-        <div class="bg-circle top-dark"></div>
-        <div class="bg-circle top-medium"></div>
-        <div class="bg-circle top-light"></div>
-    </div>
-        <!-- Fundo decorativo superior direito -->
-    <div class="bg-art bg-art-top" aria-hidden="true">
-        <div class="bg-circle top-dark"></div>
-        <div class="bg-circle top-medium"></div>
-        <div class="bg-circle top-light"></div>
-    </div>
-
-    <!-- Fundo decorativo inferior esquerdo -->
-    <div class="bg-art bg-art-bottom" aria-hidden="true">
-        <div class="bg-circle bottom-back"></div>
-        <div class="bg-circle bottom-middle"></div>
-        <div class="bg-circle bottom-front"></div>
-        <div class="bg-circle bottom-detail"></div>
-    </div>
 </main>
 
 <script th:inline="javascript">
-    const colabBase = /*[[${colaboradores}]]*/ 0;
-    const distBase = /*[[${distanciaEntrega}]]*/ 0;
-
+    const digitalAtual = /*[[${digitalAtual}]]*/ 0;
     const slider = document.getElementById('sim-slider');
+    const sliderValor = document.getElementById('slider-valor');
+    const simContainer = document.getElementById('sim-container');
     const arvoresSVG = document.querySelectorAll('.arvore-svg');
-    const resultsBox = document.getElementById('results-box');
-    const equivBox = document.getElementById('equivalency-box');
 
     async function buscarSimulacao(porcentagem) {
         const formData = new URLSearchParams();
-        formData.append('colaboradores', colabBase);
-        formData.append('distanciaEntrega', distBase);
         formData.append('porcentagemAlvo', porcentagem);
-
         try {
-            const resposta = await fetch('/simular-ajax', {
-                method: 'POST',
-                body: formData
-            });
-
+            const resposta = await fetch('/simular-ajax', { method: 'POST', body: formData });
             if (resposta.ok) {
                 const dados = await resposta.json();
-                if(!dados.erro) {
-                    document.getElementById('val-co2').textContent = dados.co2 + ' CO2';
-                    document.getElementById('val-residuos').textContent = dados.residuos;
-                    document.getElementById('val-logistica').innerHTML = dados.logistica + ' CO<sub>2</sub>';
-                    document.getElementById('val-plastico').textContent = dados.plastico;
-                    document.getElementById('val-papel').textContent = dados.papel;
-                    
-                    document.getElementById('val-arvores').textContent = dados.arvores;
-                    document.getElementById('val-carros').textContent = dados.carros;
+                
+                if (dados.piorou) {
+                    simContainer.classList.add('piorou');
+                    document.querySelector('.terrain-base').setAttribute('fill', '#D2B48C'); // Marrom
+                    document.querySelector('.terrain-side-left').setAttribute('fill', '#A68A64');
+                    document.querySelector('.terrain-side-right').setAttribute('fill', '#8B6B40');
+
+                    // Labels Negativos
+                    document.getElementById('lbl-co2').textContent = "Aumento de emissões";
+                    document.getElementById('lbl-residuos').textContent = "Aumento de resíduos";
+                    document.getElementById('lbl-co2-log').textContent = "Aumento de emissões log.";
+                    document.getElementById('lbl-plastico').textContent = "Aumento de plástico";
+                    document.getElementById('lbl-papel').textContent = "Aumento de papel";
+                    document.getElementById('equiv-intro').innerHTML = "Esse impacto <strong>adicional</strong> equivale a:";
+                    document.getElementById('lbl-arvores-txt').textContent = "árvores perdidas";
+                    document.getElementById('lbl-carro-txt').textContent = "1 carro a mais na estrada";
+                } else {
+                    simContainer.classList.remove('piorou');
+                    document.querySelector('.terrain-base').setAttribute('fill', '#91C392'); // Verde
+                    document.querySelector('.terrain-side-left').setAttribute('fill', '#76A877');
+                    document.querySelector('.terrain-side-right').setAttribute('fill', '#5D8F5E');
+
+                    // Labels Positivos
+                    document.getElementById('lbl-co2').textContent = "Emissões reduzidas";
+                    document.getElementById('lbl-residuos').textContent = "Resíduos evitados";
+                    document.getElementById('lbl-co2-log').textContent = "Emissões logísticas evitadas";
+                    document.getElementById('lbl-plastico').textContent = "Plástico evitado";
+                    document.getElementById('lbl-papel').textContent = "Papel evitado";
+                    document.getElementById('equiv-intro').innerHTML = "Esse impacto <strong>equivale</strong> a:";
+                    document.getElementById('lbl-arvores-txt').textContent = "plantar árvores";
+                    document.getElementById('lbl-carro-txt').textContent = "1 carro fora da estrada";
                 }
+
+                // Valores nos Cards
+                document.getElementById('val-co2').textContent = dados.co2;
+                document.getElementById('val-residuos').textContent = dados.residuos;
+                document.getElementById('val-co2-log').textContent = dados.co2Transacional;
+                document.getElementById('val-plastico').textContent = dados.plastico;
+                document.getElementById('val-papel').textContent = dados.papel;
+                document.getElementById('val-arvores').textContent = dados.arvores;
+                document.getElementById('val-meses').textContent = Math.ceil(dados.km / 1000); // Ex: 1000km = 1 mês
+                
+                // Valores reais enviados do backend
+                document.getElementById('tab-co2-atual').textContent = dados.tabCo2Atual;
+                document.getElementById('tab-co2-sim').textContent = dados.tabCo2Sim;
+                document.getElementById('tab-co2-diff').textContent = (dados.piorou ? "+" : "-") + dados.co2;
+                
+                document.getElementById('tab-plas-atual').textContent = dados.tabPlasAtual;
+                document.getElementById('tab-plas-sim').textContent = dados.tabPlasSim;
+                document.getElementById('tab-plas-diff').textContent = (dados.piorou ? "+" : "-") + dados.plastico;
+                
+                document.getElementById('tab-papel-atual').textContent = dados.tabPapelAtual;
+                document.getElementById('tab-papel-sim').textContent = dados.tabPapelSim;
+                document.getElementById('tab-papel-diff').textContent = (dados.piorou ? "+" : "-") + dados.papel;
+
+                document.getElementById('tab-res-atual').textContent = dados.tabResAtual;
+                document.getElementById('tab-res-sim').textContent = dados.tabResSim;
+                document.getElementById('tab-res-diff').textContent = (dados.piorou ? "+" : "-") + dados.residuos;
+
+                document.getElementById('tab-log-atual').textContent = dados.tabLogAtual;
+                document.getElementById('tab-log-sim').textContent = dados.tabLogSim;
+                document.getElementById('tab-log-diff').textContent = (dados.piorou ? "+" : "-") + dados.co2Transacional;
             }
-        } catch (error) {
-            console.error("Erro ao simular:", error);
-        }
+        } catch (error) { console.error(error); }
     }
 
-    slider.addEventListener('input', (e) => {
-        const val = parseInt(e.target.value);
+    function atualizarArvores(porcentagemAlvo) {
+        const total = arvoresSVG.length;
+        const arvoresIniciais = Math.ceil((digitalAtual / 100) * total);
+        const arvoresAlvo = Math.ceil((porcentagemAlvo / 100) * total);
 
-        if (val > 0) {
-            resultsBox.style.display = 'block';
-            equivBox.style.display = 'block';
-            setTimeout(() => { resultsBox.style.opacity = '1'; }, 10);
+        arvoresSVG.forEach((tree, i) => {
+            tree.classList.remove('visivel', 'fallen');
+            
+            if (i < arvoresAlvo) {
+                // Árvores que ficam em pé no novo cenário
+                tree.classList.add('visivel');
+            } else if (i < arvoresIniciais) {
+                // Árvores que existiam mas o usuário "removeu" (caem)
+                tree.classList.add('visivel', 'fallen');
+            }
+            // Árvores i >= arvoresIniciais e i >= arvoresAlvo ficam invisíveis
+        });
+    }
+
+    slider.addEventListener('input', function(e) {
+        const val = parseInt(e.target.value);
+        sliderValor.textContent = val + '%';
+
+        atualizarArvores(val);
+
+        document.getElementById('comparison-table').style.display = 'block';
+
+        if (val != digitalAtual) {
             buscarSimulacao(val);
         } else {
-            resultsBox.style.opacity = '0';
-            setTimeout(() => { 
-                resultsBox.style.display = 'none'; 
-                equivBox.style.display = 'none';
-            }, 500);
+            simContainer.classList.remove('piorou');
         }
-
-        const totalArvores = arvoresSVG.length;
-        const arvoresAtivas = Math.ceil((val / 100) * totalArvores);
-
-        arvoresSVG.forEach((arvore, index) => {
-            if (index < arvoresAtivas) {
-                arvore.classList.add('visivel');
-            } else {
-                arvore.classList.remove('visivel');
-            }
-        });
     });
+
+    window.onload = () => {
+        atualizarArvores(digitalAtual);
+    };
 </script>
 </body>
 </html>

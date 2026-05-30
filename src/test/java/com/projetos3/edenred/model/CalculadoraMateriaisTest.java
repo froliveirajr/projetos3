@@ -7,8 +7,9 @@ public class CalculadoraMateriaisTest {
 
     @Test
     public void deveriaCalcularPlasticoCorretamente() {
+        // 10 cartões × 7.5 g = 75 g
         double resultado = CalculadoraMateriais.calcularPlastico(10);
-        assertEquals(50.0, resultado);
+        assertEquals(75.0, resultado);
     }
 
     @Test
@@ -18,10 +19,13 @@ public class CalculadoraMateriaisTest {
     }
 
     @Test
-    public void deveriaCalcularLogisticaComSucesso() {
-        double resultado = CalculadoraMateriais.calcularLogistica(10, 100.0);
-        assertEquals(150.0, resultado);
+    public void deveriaCalcularPapelCorretamente() {
+        // 100 transações × 2 g = 200 g
+        double resultado = CalculadoraMateriais.calcularPapel(100);
+        assertEquals(200.0, resultado);
     }
+
+
 
     @Test
     public void deveriaFormatarParaGramas() {

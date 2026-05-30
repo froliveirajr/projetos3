@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav th:fragment="progress(activeStep)" class="progress-breadcrumb" aria-label="Etapas da jornada">
+    <ol class="progress-steps">
+
+        <li class="progress-step"
+            th:classappend="${activeStep == 1 ? 'progress-step-active' : (activeStep > 1 ? 'progress-step-done' : 'progress-step-next')}"
+            th:attr="aria-current=${activeStep == 1 ? 'step' : null}">
+            <a th:if="${activeStep > 1}" href="/impacto" class="progress-link">
+                <span class="progress-marker">1</span>
+                <span class="progress-label">Visualizar impacto</span>
+            </a>
+            <th:block th:unless="${activeStep > 1}">
+                <span class="progress-marker">1</span>
+                <span class="progress-label">Visualizar impacto</span>
+            </th:block>
+        </li>
+
+        <li class="progress-step"
+            th:classappend="${activeStep == 2 ? 'progress-step-active' : (activeStep > 2 ? 'progress-step-done' : 'progress-step-next')}"
+            th:attr="aria-current=${activeStep == 2 ? 'step' : null}, aria-disabled=${activeStep < 2 ? 'true' : null}">
+            <a th:if="${activeStep > 2}" href="/simulacao" class="progress-link">
+                <span class="progress-marker">2</span>
+                <span class="progress-label">Simular digitalização</span>
+            </a>
+            <th:block th:unless="${activeStep > 2}">
+                <span class="progress-marker">2</span>
+                <span class="progress-label">Simular digitalização</span>
+            </th:block>
+        </li>
+
+        <li class="progress-step"
+            th:classappend="${activeStep == 3 ? 'progress-step-active' : 'progress-step-next'}"
+            th:attr="aria-current=${activeStep == 3 ? 'step' : null}, aria-disabled=${activeStep < 3 ? 'true' : null}">
+            <span class="progress-marker">3</span>
+            <span class="progress-label">Exportar documento</span>
+        </li>
+
+    </ol>
+</nav>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Empresa - Painel Edenred</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/admin.css?v=2">
+</head>
+<body>
+<main class="admin-page">
+
+    <div class="home-bg-art home-bg-art-left-mid" aria-hidden="true">
+        <div class="home-bg-circle home-left-mid-back"></div>
+        <div class="home-bg-circle home-left-mid-front"></div>
+        <div class="home-bg-circle home-left-mid-detail"></div>
+    </div>
+
+    <div class="home-bg-art home-bg-art-left-side" aria-hidden="true">
+        <div class="home-bg-circle home-left-mid-back"></div>
+        <div class="home-bg-circle home-left-mid-front"></div>
+        <div class="home-bg-circle home-left-mid-detail"></div>
+    </div>
+
+    <header class="topbar">
+        <a href="/admin" class="brand brand-logo" aria-label="Eden">
+            <img src="/images/eden-logo.png" alt="Eden">
+        </a>
+        <div class="topbar-right">
+            <span style="font-size: 0.85rem;">Painel Administrativo</span>
+            <a href="/logout" class="btn-logout-sm">SAIR</a>
+        </div>
+    </header>
+
+    <section class="admin-content">
+        <a href="/admin" class="link-voltar-admin">&lt; Voltar para o painel</a>
+
+        <h1 class="admin-title">Cadastrar <strong>Empresa</strong></h1>
+        <p class="admin-subtitle">Preencha os dados da empresa cliente para habilitar o acesso à calculadora de impacto.</p>
+
+        <div th:if="${erro}" class="msg-erro" th:text="${erro}"></div>
+
+        <form class="admin-form" action="/admin/cadastrar" method="POST">
+
+            <h3 class="section-title">Dados da Empresa</h3>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="nome">Nome da empresa</label>
+                    <input type="text" id="nome" name="nome" placeholder="Ex: Tech Solutions Ltda" required>
+                </div>
+                <div class="form-field">
+                    <label for="cnpj">CNPJ</label>
+                    <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="senha">Senha de acesso</label>
+                    <input type="text" id="senha" name="senha" placeholder="Senha para a empresa" required>
+                    <span class="hint">A empresa usará esta senha + CNPJ para fazer login</span>
+                </div>
+                <div class="form-field">
+                    <label for="colaboradores">Nº de colaboradores</label>
+                    <input type="number" id="colaboradores" name="colaboradores" min="1" placeholder="1000" required>
+                </div>
+            </div>
+
+            <h3 class="section-title">Dados dos Benefícios</h3>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="numeroBeneficios">Quantos tipos de benefício?</label>
+                    <input type="number" id="numeroBeneficios" name="numeroBeneficios" min="1" max="10" placeholder="4" required>
+                    <span class="hint">Ex: VA, VR, VT, combustível = 4 benefícios</span>
+                </div>
+                <div class="form-field checkbox-field">
+                    <input type="checkbox" id="multibeneficio" name="multibeneficio" value="true">
+                    <label for="multibeneficio">Usa cartão multibenefícios? (1 cartão para todos)</label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="transacoesMensais">Transações mensais por colaborador</label>
+                    <input type="number" id="transacoesMensais" name="transacoesMensais" min="1" max="50" value="13" required>
+                    <span class="hint">Média de uso do cartão por mês (sugestão: 10 a 22)</span>
+                </div>
+                <div class="form-field">
+                    <label for="vidaUtilCartaoAnos">Vida útil do cartão (anos)</label>
+                    <input type="number" id="vidaUtilCartaoAnos" name="vidaUtilCartaoAnos" min="0.5" max="10" step="0.5" value="3.5" required>
+                </div>
+            </div>
+
+            <h3 class="section-title">Taxas Anuais (para cálculo ESG)</h3>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="taxaTurnover">Taxa de turnover anual</label>
+                    <input type="number" id="taxaTurnover" name="taxaTurnover" min="0" max="1" step="0.01" value="0.20" required>
+                    <span class="hint">Ex: 0.20 = 20% dos colaboradores saem por ano</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="taxaReemissao">Taxa de reemissão anual</label>
+                    <input type="number" id="taxaReemissao" name="taxaReemissao" min="0" max="1" step="0.01" value="0.05" required>
+                    <span class="hint">Ex: 0.05 = 5% de 2ª via</span>
+                </div>
+                <div class="form-field">
+                    <label for="porcentagemDigitalAtual">Nível Digital Atual (%)</label>
+                    <input type="number" id="porcentagemDigitalAtual" name="porcentagemDigitalAtual" min="0" max="100" placeholder="15" required>
+                    <span class="hint">Quanto a empresa já usa de digital hoje?</span>
+                </div>
+            </div>
+
+            <div class="cadastrar-cta">
+                <button type="submit" class="btn-cadastrar">CADASTRAR EMPRESA</button>
+            </div>
+        </form>
+    </section>
+</main>
+
+<script>
+    const cnpjInput = document.getElementById('cnpj');
+    cnpjInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 14) value = value.slice(0, 14);
+
+        if (value.length > 12) {
+            value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, '$1.$2.$3/$4-$5');
+        } else if (value.length > 8) {
+            value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*/, '$1.$2.$3/$4');
+        } else if (value.length > 5) {
+            value = value.replace(/^(\d{2})(\d{3})(\d{0,3}).*/, '$1.$2.$3');
+        } else if (value.length > 2) {
+            value = value.replace(/^(\d{2})(\d{0,3}).*/, '$1.$2');
+        }
+        e.target.value = value;
+    });
+</script>
+</body>
+</html>

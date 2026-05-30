@@ -11,281 +11,85 @@
 
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/impacto.css">
-
-    <style>
-        .impact-page {
-            min-height: 100vh !important;
-            height: auto !important;
-            overflow-y: auto !important;
-            padding-bottom: 100px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-section {
-            flex: 1;
-            z-index: 2;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 14px 36px;
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
-            border-radius: 50px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: none;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background-color: #009A3F;
-            color: #ffffff;
-            box-shadow: 0 4px 6px rgba(0, 154, 63, 0.2);
-        }
-
-        .btn-primary:hover {
-            background-color: #007A33;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 154, 63, 0.3);
-        }
-
-        .mensagem-alerta {
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .bg-art {
-            z-index: 1;
-            pointer-events: none;
-        }
-    </style>
 </head>
 <body>
 <main class="impact-page">
     <header class="topbar">
-        <a href="/" class="brand">Eden</a> 
+        <a href="/" class="brand brand-logo" aria-label="Eden">
+            <img src="/images/eden-logo.png" alt="Eden">
+        </a>
+        <div class="topbar-right">
+            <span style="font-size: 0.8rem;" th:text="${nomeEmpresa}">Empresa</span>
+            <a href="/logout" class="btn-logout-sm">SAIR</a>
+        </div>
     </header>
 
-    <section class="form-section">
+    <th:block th:replace="~{fragments/breadcrumb :: progress(1)}"></th:block>
+
+    <section class="form-section" id="impacto-container">
         <div class="form-header">
-            <h1 class="title">Impacto ambiental <span>atual</span></h1>
-            <p class="subtitle">Preencha os dados abaixo para visualizar o impacto ambiental da sua empresa hoje</p>
+            <h1 class="title">Impacto Ambiental <span>Atual</span></h1>
+            <p class="subtitle">Dados baseados no nível digital atual de <strong id="txt-digital">0%</strong></p>
         </div>
 
-        <form class="impact-form" action="/calcular-emissoes" method="POST">
-            <fieldset class="form-group">
-                <legend class="group-title">Dados da sua empresa</legend>
-                <div class="input-row">
-                    <div class="input-box">
-                        <label for="nomeEmpresa">Nome da sua empresa</label>
-                        <input type="text" id="nomeEmpresa" name="nomeEmpresa" placeholder="Eden Inc." required>
-                    </div>
-                    <div class="input-box">
-                        <label for="cnpj">CNPJ</label>
-                        <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required>
-                    </div>
-                </div>
-            </fieldset>
+        <div class="empresa-info">
+            <div class="info-grid">
+                <div class="info-item"><p class="info-label">Colaboradores</p><p class="info-value" th:text="${colaboradores}">0</p></div>
+                <div class="info-item"><p class="info-label">Benefícios</p><p class="info-value" th:text="${numeroBeneficios}">0</p></div>
+                <div class="info-item"><p class="info-label">Tipo</p><p class="info-value" th:text="${multibeneficio ? 'Multi' : 'Separado'}">-</p></div>
+                <div class="info-item"><p class="info-label">Total Cartões</p><p class="info-value" th:text="${totalCartoes}">0</p></div>
+            </div>
+        </div>
 
-            <fieldset class="form-group">
-                <legend class="group-title">Dados dos Benefícios</legend>
-                
-                <div class="control-box">
-                    <label for="colaboradores">Quantos colaboradores recebem benefício?</label>
-                    <div class="slider-container">
-                        <span>0</span>
-                        <input type="range" id="colaboradores" name="colaboradores" min="0" max="10000" value="0">
-                        <span id="valorColaboradores">0</span>
-                    </div>
-                </div>
+        <div class="results-grid">
+            <div class="result-card"><p class="card-label">CO₂ Emitido</p><h2 class="card-value" id="res-co2">...</h2><p class="card-subtext">por ciclo de vida</p></div>
+            <div class="result-card"><p class="card-label">Plástico</p><h2 class="value card-value" id="res-plastico">...</h2><p class="card-subtext">em cartões físicos</p></div>
+            <div class="result-card"><p class="card-label">Emissões Logísticas</p><h2 class="card-value" id="res-logistica">...</h2><p class="card-subtext">na entrega dos cartões</p></div>
+        </div>
 
-                <div class="control-box">
-                    <label>Selecione os benefícios dos colaboradores</label>
-                    <div class="pills-container">
-                        <button type="button" class="pill">VALE ALIMENTAÇÃO</button>
-                        <button type="button" class="pill">VALE REFEIÇÃO</button>
-                        <button type="button" class="pill">VALE TRANSPORTE</button>
-                        <button type="button" class="pill-add">+</button>
-                    </div>
-                </div>
+        <div id="alert-banner" class="alert-banner" role="status"></div>
 
-                <div class="control-box">
-                    <label for="porcentagemDigitais">Qual a porcentagem de benefícios digitais hoje?</label>
-                    <div class="slider-container">
-                        <span>0%</span>
-                        <input type="range" id="porcentagemDigitais" name="porcentagemDigitais" min="0" max="100" value="0">
-                        <span id="valorPorcentagem">0%</span>
-                    </div>
-                </div>
-
-                <div class="control-box">
-                    <label for="distanciaEntrega">Distância média de entrega (km)</label>
-                    <div class="slider-container">
-                        <span>0 km</span>
-                        <input type="range" id="distanciaEntrega" name="distanciaEntrega" min="0" max="1000" value="0">
-                        <span id="valorDistancia">0 km</span>
-                    </div>
-                </div>
-
-                <div th:if="${mensagemErro}" class="mensagem-alerta erro" th:text="${mensagemErro}"></div>
-                <div th:if="${mensagemSucesso}" class="mensagem-alerta sucesso" th:text="${mensagemSucesso}"></div>
-
-                <div id="result-container" style="display: none; opacity: 0; transition: opacity 0.5s ease; margin-top: 40px;">
-                    <div class="results-grid">
-                        <div class="result-card">
-                            <p class="card-label">CO2 emitido</p>
-                            <h2 class="card-value" id="res-co2">0 g</h2>
-                            <p class="card-subtext">por ano</p>
-                        </div>
-                        <div class="result-card">
-                            <p class="card-label">Plástico utilizado</p>
-                            <h2 class="card-value" id="res-plastico">0 g</h2>
-                            <p class="card-subtext">por ano</p>
-                        </div>
-                        <div class="result-card">
-                            <p class="card-label">Emissões logísticas</p>
-                            <h2 class="card-value" id="res-logistica">0 g</h2>
-                            <p class="card-subtext">por ano</p>
-                        </div>
-                    </div>
-
-                    <div class="actions" style="margin-top: 32px; text-align: center;">
-                        <button type="button" class="btn btn-dark" onclick="irParaSimulacao()">SIMULAR ADESÃO AO DIGITAL</button>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
+        <div class="actions">
+            <a href="/simulacao" class="btn btn-dark">SIMULAR MELHORIAS</a>
+        </div>
     </section>
 
-    <div class="bg-art bg-art-top" aria-hidden="true">
-        <div class="bg-circle top-dark"></div>
-        <div class="bg-circle top-medium"></div>
-        <div class="bg-circle top-light"></div>
-    </div>
-
-    <div class="bg-art bg-art-bottom" aria-hidden="true">
-        <div class="bg-circle bottom-back"></div>
-        <div class="bg-circle bottom-middle"></div>
-        <div class="bg-circle bottom-front"></div>
-        <div class="bg-circle bottom-detail"></div>
+    <div class="home-bg-art home-bg-art-left-mid" aria-hidden="true">
+        <div class="home-bg-circle home-left-mid-back"></div>
+        <div class="home-bg-circle home-left-mid-front"></div>
+        <div class="home-bg-circle home-left-mid-detail"></div>
     </div>
 </main>
 
 <script>
-    const resultContainer = document.getElementById('result-container');
-    
-    const sliderColab = document.getElementById('colaboradores');
-    const valorColab = document.getElementById('valorColaboradores');
-    const sliderDistancia = document.getElementById('distanciaEntrega');
-    const valorDistancia = document.getElementById('valorDistancia');
-    const sliderPorcentagem = document.getElementById('porcentagemDigitais');
-    const valorPorcent = document.getElementById('valorPorcentagem');
+    async function calcularImpacto() {
+        try {
+            const resposta = await fetch('/calcular-ajax', { method: 'POST' });
+            if (resposta.ok) {
+                const dados = await resposta.json();
+                
+                document.getElementById('res-co2').textContent = dados.co2;
+                document.getElementById('res-plastico').textContent = dados.plastico;
+                document.getElementById('res-logistica').textContent = dados.co2Transporte;
+                const digitalAtual = Number.parseFloat(dados.digitalAtual);
+                document.getElementById('txt-digital').textContent = Number.isInteger(digitalAtual) ? digitalAtual + "%" : dados.digitalAtual + "%";
 
-    async function atualizarCalculos() {
-        const c = parseInt(sliderColab.value);
-        const d = parseInt(sliderDistancia.value);
-        const p = parseInt(sliderPorcentagem.value);
-
-        // SÓ MOSTRA OS RESULTADOS SE TODOS OS SLIDERS FOREM MAIORES QUE ZERO
-        if (c > 0 && d > 0 && p > 0) {
-            const formData = new URLSearchParams();
-            formData.append('colaboradores', c);
-            formData.append('distanciaEntrega', d);
-            formData.append('porcentagemDigitais', p);
-
-            try {
-                const resposta = await fetch('/calcular-ajax', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (resposta.ok) {
-                    const dados = await resposta.json();
-                    
-                    if(!dados.erro) {
-                        document.getElementById('res-co2').textContent = dados.co2;
-                        document.getElementById('res-plastico').textContent = dados.plastico;
-                        document.getElementById('res-logistica').innerHTML = dados.logistica + ' CO<sub>2</sub>';
-                        
-                        // Faz os cards e o botão aparecerem
-                        if (resultContainer.style.display === 'none' || resultContainer.style.display === '') {
-                            resultContainer.style.display = 'block';
-                            setTimeout(() => { resultContainer.style.opacity = '1'; }, 50);
-                        }
-                    }
+                const alertBanner = document.getElementById('alert-banner');
+                alertBanner.style.display = 'block';
+                if (dados.condicaoRuim === "true") {
+                    document.getElementById('impacto-container').classList.add('condicao-ruim');
+                    alertBanner.classList.add('alert-bad');
+                    alertBanner.classList.remove('alert-good');
+                    alertBanner.textContent = '⚠ Nível de digitalização baixo! Sua empresa possui um impacto ambiental elevado.';
+                } else {
+                    alertBanner.classList.add('alert-good');
+                    alertBanner.classList.remove('alert-bad');
+                    alertBanner.textContent = 'Nível de digitalização alto. Sua empresa possui um impacto ambiental reduzido.';
                 }
-            } catch (error) {
-                console.error("Erro na comunicação com o backend", error);
             }
-        } else {
-            // Se algum slider voltar para 0, esconde a área de resultados suavemente
-            resultContainer.style.opacity = '0';
-            setTimeout(() => { 
-                if (resultContainer.style.opacity === '0') {
-                    resultContainer.style.display = 'none'; 
-                }
-            }, 500);
-        }
+        } catch (error) { console.error(error); }
     }
-
-    sliderColab.addEventListener('input', (e) => {
-        const valor = parseInt(e.target.value);
-        valorColab.textContent = valor.toLocaleString('pt-BR');
-        atualizarCalculos();
-    });
-
-    sliderDistancia.addEventListener('input', (e) => {
-        const valor = parseInt(e.target.value);
-        valorDistancia.textContent = valor.toLocaleString('pt-BR') + ' km';
-        atualizarCalculos();
-    });
-
-    sliderPorcentagem.addEventListener('input', (e) => {
-        valorPorcent.textContent = e.target.value + '%';
-        atualizarCalculos();
-    });
-
-    const pills = document.querySelectorAll('.pill, .pill-add');
-    pills.forEach(pill => {
-        pill.addEventListener('click', function() {
-            this.classList.toggle('selecionada');
-            atualizarCalculos();
-        });
-    });
-
-    const inputsTexto = document.querySelectorAll('input[type="text"]');
-    inputsTexto.forEach(input => {
-        input.addEventListener('input', atualizarCalculos);
-    });
-
-    function irParaSimulacao() {
-        const form = document.querySelector('.impact-form');
-        
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return; 
-        }
-
-        const beneficiosSelecionados = document.querySelectorAll('.pill.selecionada, .pill-add.selecionada');
-        if (beneficiosSelecionados.length === 0) {
-            alert("Por favor, selecione pelo menos um tipo de benefício antes de simular.");
-            return;
-        }
-
-        const nome = document.getElementById('nomeEmpresa').value;
-        const colab = document.getElementById('colaboradores').value;
-        const dist = document.getElementById('distanciaEntrega').value;
-        const porc = document.getElementById('porcentagemDigitais').value;
-        
-        window.location.href = `/simulacao?nomeEmpresa=${encodeURIComponent(nome)}&colaboradores=${colab}&distanciaEntrega=${dist}&porcentagemDigitais=${porc}`;
-    }
+    calcularImpacto();
 </script>
 </body>
 </html>
