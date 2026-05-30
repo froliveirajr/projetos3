@@ -10,37 +10,37 @@ import jakarta.persistence.Table;
 public class Empresa {
 
     @Id
-    @Column(nullable = false, length = 18)
+    @Column(name = "cnpj", nullable = false, length = 18)
     private String cnpj;
 
-    @Column(nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column(name = "senha", nullable = false)
     private String senha;
 
-    @Column(nullable = false)
+    @Column(name = "colaboradores", nullable = false)
     private int colaboradores;
 
-    @Column(nullable = false)
+    @Column(name = "numero_beneficios", nullable = false)
     private int numeroBeneficios;
 
-    @Column(nullable = false)
+    @Column(name = "multibeneficio", nullable = false)
     private boolean multibeneficio;
 
-    @Column(nullable = false)
+    @Column(name = "vida_util_cartao_anos", nullable = false)
     private double vidaUtilCartaoAnos;
 
-    @Column(nullable = false)
+    @Column(name = "taxa_turnover", nullable = false)
     private double taxaTurnover;
 
-    @Column(nullable = false)
+    @Column(name = "taxa_reemissao", nullable = false)
     private double taxaReemissao;
 
-    @Column(nullable = false)
+    @Column(name = "transacoes_mensais", nullable = false)
     private int transacoesMensais;
 
-    @Column(nullable = false)
+    @Column(name = "porcentagem_digital_atual", nullable = false)
     private double porcentagemDigitalAtual;
 
     public Empresa() {

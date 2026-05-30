@@ -7,6 +7,7 @@ O projeto esta preparado para usar Supabase como banco PostgreSQL e uma hospedag
 Principais arquivos:
 
 - `.env.example`: variaveis esperadas para Supabase, admin e deploy.
+- `supabase/migrations`: schema versionado para a integracao Supabase + GitHub.
 - `Dockerfile`: build da aplicacao Spring Boot para hospedagens Docker.
 - `render.yaml`: configuracao opcional para deploy na Render.
 

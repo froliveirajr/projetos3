@@ -15,7 +15,7 @@ services:
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
         value: org.postgresql.Driver
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
+        value: validate
       - key: APP_ADMIN_CNPJ
         sync: false
       - key: APP_ADMIN_SENHA

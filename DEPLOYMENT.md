@@ -5,14 +5,19 @@ Este projeto esta preparado para usar Supabase como banco PostgreSQL e publicar 
 ## 1. Supabase
 
 1. Crie um projeto no Supabase.
-2. Abra **Project Settings > Database > Connection string**.
-3. Copie a connection string no formato **JDBC**. Ela deve ficar parecida com:
+2. Abra **Project Settings > Integrations**.
+3. Em **GitHub Integration**, clique em **Authorize GitHub**.
+4. Escolha o repositorio `froliveirajr/projetos3`.
+5. Em **Working directory**, use `.` porque a pasta `supabase/` esta na raiz do repositorio.
+6. Habilite a integracao. As migrations em `supabase/migrations/` serao usadas para criar/atualizar o schema.
+7. Abra **Project Settings > Database > Connection string**.
+8. Copie a connection string no formato **JDBC**. Ela deve ficar parecida com:
 
 ```text
 jdbc:postgresql://aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require
 ```
 
-4. Guarde tambem o usuario, normalmente `postgres.<project-ref>`, e a senha do banco.
+9. Guarde tambem o usuario, normalmente `postgres.<project-ref>`, e a senha do banco.
 
 ## 2. Variaveis de ambiente
 
@@ -23,7 +28,7 @@ SPRING_DATASOURCE_URL=jdbc:postgresql://.../postgres?sslmode=require
 SPRING_DATASOURCE_USERNAME=postgres.SEUPROJECTREF
 SPRING_DATASOURCE_PASSWORD=SENHA_DO_SUPABASE
 SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
-SPRING_JPA_HIBERNATE_DDL_AUTO=update
+SPRING_JPA_HIBERNATE_DDL_AUTO=validate
 APP_ADMIN_CNPJ=00.000.000/0001-00
 APP_ADMIN_SENHA=uma-senha-forte
 APP_SEED_DEMO_DATA=false
@@ -45,6 +50,14 @@ Na Render:
 2. Escolha ambiente **Docker**.
 3. Configure as variaveis acima.
 4. Depois do deploy, adicione o dominio customizado `edencalc.app`.
+
+### Sobre Vercel
+
+A Vercel e excelente para frontend e funcoes serverless, mas este projeto hoje e uma aplicacao Spring Boot/Thymeleaf que precisa rodar como servidor Java. Para usar Vercel sem reescrever o app, o caminho mais seguro e:
+
+- backend Spring Boot em Render/Railway/Fly.io, usando Supabase como banco;
+- Vercel apenas para um frontend separado, se no futuro o projeto for migrado para Next.js/React;
+- `edencalc.app` apontando para o frontend e `api.edencalc.app` para o backend.
 
 ## 4. DNS no Name.com
 
