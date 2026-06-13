@@ -264,3 +264,7 @@ São relacionadas à melhoria de design system, funcionamento adequado das funci
 
 </table>
 </div>
+
+## Como Executar
+Para ver o passo a passo completo de como rodar este projeto, acesse o nosso [Guia de Execução](GUIA-DE-EXECUCAO.md).
+
