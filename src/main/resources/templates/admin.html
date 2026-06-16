@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/admin.css?v=2">
+    <link rel="stylesheet" href="/css/admin.css?v=3">
 </head>
 <body>
 <main class="admin-page">
@@ -67,13 +67,13 @@
         </div>
 
         <section class="relatorios-section">
-            <h2 class="section-block-title">Inteligencia Comercial de Digitalizacao</h2>
+            <h2 class="section-block-title">Inteligência Comercial de Digitalização</h2>
             <p class="section-block-subtitle">
-                Relatorios finais gerados pelos clientes, com a meta de digitalizacao escolhida e impactos estimados para abordagem comercial.
+                Relatórios finais gerados pelos clientes, com a meta de digitalização escolhida e impactos estimados para abordagem comercial.
             </p>
 
             <div th:if="${#lists.isEmpty(relatoriosRecentes)}" class="empty-msg">
-                Nenhum relatorio final foi gerado por clientes ainda.
+                Nenhum relatório final foi gerado por clientes ainda.
             </div>
 
             <div th:if="${!#lists.isEmpty(relatoriosRecentes)}" class="relatorios-grid">
@@ -87,25 +87,24 @@
                     </div>
                     <div class="relatorio-admin-meta">
                         <span>Atual: <strong th:text="${#numbers.formatDecimal(rel.digitalAtual, 1, 0) + '%'}">20%</strong></span>
-                        <span>Avanco: <strong th:text="${#numbers.formatDecimal(rel.ganhoDigital, 1, 0) + ' p.p.'}">80 p.p.</strong></span>
+                        <span>Avanço: <strong th:text="${#numbers.formatDecimal(rel.ganhoDigital, 1, 0) + ' p.p.'}">80 p.p.</strong></span>
                         <span>CNPJ: <strong th:text="${rel.empresaCnpj}">00.000.000/0000-00</strong></span>
                     </div>
                     <div class="relatorio-admin-impactos">
-                        <span><strong th:text="${rel.cartoesAfetados}">0</strong> cartoes</span>
-                        <span><strong th:text="${rel.co2Cartoes}">0 kg</strong> CO2 cartoes</span>
-                        <span><strong th:text="${rel.residuos}">0 kg</strong> residuos</span>
-                        <span><strong th:text="${rel.arvoresEquivalentes}">0</strong> arvores</span>
+                        <span><strong th:text="${rel.cartoesAfetados}">0</strong> cartões</span>
+                        <span><strong th:text="${rel.co2Cartoes}">0 kg</strong> CO2 cartões</span>
+                        <span><strong th:text="${rel.residuos}">0 kg</strong> resíduos</span>
+                        <span><strong th:text="${rel.arvoresEquivalentes}">0</strong> árvores</span>
                     </div>
                     <p class="relatorio-admin-action">
-                        Sugestao: priorizar contato comercial com proposta de aumento para
+                        Sugestão: priorizar contato comercial com proposta de aumento para
                         <strong th:text="${#numbers.formatDecimal(rel.digitalEscolhido, 1, 0) + '%'}">100%</strong>
-                        de digitalizacao.
+                        de digitalização.
                     </p>
                 </article>
             </div>
         </section>
 
-        <!-- Oportunidades qualificadas -->
         <section class="oportunidades-section">
             <h2 class="section-block-title">Oportunidades Qualificadas</h2>
             <p class="section-block-subtitle has-info">Top 5 empresas com maior potencial de cross-sell, ordenadas por score</p>
@@ -165,7 +164,7 @@
         <!-- Botão de cadastro + tabela de empresas -->
         <section class="empresas-section">
             <h2 class="section-block-title">Empresas Cadastradas</h2>
-            <p class="section-block-subtitle">Lista das empresas registradas no sistema da Edenred.</p>
+            <p class="section-block-subtitle">Lista das empresas registradas no sistema da Edenred, incluindo novas prospecções salvas durante visitas.</p>
 
             <div th:if="${#lists.isEmpty(empresas)}" class="empty-msg">
                 Nenhuma empresa cadastrada ainda.
@@ -175,6 +174,7 @@
                 <thead>
                     <tr>
                         <th>Empresa</th>
+                        <th>Localidade</th>
                         <th>CNPJ</th>
                         <th>Colaboradores</th>
                         <th>Digital.</th>
@@ -185,7 +185,12 @@
                 </thead>
                 <tbody>
                     <tr th:each="emp : ${empresas}">
-                        <td th:text="${emp.nome}"></td>
+                        <td>
+                            <strong th:text="${emp.nome}"></strong>
+                            <div class="table-subinfo" th:if="${emp.nomeFantasia != null and !#strings.isEmpty(emp.nomeFantasia)}"
+                                 th:text="${emp.nomeFantasia}"></div>
+                        </td>
+                        <td th:text="${emp.localidadeResumo}"></td>
                         <td th:text="${emp.cnpj}"></td>
                         <td th:text="${emp.colaboradores}"></td>
                         <td th:text="${#numbers.formatDecimal(emp.porcentagemDigitalAtual, 1, 0) + '%'}"></td>
@@ -204,7 +209,7 @@
             </table>
 
             <div class="cadastrar-cta">
-                <a href="/admin/cadastrar" class="btn-cadastrar">CADASTRAR NOVA EMPRESA</a>
+                <a href="/admin/cadastrar" class="btn-cadastrar">INICIAR NOVA PROSPECÇÃO</a>
             </div>
         </section>
     </section>

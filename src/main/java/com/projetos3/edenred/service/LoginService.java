@@ -11,22 +11,17 @@ public class LoginService {
 
     private final String adminCnpj;
     private final String adminSenha;
-    private final String adminUsuarioProvisorio;
-    private final String adminSenhaProvisoria;
 
     public LoginService(@Value("${app.admin.cnpj}") String adminCnpj,
-                        @Value("${app.admin.senha}") String adminSenha,
-                        @Value("${app.admin.usuario-provisorio}") String adminUsuarioProvisorio,
-                        @Value("${app.admin.senha-provisoria}") String adminSenhaProvisoria) {
+                        @Value("${app.admin.senha}") String adminSenha) {
         this.adminCnpj = adminCnpj;
         this.adminSenha = adminSenha;
-        this.adminUsuarioProvisorio = adminUsuarioProvisorio;
-        this.adminSenhaProvisoria = adminSenhaProvisoria;
     }
 
     public boolean autenticarAdmin(String cnpj, String senha) {
-        return (adminCnpj.equals(cnpj) && adminSenha.equals(senha))
-                || (adminUsuarioProvisorio.equalsIgnoreCase(cnpj) && adminSenhaProvisoria.equals(senha));
+        String loginInformado = cnpj == null ? "" : cnpj.trim();
+        String senhaInformada = senha == null ? "" : senha.trim();
+        return adminCnpj.equals(loginInformado) && adminSenha.equals(senhaInformada);
     }
 
     public Empresa autenticarEmpresa(String cnpj, String senha) throws DadosEmpresaException {

@@ -1,33 +1,43 @@
 package com.projetos3.edenred.controller;
 
 import com.projetos3.edenred.model.CalculadoraCO2;
+import com.projetos3.edenred.model.CnpjEmpresaDados;
 import com.projetos3.edenred.model.DadosEmpresaException;
 import com.projetos3.edenred.model.Empresa;
 import com.projetos3.edenred.model.OportunidadeDTO;
 import com.projetos3.edenred.model.RelatorioDigitalizacao;
 import com.projetos3.edenred.repository.RelatorioDigitalizacaoRepository;
+import com.projetos3.edenred.service.CnpjConsultaService;
 import com.projetos3.edenred.service.EmpresaService;
+import jakarta.servlet.http.HttpSession;
+import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import jakarta.servlet.http.HttpSession;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class AdminController {
 
     private final EmpresaService empresaService;
     private final RelatorioDigitalizacaoRepository relatorioRepository;
+    private final CnpjConsultaService cnpjConsultaService;
 
     public AdminController(EmpresaService empresaService,
-                           RelatorioDigitalizacaoRepository relatorioRepository) {
+                           RelatorioDigitalizacaoRepository relatorioRepository,
+                           CnpjConsultaService cnpjConsultaService) {
         this.empresaService = empresaService;
         this.relatorioRepository = relatorioRepository;
+        this.cnpjConsultaService = cnpjConsultaService;
     }
 
     private boolean isAdmin(HttpSession session) {
@@ -45,11 +55,49 @@ public class AdminController {
     }
 
     @GetMapping("/admin/cadastrar")
-    public String telaCadastro(HttpSession session) {
+    public String telaCadastro(HttpSession session, Model model) {
         if (!isAdmin(session)) {
             return "redirect:/admin/login";
         }
+        popularParametrosPadrao(model);
+        popularFormularioCadastro(
+                model,
+                "", "", "", "", "", "", "", "", "", "",
+                0, 0, true,
+                empresaService.getTransacoesPadrao(),
+                empresaService.getVidaUtilPadrao(),
+                empresaService.getTurnoverPadrao(),
+                empresaService.getReemissaoPadrao(),
+                0
+        );
         return "admin-cadastro";
+    }
+
+    @GetMapping("/admin/cnpj-consulta")
+    @ResponseBody
+    public ResponseEntity<?> consultarCnpj(@RequestParam String cnpj, HttpSession session) {
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("erro", "Sessao administrativa expirada."));
+        }
+
+        try {
+            CnpjEmpresaDados dados = cnpjConsultaService.consultar(cnpj);
+            Map<String, Object> resposta = new LinkedHashMap<>();
+            resposta.put("cnpj", dados.cnpj());
+            resposta.put("razaoSocial", dados.razaoSocial());
+            resposta.put("nomeFantasia", dados.nomeFantasia());
+            resposta.put("cep", dados.cep());
+            resposta.put("logradouro", dados.logradouro());
+            resposta.put("numero", dados.numero());
+            resposta.put("bairro", dados.bairro());
+            resposta.put("cidade", dados.cidade());
+            resposta.put("uf", dados.uf());
+            resposta.put("situacaoCadastral", dados.situacaoCadastral());
+            return ResponseEntity.ok(resposta);
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            return ResponseEntity.badRequest().body(Map.of("erro", ex.getMessage()));
+        }
     }
 
     private void popularDadosAdmin(Model model) {
@@ -81,7 +129,11 @@ public class AdminController {
             histograma[bucket]++;
         }
         int histogramaMax = 0;
-        for (int v : histograma) if (v > histogramaMax) histogramaMax = v;
+        for (int v : histograma) {
+            if (v > histogramaMax) {
+                histogramaMax = v;
+            }
+        }
         model.addAttribute("histograma", histograma);
         model.addAttribute("histogramaMax", Math.max(histogramaMax, 1));
 
@@ -90,10 +142,64 @@ public class AdminController {
         model.addAttribute("totalRelatorios", relatorioRepository.count());
     }
 
+    private void popularParametrosPadrao(Model model) {
+        model.addAttribute("transacoesPadrao", empresaService.getTransacoesPadrao());
+        model.addAttribute("vidaUtilPadrao", empresaService.getVidaUtilPadrao());
+        model.addAttribute("turnoverPadrao", empresaService.getTurnoverPadrao());
+        model.addAttribute("reemissaoPadrao", empresaService.getReemissaoPadrao());
+    }
+
+    private void popularFormularioCadastro(Model model,
+                                           String cnpj,
+                                           String nome,
+                                           String nomeFantasia,
+                                           String cep,
+                                           String logradouro,
+                                           String numeroEndereco,
+                                           String bairro,
+                                           String cidade,
+                                           String uf,
+                                           String situacaoCadastral,
+                                           int colaboradores,
+                                           int numeroBeneficios,
+                                           boolean multibeneficio,
+                                           int transacoesMensais,
+                                           double vidaUtilCartaoAnos,
+                                           double taxaTurnover,
+                                           double taxaReemissao,
+                                           double porcentagemDigitalAtual) {
+        model.addAttribute("cnpj", cnpj);
+        model.addAttribute("nome", nome);
+        model.addAttribute("nomeFantasia", nomeFantasia);
+        model.addAttribute("cep", cep);
+        model.addAttribute("logradouro", logradouro);
+        model.addAttribute("numeroEndereco", numeroEndereco);
+        model.addAttribute("bairro", bairro);
+        model.addAttribute("cidade", cidade);
+        model.addAttribute("uf", uf);
+        model.addAttribute("situacaoCadastral", situacaoCadastral);
+        model.addAttribute("enderecoResumo", montarResumo(" - ", logradouro, numeroEndereco, bairro));
+        model.addAttribute("cidadeUfResumo", montarResumo(" / ", cidade, uf));
+        model.addAttribute("colaboradores", colaboradores > 0 ? colaboradores : null);
+        model.addAttribute("numeroBeneficios", numeroBeneficios > 0 ? numeroBeneficios : null);
+        model.addAttribute("multibeneficio", multibeneficio);
+        model.addAttribute("transacoesMensais", transacoesMensais);
+        model.addAttribute("vidaUtilCartaoAnos", vidaUtilCartaoAnos);
+        model.addAttribute("taxaTurnover", taxaTurnover);
+        model.addAttribute("taxaReemissao", taxaReemissao);
+        model.addAttribute("porcentagemDigitalAtual", porcentagemDigitalAtual);
+    }
+
+    private String montarResumo(String separador, String... valores) {
+        return java.util.Arrays.stream(valores)
+                .filter(valor -> valor != null && !valor.isBlank())
+                .collect(Collectors.joining(separador));
+    }
+
     private OportunidadeDTO montarOportunidade(Empresa e) {
         double lacunaDigital = 1 - e.getPorcentagemDigitalAtual() / 100.0;
         double bonus = (e.getNumeroBeneficios() < 3 ? 0.3 : 0)
-                     + (!e.isMultibeneficio() ? 0.2 : 0);
+                + (!e.isMultibeneficio() ? 0.2 : 0);
         double score = e.getColaboradores() * lacunaDigital * (1 + bonus);
 
         String recomendacao;
@@ -101,11 +207,11 @@ public class AdminController {
             recomendacao = "Migrar " + (int) Math.round(100 - e.getPorcentagemDigitalAtual())
                     + "% restantes para digital";
         } else if (!e.isMultibeneficio()) {
-            recomendacao = "Adotar cartão multibenefício";
+            recomendacao = "Adotar cartao multibeneficio";
         } else if (e.getNumeroBeneficios() < 3) {
-            recomendacao = "Expandir portfólio (atualmente " + e.getNumeroBeneficios() + " benefícios)";
+            recomendacao = "Expandir portfolio (atualmente " + e.getNumeroBeneficios() + " beneficios)";
         } else {
-            recomendacao = "Concluir migração para digital";
+            recomendacao = "Concluir migracao para digital";
         }
 
         int colabsMigrando = (int) (e.getColaboradores() * lacunaDigital);
@@ -125,15 +231,23 @@ public class AdminController {
     @PostMapping("/admin/cadastrar")
     public String cadastrarEmpresa(@RequestParam String cnpj,
                                    @RequestParam String nome,
-                                   @RequestParam String senha,
+                                   @RequestParam(required = false, defaultValue = "") String nomeFantasia,
+                                   @RequestParam(required = false, defaultValue = "") String cep,
+                                   @RequestParam(required = false, defaultValue = "") String logradouro,
+                                   @RequestParam(required = false, defaultValue = "") String numeroEndereco,
+                                   @RequestParam(required = false, defaultValue = "") String bairro,
+                                   @RequestParam(required = false, defaultValue = "") String cidade,
+                                   @RequestParam(required = false, defaultValue = "") String uf,
+                                   @RequestParam(required = false, defaultValue = "") String situacaoCadastral,
                                    @RequestParam int colaboradores,
                                    @RequestParam int numeroBeneficios,
                                    @RequestParam(required = false, defaultValue = "false") boolean multibeneficio,
+                                   @RequestParam int transacoesMensais,
                                    @RequestParam double vidaUtilCartaoAnos,
                                    @RequestParam double taxaTurnover,
                                    @RequestParam double taxaReemissao,
-                                   @RequestParam int transacoesMensais,
                                    @RequestParam double porcentagemDigitalAtual,
+                                   @RequestParam(defaultValue = "salvar") String acao,
                                    HttpSession session,
                                    Model model) {
 
@@ -142,15 +256,58 @@ public class AdminController {
         }
 
         try {
-            empresaService.cadastrarEmpresa(
-                    cnpj, nome, senha, colaboradores,
-                    numeroBeneficios, multibeneficio,
-                    vidaUtilCartaoAnos, taxaTurnover,
-                    taxaReemissao, transacoesMensais,
+            Empresa empresa = empresaService.salvarProspeccao(
+                    cnpj,
+                    nome,
+                    nomeFantasia,
+                    cep,
+                    logradouro,
+                    numeroEndereco,
+                    bairro,
+                    cidade,
+                    uf,
+                    situacaoCadastral,
+                    colaboradores,
+                    numeroBeneficios,
+                    multibeneficio,
+                    transacoesMensais,
+                    vidaUtilCartaoAnos,
+                    taxaTurnover,
+                    taxaReemissao,
                     porcentagemDigitalAtual
             );
-            return "redirect:/admin?cadastrado=" + java.net.URLEncoder.encode(nome, java.nio.charset.StandardCharsets.UTF_8);
+
+            if ("simular".equals(acao)) {
+                session.setAttribute("empresaLogada", empresa);
+                session.setAttribute("admin", true);
+                return "redirect:/impacto";
+            }
+
+            return "redirect:/admin?cadastrado="
+                    + java.net.URLEncoder.encode(nome, StandardCharsets.UTF_8);
         } catch (DadosEmpresaException e) {
+            popularParametrosPadrao(model);
+            popularFormularioCadastro(
+                    model,
+                    cnpj,
+                    nome,
+                    nomeFantasia,
+                    cep,
+                    logradouro,
+                    numeroEndereco,
+                    bairro,
+                    cidade,
+                    uf,
+                    situacaoCadastral,
+                    colaboradores,
+                    numeroBeneficios,
+                    multibeneficio,
+                    transacoesMensais,
+                    vidaUtilCartaoAnos,
+                    taxaTurnover,
+                    taxaReemissao,
+                    porcentagemDigitalAtual
+            );
             model.addAttribute("erro", e.getMessage());
             return "admin-cadastro";
         }

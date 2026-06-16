@@ -13,6 +13,14 @@ public class Empresa {
     private double taxaReemissao;       // R (ex: 0.05 = 5% ao ano)
     private int transacoesMensais;      // média de transações por colaborador por mês
     private double porcentagemDigitalAtual; // Novo campo: 0 a 100
+    private String nomeFantasia;
+    private String cep;
+    private String logradouro;
+    private String numeroEndereco;
+    private String bairro;
+    private String cidade;
+    private String uf;
+    private String situacaoCadastral;
 
     // Construtor vazio
     public Empresa() {
@@ -141,5 +149,102 @@ public class Empresa {
 
     public void setPorcentagemDigitalAtual(double porcentagemDigitalAtual) {
         this.porcentagemDigitalAtual = porcentagemDigitalAtual;
+    }
+
+    public String getNomeFantasia() {
+        return nomeFantasia;
+    }
+
+    public void setNomeFantasia(String nomeFantasia) {
+        this.nomeFantasia = nomeFantasia;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getLogradouro() {
+        return logradouro;
+    }
+
+    public void setLogradouro(String logradouro) {
+        this.logradouro = logradouro;
+    }
+
+    public String getNumeroEndereco() {
+        return numeroEndereco;
+    }
+
+    public void setNumeroEndereco(String numeroEndereco) {
+        this.numeroEndereco = numeroEndereco;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
+    public String getSituacaoCadastral() {
+        return situacaoCadastral;
+    }
+
+    public void setSituacaoCadastral(String situacaoCadastral) {
+        this.situacaoCadastral = situacaoCadastral;
+    }
+
+    public String getEnderecoResumo() {
+        StringBuilder endereco = new StringBuilder();
+        appendParte(endereco, logradouro);
+        appendParte(endereco, numeroEndereco);
+        appendParte(endereco, bairro);
+        appendParte(endereco, cidade);
+        appendParte(endereco, uf);
+        return endereco.toString();
+    }
+
+    public String getLocalidadeResumo() {
+        StringBuilder localidade = new StringBuilder();
+        appendParte(localidade, cidade);
+        if (uf != null && !uf.isBlank()) {
+            if (localidade.isEmpty()) {
+                localidade.append(uf);
+            } else {
+                localidade.append(" / ").append(uf);
+            }
+        }
+        return localidade.isEmpty() ? "-" : localidade.toString();
+    }
+
+    private void appendParte(StringBuilder builder, String valor) {
+        if (valor == null || valor.isBlank()) {
+            return;
+        }
+        if (!builder.isEmpty()) {
+            builder.append(" - ");
+        }
+        builder.append(valor);
     }
 }

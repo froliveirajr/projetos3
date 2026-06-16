@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Empresa - Painel Edenred</title>
+    <title>Nova Prospecção - Painel Edenred</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/admin.css?v=2">
+    <link rel="stylesheet" href="/css/admin.css?v=5">
 </head>
 <body>
 <main class="admin-page">
@@ -40,88 +40,171 @@
     <section class="admin-content">
         <a href="/admin" class="link-voltar-admin">&lt; Voltar para o painel</a>
 
-        <h1 class="admin-title">Cadastrar <strong>Empresa</strong></h1>
-        <p class="admin-subtitle">Preencha os dados da empresa cliente para habilitar o acesso à calculadora de impacto.</p>
+        <h1 class="admin-title">Nova <strong>Prospecção</strong></h1>
+        <p class="admin-subtitle">Consulte o CNPJ, confirme os dados do cliente e inicie a simulação em poucos passos.</p>
 
         <div th:if="${erro}" class="msg-erro" th:text="${erro}"></div>
 
-        <form class="admin-form" action="/admin/cadastrar" method="POST">
+        <form class="admin-form prospect-form" action="/admin/cadastrar" method="POST">
+            <h3 class="section-title">1. Consultar CNPJ</h3>
 
-            <h3 class="section-title">Dados da Empresa</h3>
+            <div class="form-row form-row-align-end">
+                <div class="form-field form-field-grow">
+                    <label for="cnpj">CNPJ da empresa</label>
+                    <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" th:value="${cnpj}" required>
+                </div>
+                <button type="button" class="btn-secondary-action" id="btn-consultar-cnpj">Buscar dados</button>
+            </div>
+
+            <div id="cnpj-feedback" class="lookup-feedback" hidden></div>
+
+            <section class="company-lookup-card" id="empresa-encontrada">
+                <div class="company-lookup-head">
+                    <div>
+                        <span class="company-lookup-label">Dados cadastrais</span>
+                        <h2 id="preview-razao-social" th:text="${nome != null and !#strings.isEmpty(nome) ? nome : 'Preencha o CNPJ para buscar a razão social'}">Preencha o CNPJ para buscar a razão social</h2>
+                        <p id="preview-situacao" th:text="${situacaoCadastral != null and !#strings.isEmpty(situacaoCadastral) ? 'Situação cadastral: ' + situacaoCadastral : 'Os campos abaixo continuam editáveis para ajuste rápido durante a visita.'}">Os campos abaixo continuam editáveis para ajuste rápido durante a visita.</p>
+                    </div>
+                    <strong id="preview-uf" th:text="${uf != null and !#strings.isEmpty(uf) ? uf : '--'}">--</strong>
+                </div>
+
+                <div class="company-lookup-grid">
+                    <div>
+                        <span class="company-lookup-mini-label">Nome fantasia</span>
+                        <p id="preview-nome-fantasia" th:text="${nomeFantasia != null and !#strings.isEmpty(nomeFantasia) ? nomeFantasia : '-'}">-</p>
+                    </div>
+                    <div>
+                        <span class="company-lookup-mini-label">CEP</span>
+                        <p id="preview-cep" th:text="${cep != null and !#strings.isEmpty(cep) ? cep : '-'}">-</p>
+                    </div>
+                    <div>
+                        <span class="company-lookup-mini-label">Endereço</span>
+                        <p id="preview-endereco" th:text="${enderecoResumo != null and !#strings.isEmpty(enderecoResumo) ? enderecoResumo : '-'}">-</p>
+                    </div>
+                    <div>
+                        <span class="company-lookup-mini-label">Cidade / UF</span>
+                        <p id="preview-cidade-uf" th:text="${cidadeUfResumo != null and !#strings.isEmpty(cidadeUfResumo) ? cidadeUfResumo : '-'}">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <h3 class="section-title">2. Confirmar empresa</h3>
 
             <div class="form-row">
                 <div class="form-field">
-                    <label for="nome">Nome da empresa</label>
-                    <input type="text" id="nome" name="nome" placeholder="Ex: Tech Solutions Ltda" required>
+                    <label for="nome">Razão social</label>
+                    <input type="text" id="nome" name="nome" placeholder="Ex: Tech Solutions Ltda" th:value="${nome}" required>
                 </div>
                 <div class="form-field">
-                    <label for="cnpj">CNPJ</label>
-                    <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required>
+                    <label for="nomeFantasia">Nome fantasia</label>
+                    <input type="text" id="nomeFantasia" name="nomeFantasia" placeholder="Opcional" th:value="${nomeFantasia}">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-field">
-                    <label for="senha">Senha de acesso</label>
-                    <input type="text" id="senha" name="senha" placeholder="Senha para a empresa" required>
-                    <span class="hint">A empresa usará esta senha + CNPJ para fazer login</span>
+                    <label for="cep">CEP</label>
+                    <input type="text" id="cep" name="cep" placeholder="00000-000" th:value="${cep}">
                 </div>
                 <div class="form-field">
-                    <label for="colaboradores">Nº de colaboradores</label>
-                    <input type="number" id="colaboradores" name="colaboradores" min="1" placeholder="1000" required>
+                    <label for="cidade">Cidade</label>
+                    <input type="text" id="cidade" name="cidade" placeholder="Cidade" th:value="${cidade}">
                 </div>
-            </div>
-
-            <h3 class="section-title">Dados dos Benefícios</h3>
-
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="numeroBeneficios">Quantos tipos de benefício?</label>
-                    <input type="number" id="numeroBeneficios" name="numeroBeneficios" min="1" max="10" placeholder="4" required>
-                    <span class="hint">Ex: VA, VR, VT, combustível = 4 benefícios</span>
-                </div>
-                <div class="form-field checkbox-field">
-                    <input type="checkbox" id="multibeneficio" name="multibeneficio" value="true">
-                    <label for="multibeneficio">Usa cartão multibenefícios? (1 cartão para todos)</label>
+                <div class="form-field form-field-small">
+                    <label for="uf">UF</label>
+                    <input type="text" id="uf" name="uf" maxlength="2" placeholder="SP" th:value="${uf}">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-field">
-                    <label for="transacoesMensais">Transações mensais por colaborador</label>
-                    <input type="number" id="transacoesMensais" name="transacoesMensais" min="1" max="50" value="13" required>
-                    <span class="hint">Média de uso do cartão por mês (sugestão: 10 a 22)</span>
+                    <label for="logradouro">Logradouro</label>
+                    <input type="text" id="logradouro" name="logradouro" placeholder="Rua, avenida ou travessa" th:value="${logradouro}">
+                </div>
+                <div class="form-field form-field-small">
+                    <label for="numeroEndereco">Número</label>
+                    <input type="text" id="numeroEndereco" name="numeroEndereco" placeholder="123" th:value="${numeroEndereco}">
                 </div>
                 <div class="form-field">
-                    <label for="vidaUtilCartaoAnos">Vida útil do cartão (anos)</label>
-                    <input type="number" id="vidaUtilCartaoAnos" name="vidaUtilCartaoAnos" min="0.5" max="10" step="0.5" value="3.5" required>
+                    <label for="bairro">Bairro</label>
+                    <input type="text" id="bairro" name="bairro" placeholder="Bairro" th:value="${bairro}">
                 </div>
             </div>
 
-            <h3 class="section-title">Taxas Anuais (para cálculo ESG)</h3>
+            <input type="hidden" id="situacaoCadastral" name="situacaoCadastral" th:value="${situacaoCadastral}">
+
+            <h3 class="section-title">3. Perguntas para iniciar a simulação</h3>
 
             <div class="form-row">
                 <div class="form-field">
-                    <label for="taxaTurnover">Taxa de turnover anual</label>
-                    <input type="number" id="taxaTurnover" name="taxaTurnover" min="0" max="1" step="0.01" value="0.20" required>
-                    <span class="hint">Ex: 0.20 = 20% dos colaboradores saem por ano</span>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="taxaReemissao">Taxa de reemissão anual</label>
-                    <input type="number" id="taxaReemissao" name="taxaReemissao" min="0" max="1" step="0.01" value="0.05" required>
-                    <span class="hint">Ex: 0.05 = 5% de 2ª via</span>
+                    <label for="colaboradores">Quantos funcionários?</label>
+                    <input type="number" id="colaboradores" name="colaboradores" min="1" placeholder="1000" th:value="${colaboradores}" required>
                 </div>
                 <div class="form-field">
-                    <label for="porcentagemDigitalAtual">Nível Digital Atual (%)</label>
-                    <input type="number" id="porcentagemDigitalAtual" name="porcentagemDigitalAtual" min="0" max="100" placeholder="15" required>
-                    <span class="hint">Quanto a empresa já usa de digital hoje?</span>
+                    <label for="numeroBeneficios">Quantos benefícios diferentes?</label>
+                    <input type="number" id="numeroBeneficios" name="numeroBeneficios" min="1" max="10" placeholder="4" th:value="${numeroBeneficios}" required>
+                    <span class="hint">Ex.: VA, VR, VT e combustível = 4 benefícios</span>
                 </div>
             </div>
 
-            <div class="cadastrar-cta">
-                <button type="submit" class="btn-cadastrar">CADASTRAR EMPRESA</button>
+            <div class="form-row">
+                <div class="form-field checkbox-card-field">
+                    <span class="choice-title">Modelo de cartão</span>
+                    <label class="choice-card">
+                        <input type="radio" name="multibeneficio" value="true" th:checked="${multibeneficio}">
+                        <span>
+                            <strong>Cartão único</strong>
+                            <small>1 cartão para todos os benefícios</small>
+                        </span>
+                    </label>
+                    <label class="choice-card">
+                        <input type="radio" name="multibeneficio" value="false" th:checked="${!multibeneficio}">
+                        <span>
+                            <strong>Um por benefício</strong>
+                            <small>Cartões separados por categoria</small>
+                        </span>
+                    </label>
+                </div>
+                <div class="form-field">
+                    <label for="porcentagemDigitalAtual">Nível digital atual (%)</label>
+                    <input type="number" id="porcentagemDigitalAtual" name="porcentagemDigitalAtual" min="0" max="100" th:value="${porcentagemDigitalAtual}" required>
+                    <span class="hint">Se o cliente ainda não souber, começamos em 0% para mostrar a oportunidade total.</span>
+                </div>
+            </div>
+
+            <section class="assumptions-card">
+                <div>
+                    <span class="company-lookup-label">Parâmetros padrão da simulação</span>
+                    <h3>Premissas editáveis para refinar a simulação</h3>
+                    <p class="assumptions-copy">Os campos já vêm preenchidos com valores padrão da Edenred, mas podem ser ajustados se a empresa informar os números reais.</p>
+                </div>
+                <div class="assumptions-grid">
+                    <div>
+                        <label for="transacoesMensais">Transações mensais por colaborador</label>
+                        <input type="number" id="transacoesMensais" name="transacoesMensais" min="1" th:value="${transacoesMensais}" required>
+                        <span>Média mensal de uso dos benefícios por colaborador.</span>
+                    </div>
+                    <div>
+                        <label for="vidaUtilCartaoAnos">Vida útil do cartão (anos)</label>
+                        <input type="number" id="vidaUtilCartaoAnos" name="vidaUtilCartaoAnos" min="0.5" max="10" step="0.1" th:value="${vidaUtilCartaoAnos}" required>
+                        <span>Tempo médio considerado para substituição natural do cartão.</span>
+                    </div>
+                    <div>
+                        <label for="taxaTurnover">Turnover anual</label>
+                        <input type="number" id="taxaTurnover" name="taxaTurnover" min="0" max="1" step="0.01" th:value="${taxaTurnover}" required>
+                        <span>Informe em decimal. Ex.: 0,20 representa 20% ao ano.</span>
+                    </div>
+                    <div>
+                        <label for="taxaReemissao">Reemissão anual</label>
+                        <input type="number" id="taxaReemissao" name="taxaReemissao" min="0" max="1" step="0.01" th:value="${taxaReemissao}" required>
+                        <span>Informe em decimal. Ex.: 0,05 representa 5% de reemissões.</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="dual-cta">
+                <button type="submit" class="btn-cadastrar btn-secondary-outline" name="acao" value="salvar">Salvar na base da Eden</button>
+                <button type="submit" class="btn-cadastrar" name="acao" value="simular">Salvar e iniciar simulação</button>
             </div>
         </form>
     </section>
@@ -129,20 +212,105 @@
 
 <script>
     const cnpjInput = document.getElementById('cnpj');
-    cnpjInput.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 14) value = value.slice(0, 14);
+    const cepInput = document.getElementById('cep');
+    const ufInput = document.getElementById('uf');
+    const consultarButton = document.getElementById('btn-consultar-cnpj');
+    const feedback = document.getElementById('cnpj-feedback');
 
-        if (value.length > 12) {
-            value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, '$1.$2.$3/$4-$5');
-        } else if (value.length > 8) {
-            value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*/, '$1.$2.$3/$4');
-        } else if (value.length > 5) {
-            value = value.replace(/^(\d{2})(\d{3})(\d{0,3}).*/, '$1.$2.$3');
-        } else if (value.length > 2) {
-            value = value.replace(/^(\d{2})(\d{0,3}).*/, '$1.$2');
+    function formatarCnpj(value) {
+        let digitos = value.replace(/\D/g, '').slice(0, 14);
+        if (digitos.length > 12) {
+            digitos = digitos.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*/, '$1.$2.$3/$4-$5');
+        } else if (digitos.length > 8) {
+            digitos = digitos.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*/, '$1.$2.$3/$4');
+        } else if (digitos.length > 5) {
+            digitos = digitos.replace(/^(\d{2})(\d{3})(\d{0,3}).*/, '$1.$2.$3');
+        } else if (digitos.length > 2) {
+            digitos = digitos.replace(/^(\d{2})(\d{0,3}).*/, '$1.$2');
         }
-        e.target.value = value;
+        return digitos;
+    }
+
+    function formatarCep(value) {
+        let digitos = value.replace(/\D/g, '').slice(0, 8);
+        if (digitos.length > 5) {
+            digitos = digitos.replace(/^(\d{5})(\d{0,3}).*/, '$1-$2');
+        }
+        return digitos;
+    }
+
+    function setFeedback(message, type) {
+        feedback.hidden = false;
+        feedback.textContent = message;
+        feedback.className = 'lookup-feedback lookup-feedback-' + type;
+    }
+
+    function preencherResumo(data) {
+        document.getElementById('preview-razao-social').textContent = data.razaoSocial || '-';
+        document.getElementById('preview-situacao').textContent = data.situacaoCadastral
+            ? 'Situação cadastral: ' + data.situacaoCadastral
+            : 'Campos carregados. Revise antes de salvar.';
+        document.getElementById('preview-uf').textContent = data.uf || '--';
+        document.getElementById('preview-nome-fantasia').textContent = data.nomeFantasia || '-';
+        document.getElementById('preview-cep').textContent = data.cep || '-';
+        document.getElementById('preview-endereco').textContent = [data.logradouro, data.numero, data.bairro].filter(Boolean).join(' - ') || '-';
+        document.getElementById('preview-cidade-uf').textContent = [data.cidade, data.uf].filter(Boolean).join(' / ') || '-';
+    }
+
+    function preencherCampos(data) {
+        document.getElementById('cnpj').value = data.cnpj || '';
+        document.getElementById('nome').value = data.razaoSocial || '';
+        document.getElementById('nomeFantasia').value = data.nomeFantasia || '';
+        document.getElementById('cep').value = formatarCep(data.cep || '');
+        document.getElementById('logradouro').value = data.logradouro || '';
+        document.getElementById('numeroEndereco').value = data.numero || '';
+        document.getElementById('bairro').value = data.bairro || '';
+        document.getElementById('cidade').value = data.cidade || '';
+        document.getElementById('uf').value = (data.uf || '').toUpperCase();
+        document.getElementById('situacaoCadastral').value = data.situacaoCadastral || '';
+        preencherResumo(data);
+    }
+
+    cnpjInput.addEventListener('input', (event) => {
+        event.target.value = formatarCnpj(event.target.value);
+    });
+
+    cepInput.addEventListener('input', (event) => {
+        event.target.value = formatarCep(event.target.value);
+    });
+
+    ufInput.addEventListener('input', (event) => {
+        event.target.value = event.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 2).toUpperCase();
+    });
+
+    consultarButton.addEventListener('click', async () => {
+        const cnpj = cnpjInput.value.trim();
+        if (!cnpj) {
+            setFeedback('Informe um CNPJ para iniciar a consulta.', 'error');
+            cnpjInput.focus();
+            return;
+        }
+
+        consultarButton.disabled = true;
+        consultarButton.textContent = 'Buscando...';
+        setFeedback('Consultando dados cadastrais da empresa...', 'loading');
+
+        try {
+            const response = await fetch('/admin/cnpj-consulta?cnpj=' + encodeURIComponent(cnpj));
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.erro || 'Não foi possível consultar este CNPJ.');
+            }
+
+            preencherCampos(data);
+            setFeedback('Dados carregados. Agora só faltam as perguntas da simulação.', 'success');
+        } catch (error) {
+            setFeedback(error.message || 'Falha ao consultar o CNPJ.', 'error');
+        } finally {
+            consultarButton.disabled = false;
+            consultarButton.textContent = 'Buscar dados';
+        }
     });
 </script>
 </body>

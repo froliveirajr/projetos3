@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/login.css?v=9">
+    <link rel="stylesheet" href="/css/login.css?v=10">
 </head>
 <body>
 <main class="login-page">
@@ -18,8 +18,8 @@
     <div class="login-container">
         <div class="login-header">
             <span class="brand brand-logo login-brand-logo"><img src="/images/eden-logo.png" alt="Eden"></span>
-            <p class="subtitle">Entre com seu login e senha administrativos</p>
-            <p class="subtitle admin-temp-access">Acesso provisório: admin / admin123</p>
+            <p class="subtitle">Entre com seu CNPJ e senha administrativos</p>
+            <p class="subtitle admin-temp-access">Acesso administrativo vinculado ao CNPJ da Edenred</p>
         </div>
 
         <div th:if="${erro}" class="login-erro" th:text="${erro}"></div>
