@@ -166,6 +166,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
+    overflow: visible;
 }
 
 /* Slider Centralizado na Base */
@@ -234,6 +235,8 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
     justify-content: center;
     align-items: center;
     gap: var(--space-md);
+    overflow: visible;
+    padding-bottom: calc(var(--space-lg) + 18px);
 }
 
 .piorou .dark-card { background: var(--color-piora-bg); }
@@ -252,17 +255,18 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
 .dark-card .sub-label {
     font-size: 0.7rem;
     opacity: 0.7;
+    padding-right: 34px;
 }
 
 .info-trigger {
     position: absolute;
-    right: 12px;
-    bottom: 12px;
+    right: 6px;
+    bottom: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     border: 2px solid #008568;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.96);
@@ -270,13 +274,14 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
     font-size: 0.8rem;
     font-weight: 800;
     cursor: pointer;
+    z-index: 8;
 }
 
 .info-popover {
     position: absolute;
-    right: 12px;
-    bottom: 46px;
-    z-index: 4;
+    right: 8px;
+    bottom: 42px;
+    z-index: 12;
     width: min(260px, calc(100vw - 48px));
     padding: 12px 14px;
     border-radius: 12px;
@@ -989,7 +994,7 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
     min-height: 104px;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 14px 14px 12px;
+    padding: 14px 18px 36px 14px;
     border-radius: 6px;
     background: linear-gradient(180deg, #008568 0%, #006b55 100%);
     color: #fff;
@@ -1021,6 +1026,7 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
     color: rgba(255, 255, 255, 0.7);
     font-size: 0.68rem;
     font-weight: 700;
+    padding-right: 36px;
 }
 
 .dashboard-app .slider-section {
