@@ -21,7 +21,7 @@ public class CnpjConsultaService {
     public CnpjEmpresaDados consultar(String cnpj) {
         String digitos = CnpjUtils.somenteDigitos(cnpj);
         if (!CnpjUtils.isValido(digitos)) {
-            throw new IllegalArgumentException("CNPJ invalido. Verifique os 14 digitos informados.");
+            throw new IllegalArgumentException("CNPJ inválido. Verifique os 14 dígitos informados.");
         }
 
         try {

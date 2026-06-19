@@ -49,14 +49,13 @@ public class ImpactoService {
         resposta.put("porcentagemAtual", atual);
         resposta.put("piorou", diff < 0);
 
-        double diffAbs = Math.abs(diff);
         int colaboradores = empresa.getColaboradores();
         int cartoesPorColab = empresa.getCartoesPorColaborador();
-
         int maxCartoes = colaboradores * cartoesPorColab;
         int transacoesAnuais = CalculadoraMateriais.calcularTransacoesAnuais(
                 colaboradores, empresa.getTransacoesMensais());
 
+        // A comparação usa a mesma base anual e só altera o percentual digital entre cenário atual e alvo.
         int cartoesDigitaisAtuais = calcularQuantidadePorPercentual(maxCartoes, atual);
         int cartoesDigitaisSimulados = calcularQuantidadePorPercentual(maxCartoes, alvoNormalizado);
         int transacoesDigitaisAtuais = calcularQuantidadePorPercentual(transacoesAnuais, atual);
@@ -79,6 +78,7 @@ public class ImpactoService {
         double co2Transacional = Math.abs(co2SimTrans - co2AtualTrans);
         double papel = Math.abs(papelSim - papelAtual);
 
+        // Os cards de variacao exibem o ganho ou a perda incremental entre os dois cenarios.
         double co2TotalMudanca = co2Cartoes + co2Transacional;
         double residuosMudanca = plastico + papel;
         double co2TotalCenario = co2SimCartoes + co2SimTrans;

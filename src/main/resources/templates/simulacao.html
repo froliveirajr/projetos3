@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cenário Simulado - Edenred</title>
+    <title>Cen&aacute;rio Simulado - Edenred</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/simulacao.css?v=5">
+    <link rel="stylesheet" href="/css/simulacao.css?v=6">
 </head>
 <body>
 <main class="simulacao-page dashboard-app">
@@ -133,7 +133,7 @@
                         <svg class="equiv-icon equiv-tree" viewBox="0 0 100 100"><circle class="tree-foliage" cx="50" cy="40" r="25"/><rect class="tree-trunk" x="45" y="60" width="10" height="30"/></svg>
                         <svg class="equiv-icon equiv-tree" viewBox="0 0 100 100"><circle class="tree-foliage" cx="50" cy="40" r="25"/><rect class="tree-trunk" x="45" y="60" width="10" height="30"/></svg>
                     </div>
-                    <span class="equiv-text"><span id="val-arvores">0</span> <span id="lbl-arvores-txt">plantar árvores</span></span>
+                    <span class="equiv-text"><span id="val-arvores">0</span> <span id="lbl-arvores-txt">plantar &aacute;rvores</span></span>
                 </div>
                 <div class="equiv-item" id="item-car">
                     <div class="equiv-icons">
@@ -205,13 +205,13 @@
         </div>
 
         <a id="report-link" class="report-link" th:href="@{/relatorio(porcentagemAlvo=${#numbers.formatDecimal(digitalAtual, 1, 0)})}">
-            Gerar relatório final
+            Gerar relat&oacute;rio final
         </a>
 
         <div class="studies-note" style="margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; font-size: 0.75rem; color: #aaa; text-align: center;">
-            <p>Os cálculos são fundamentados em metodologias de LCA (Life Cycle Assessment) reportadas por instituições como:</p>
+            <p>Os c&aacute;lculos s&atilde;o fundamentados em metodologias de LCA (Life Cycle Assessment) reportadas por institui&ccedil;&otilde;es como:</p>
             <div style="margin-top: 10px;">
-                <a href="https://www.dnb.nl/media/a3sk2oob/574-evaluating-the-environmental-impact-of-debit-card-payments.pdf" target="_blank" style="color: var(--green-light); text-decoration: underline; margin: 0 10px;">Banco Central Holandês (DNB)</a> |
+                <a href="https://www.dnb.nl/media/a3sk2oob/574-evaluating-the-environmental-impact-of-debit-card-payments.pdf" target="_blank" style="color: var(--green-light); text-decoration: underline; margin: 0 10px;">Banco Central Holand&ecirc;s (DNB)</a> |
                 <a href="https://www.riksbank.se/globalassets/media/rapporter/klimatrapport/2025/klimatrapport-pdf/the-riksbanks-climate-report-2025.pdf" target="_blank" style="color: var(--green-light); text-decoration: underline; margin: 0 10px;">Riksbank</a> |
                 <a href="https://www.acnnewswire.com/docs/files/JCB_White_Paper_20240214.pdf" target="_blank" style="color: var(--green-light); text-decoration: underline; margin: 0 10px;">JCB</a>
             </div>
@@ -335,12 +335,12 @@
                     document.getElementById('lbl-plastico').textContent = "Acr\u00e9scimo de impacto res\u00edduos";
                     document.getElementById('lbl-papel').textContent = "Aumento de papel";
                     document.getElementById('equiv-intro').innerHTML = "Esse impacto <strong>adicional</strong> equivale a:";
-                    document.getElementById('lbl-arvores-txt').textContent = "árvores perdidas";
+                    document.getElementById('lbl-arvores-txt').textContent = "\u00e1rvores perdidas";
                     document.getElementById('lbl-carro-txt').textContent = "1 carro a mais na estrada";
                 } else {
                     simContainer.classList.remove('piorou');
                     simContainer.classList.add('melhorou');
-                    document.querySelector('.terrain-base').setAttribute('fill', '#91C392'); // Verde
+                    document.querySelector('.terrain-base').setAttribute('fill', '#91C392');
                     document.querySelector('.terrain-side-left').setAttribute('fill', '#76A877');
                     document.querySelector('.terrain-side-right').setAttribute('fill', '#5D8F5E');
 
@@ -350,7 +350,7 @@
                     document.getElementById('lbl-plastico').textContent = "Redu\u00e7\u00e3o de impacto res\u00edduos";
                     document.getElementById('lbl-papel').textContent = "Papel evitado";
                     document.getElementById('equiv-intro').innerHTML = "Esse impacto <strong>equivale</strong> a:";
-                    document.getElementById('lbl-arvores-txt').textContent = "plantar árvores";
+                    document.getElementById('lbl-arvores-txt').textContent = "plantar \u00e1rvores";
                     document.getElementById('lbl-carro-txt').textContent = "1 carro fora da estrada";
                 }
 

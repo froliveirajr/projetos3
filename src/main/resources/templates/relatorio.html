@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório Executivo - Edenred</title>
+    <title>Relat&oacute;rio Executivo - Edenred</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/relatorio.css?v=5">
+    <link rel="stylesheet" href="/css/relatorio.css?v=6">
 </head>
 <body>
 <main class="report-page">
@@ -33,33 +33,33 @@
     <th:block th:replace="~{fragments/breadcrumb :: progress(3)}"></th:block>
 
     <div class="report-toolbar">
-        <a href="/simulacao" class="report-back">Voltar para simulação</a>
+        <a href="/simulacao" class="report-back">Voltar para simula&ccedil;&atilde;o</a>
         <button type="button" onclick="window.print()" class="report-print">Imprimir / salvar PDF</button>
     </div>
 
     <section class="report-hero">
         <div>
             <img class="report-logo" src="/images/eden-logo.png" alt="Eden">
-            <p class="report-kicker">Relatório executivo de digitalização de benefícios</p>
-            <h1 th:if="${ganhoPositivo}">Business case para acelerar a digitalização dos benefícios</h1>
-            <h1 th:if="${ganhoNeutro}">Simulação sem avanço de digitalização</h1>
-            <h1 th:if="${reducaoDigital}">Simulação com redução da digitalização</h1>
+            <p class="report-kicker">Relat&oacute;rio executivo de digitaliza&ccedil;&atilde;o de benef&iacute;cios</p>
+            <h1 th:if="${ganhoPositivo}">Business case para acelerar a digitaliza&ccedil;&atilde;o dos benef&iacute;cios</h1>
+            <h1 th:if="${ganhoNeutro}">Simula&ccedil;&atilde;o sem avan&ccedil;o de digitaliza&ccedil;&atilde;o</h1>
+            <h1 th:if="${reducaoDigital}">Simula&ccedil;&atilde;o com redu&ccedil;&atilde;o da digitaliza&ccedil;&atilde;o</h1>
             <p class="report-lead" th:if="${ganhoPositivo}">
-                Esta análise transforma a escolha de digitalização feita pela empresa em uma
-                recomendação executiva. O objetivo é demonstrar, com números e argumentos de
-                negócio, por que ampliar a digitalização reduz atritos operacionais, melhora a
-                experiência dos colaboradores e cria uma agenda ESG mais mensurável.
+                Esta an&aacute;lise transforma a escolha de digitaliza&ccedil;&atilde;o feita pela empresa em uma
+                recomenda&ccedil;&atilde;o executiva. O objetivo &eacute; demonstrar, com n&uacute;meros e argumentos de
+                neg&oacute;cio, por que ampliar a digitaliza&ccedil;&atilde;o reduz atritos operacionais, melhora a
+                experi&ecirc;ncia dos colaboradores e cria uma agenda ESG mais mensur&aacute;vel.
             </p>
             <p class="report-lead report-lead-alert" th:if="${ganhoNeutro}">
-                A meta escolhida é igual ao nível atual de digitalização. Portanto, a simulação
-                não gera ganhos incrementais de CO2e, resíduos, experiência ou eficiência. Para
+                A meta escolhida &eacute; igual ao n&iacute;vel atual de digitaliza&ccedil;&atilde;o. Portanto, a simula&ccedil;&atilde;o
+                n&atilde;o gera ganhos incrementais de CO2e, res&iacute;duos, experi&ecirc;ncia ou efici&ecirc;ncia. Para
                 construir um business case convincente, recomenda-se simular uma meta superior ao
                 patamar atual.
             </p>
             <p class="report-lead report-lead-alert" th:if="${reducaoDigital}">
-                A meta escolhida reduz o nível de digitalização atual. Esse caminho aumenta a
-                dependência de cartões físicos e enfraquece os ganhos operacionais, ambientais e de
-                experiência. A recomendação é rever a meta para um percentual acima do nível atual.
+                A meta escolhida reduz o n&iacute;vel de digitaliza&ccedil;&atilde;o atual. Esse caminho aumenta a
+                depend&ecirc;ncia de cart&otilde;es f&iacute;sicos e enfraquece os ganhos operacionais, ambientais e de
+                experi&ecirc;ncia. A recomenda&ccedil;&atilde;o &eacute; rever a meta para um percentual acima do n&iacute;vel atual.
             </p>
         </div>
         <aside class="report-company">
@@ -73,24 +73,24 @@
         <div class="summary-card main">
             <span>Meta simulada</span>
             <strong th:text="${#numbers.formatDecimal(digitalAlvo, 1, 0)} + '%'">100%</strong>
-            <small th:text="'Nível atual: ' + ${#numbers.formatDecimal(digitalAtual, 1, 0)} + '%'">Nível atual: 20%</small>
+            <small th:text="'Nível atual: ' + ${#numbers.formatDecimal(digitalAtual, 1, 0)} + '%'">N&iacute;vel atual: 20%</small>
         </div>
         <div class="summary-card">
-            <span th:if="${ganhoPositivo}">Avanço digital</span>
-            <span th:if="${ganhoNeutro}">Avanço digital</span>
-            <span th:if="${reducaoDigital}">Redução digital</span>
+            <span th:if="${ganhoPositivo}">Avan&ccedil;o digital</span>
+            <span th:if="${ganhoNeutro}">Avan&ccedil;o digital</span>
+            <span th:if="${reducaoDigital}">Redu&ccedil;&atilde;o digital</span>
             <strong th:text="${#numbers.formatDecimal(ganhoDigital, 1, 0)} + ' p.p.'">80 p.p.</strong>
-            <small th:if="${ganhoPositivo}">Incremento concreto sobre o nível atual</small>
-            <small th:if="${ganhoNeutro}">Sem mudança em relação ao nível atual</small>
-            <small th:if="${reducaoDigital}">Abaixo do nível atual de digitalização</small>
+            <small th:if="${ganhoPositivo}">Incremento concreto sobre o n&iacute;vel atual</small>
+            <small th:if="${ganhoNeutro}">Sem mudan&ccedil;a em rela&ccedil;&atilde;o ao n&iacute;vel atual</small>
+            <small th:if="${reducaoDigital}">Abaixo do n&iacute;vel atual de digitaliza&ccedil;&atilde;o</small>
         </div>
         <div class="summary-card">
-            <span>Cartões impactados</span>
+            <span>Cart&otilde;es impactados</span>
             <strong th:text="${simulacao['cartoesAfetados']}">0</strong>
             <small th:text="'Base física atual: ' + ${#numbers.formatInteger(cartoesAtuais, 1, 'POINT')} + ' cartões'">Base atual</small>
         </div>
         <div class="summary-card">
-            <span>Transações anuais</span>
+            <span>Transa&ccedil;&otilde;es anuais</span>
             <strong th:text="${#numbers.formatInteger(transacoesAnuais, 1, 'POINT')}">0</strong>
             <small>Volume anual para sustentar jornadas digitais</small>
         </div>
@@ -98,32 +98,32 @@
 
     <section class="impact-strip">
         <article>
-            <span>CO2e evitado em cartões</span>
+            <span>CO2e evitado em cart&otilde;es</span>
             <strong th:text="${simulacao['co2']}">0 kg</strong>
-            <small th:if="${ganhoPositivo}">Redução associada à emissão, fabricação e distribuição de cartões.</small>
-            <small th:if="${ganhoNeutro}">Sem ganho incremental porque a meta manteve o nível atual.</small>
-            <small th:if="${reducaoDigital}">Indicador aponta aumento de impacto ao reduzir a digitalização.</small>
+            <small th:if="${ganhoPositivo}">Redu&ccedil;&atilde;o associada &agrave; emiss&atilde;o, fabrica&ccedil;&atilde;o e distribui&ccedil;&atilde;o de cart&otilde;es.</small>
+            <small th:if="${ganhoNeutro}">Sem ganho incremental porque a meta manteve o n&iacute;vel atual.</small>
+            <small th:if="${reducaoDigital}">Indicador aponta aumento de impacto ao reduzir a digitaliza&ccedil;&atilde;o.</small>
         </article>
         <article>
             <span>CO2e transacional</span>
             <strong th:text="${simulacao['co2Transacional']}">0 kg</strong>
             <small th:if="${ganhoPositivo}">Ganho ambiental ligado ao uso de jornadas digitais.</small>
-            <small th:if="${ganhoNeutro}">Não há mudança transacional frente ao cenário atual.</small>
-            <small th:if="${reducaoDigital}">Menor digitalização reduz o potencial de ganho transacional.</small>
+            <small th:if="${ganhoNeutro}">N&atilde;o h&aacute; mudan&ccedil;a transacional frente ao cen&aacute;rio atual.</small>
+            <small th:if="${reducaoDigital}">Menor digitaliza&ccedil;&atilde;o reduz o potencial de ganho transacional.</small>
         </article>
         <article>
-            <span>Resíduos evitados</span>
+            <span>Res&iacute;duos evitados</span>
             <strong th:text="${simulacao['residuos']}">0 kg</strong>
-            <small th:if="${ganhoPositivo}">Menos plástico, papel e descarte recorrente na operação.</small>
-            <small th:if="${ganhoNeutro}">Sem redução adicional de plástico ou papel.</small>
-            <small th:if="${reducaoDigital}">Redução da digitalização tende a ampliar resíduos físicos.</small>
+            <small th:if="${ganhoPositivo}">Menos pl&aacute;stico, papel e descarte recorrente na opera&ccedil;&atilde;o.</small>
+            <small th:if="${ganhoNeutro}">Sem redu&ccedil;&atilde;o adicional de pl&aacute;stico ou papel.</small>
+            <small th:if="${reducaoDigital}">Redu&ccedil;&atilde;o da digitaliza&ccedil;&atilde;o tende a ampliar res&iacute;duos f&iacute;sicos.</small>
         </article>
         <article>
-            <span>Equivalência climática</span>
-            <strong th:text="${simulacao['arvores']} + ' árvores'">0 árvores</strong>
+            <span>Equival&ecirc;ncia clim&aacute;tica</span>
+            <strong th:text="${simulacao['arvores']} + ' árvores'">0 &aacute;rvores</strong>
             <small th:if="${ganhoPositivo}" th:text="${simulacao['km']} + ' km de carro evitados'">0 km de carro evitados</small>
-            <small th:if="${ganhoNeutro}">Sem equivalência adicional gerada.</small>
-            <small th:if="${reducaoDigital}">Equivalência indica perda de oportunidade ambiental.</small>
+            <small th:if="${ganhoNeutro}">Sem equival&ecirc;ncia adicional gerada.</small>
+            <small th:if="${reducaoDigital}">Equival&ecirc;ncia indica perda de oportunidade ambiental.</small>
         </article>
     </section>
 
@@ -131,108 +131,108 @@
         <article class="argument-card finance">
             <h2>Financeiro</h2>
             <p th:if="${ganhoPositivo}">
-                A digitalização deve ser vista como uma frente de eficiência operacional. Cada
-                ponto migrado reduz dependência de emissão, reemissão, transporte, embalagem,
+                A digitaliza&ccedil;&atilde;o deve ser vista como uma frente de efici&ecirc;ncia operacional. Cada
+                ponto migrado reduz depend&ecirc;ncia de emiss&atilde;o, reemiss&atilde;o, transporte, embalagem,
                 segunda via e suporte operacional. Mesmo quando a economia financeira final
-                depende de contratos e tarifas, a empresa passa a operar uma base mais previsível,
-                menos física e mais fácil de escalar.
+                depende de contratos e tarifas, a empresa passa a operar uma base mais previs&iacute;vel,
+                menos f&iacute;sica e mais f&aacute;cil de escalar.
             </p>
             <p th:if="${ganhoNeutro}">
-                Como a meta escolhida repete o nível atual, não há argumento financeiro incremental.
-                O relatório registra a linha de base, mas a oportunidade comercial está em propor
-                uma meta maior, capaz de reduzir dependência física e simplificar custos operacionais.
+                Como a meta escolhida repete o n&iacute;vel atual, n&atilde;o h&aacute; argumento financeiro incremental.
+                O relat&oacute;rio registra a linha de base, mas a oportunidade comercial est&aacute; em propor
+                uma meta maior, capaz de reduzir depend&ecirc;ncia f&iacute;sica e simplificar custos operacionais.
             </p>
             <p th:if="${reducaoDigital}">
-                A redução da digitalização enfraquece a tese financeira, pois aumenta dependência
-                de processos físicos. Para Finanças, o melhor encaminhamento é reverter a meta e
-                avaliar um plano de aumento gradual da digitalização.
+                A redu&ccedil;&atilde;o da digitaliza&ccedil;&atilde;o enfraquece a tese financeira, pois aumenta depend&ecirc;ncia
+                de processos f&iacute;sicos. Para Finan&ccedil;as, o melhor encaminhamento &eacute; reverter a meta e
+                avaliar um plano de aumento gradual da digitaliza&ccedil;&atilde;o.
             </p>
-            <strong th:text="${simulacao['cartoesAfetados']} + ' cartões físicos potencialmente deslocados'">0 cartões</strong>
+            <strong th:text="${simulacao['cartoesAfetados']} + ' cartões físicos potencialmente deslocados'">0 cart&otilde;es</strong>
         </article>
 
         <article class="argument-card hr">
             <h2>RH</h2>
             <p th:if="${ganhoPositivo}">
-                Para RH, a digitalização reduz atritos na experiência do colaborador: menos espera
-                por cartão, menos perda, menos substituição e mais autonomia no uso dos benefícios.
-                A jornada digital também facilita onboarding, comunicação, adesão a novos produtos
-                e percepção de inovação na proposta de valor ao colaborador.
+                Para RH, a digitaliza&ccedil;&atilde;o reduz atritos na experi&ecirc;ncia do colaborador: menos espera
+                por cart&atilde;o, menos perda, menos substitui&ccedil;&atilde;o e mais autonomia no uso dos benef&iacute;cios.
+                A jornada digital tamb&eacute;m facilita onboarding, comunica&ccedil;&atilde;o, ades&atilde;o a novos produtos
+                e percep&ccedil;&atilde;o de inova&ccedil;&atilde;o na proposta de valor ao colaborador.
             </p>
             <p th:if="${ganhoNeutro}">
-                Sem aumento de digitalização, a experiência do colaborador permanece no mesmo
-                patamar. Para RH, a oportunidade é usar esta simulação como ponto de partida para
-                defender uma meta mais ambiciosa, reduzindo fricções de entrega, perda e substituição
-                de cartões.
+                Sem aumento de digitaliza&ccedil;&atilde;o, a experi&ecirc;ncia do colaborador permanece no mesmo
+                patamar. Para RH, a oportunidade &eacute; usar esta simula&ccedil;&atilde;o como ponto de partida para
+                defender uma meta mais ambiciosa, reduzindo fric&ccedil;&otilde;es de entrega, perda e substitui&ccedil;&atilde;o
+                de cart&otilde;es.
             </p>
             <p th:if="${reducaoDigital}">
-                Reduzir a digitalização tende a piorar a experiência do colaborador, trazendo mais
-                dependência de cartão físico, entrega, segunda via e suporte. A recomendação para RH
-                é proteger ou elevar o nível atual.
+                Reduzir a digitaliza&ccedil;&atilde;o tende a piorar a experi&ecirc;ncia do colaborador, trazendo mais
+                depend&ecirc;ncia de cart&atilde;o f&iacute;sico, entrega, segunda via e suporte. A recomenda&ccedil;&atilde;o para RH
+                &eacute; proteger ou elevar o n&iacute;vel atual.
             </p>
         </article>
 
         <article class="argument-card esg">
             <h2>ESG</h2>
             <p th:if="${ganhoPositivo}">
-                Para ESG, o ganho está em transformar uma decisão operacional em indicadores
-                reportáveis. O cenário simulado reduz
-                <strong th:text="${simulacao['plastico']}">0 kg</strong> de plástico,
+                Para ESG, o ganho est&aacute; em transformar uma decis&atilde;o operacional em indicadores
+                report&aacute;veis. O cen&aacute;rio simulado reduz
+                <strong th:text="${simulacao['plastico']}">0 kg</strong> de pl&aacute;stico,
                 <strong th:text="${simulacao['papel']}">0 kg</strong> de papel e
                 <strong th:text="${simulacao['co2AnualTotal']}">0 kg</strong> de CO2e anual no
-                recorte de cartões, fortalecendo metas ambientais e comunicação corporativa.
+                recorte de cart&otilde;es, fortalecendo metas ambientais e comunica&ccedil;&atilde;o corporativa.
             </p>
             <p th:if="${ganhoNeutro}">
-                Para ESG, a meta igual ao nível atual não cria redução adicional reportável. O dado
-                é útil como linha de base, mas não sustenta uma narrativa de melhoria. Para gerar
+                Para ESG, a meta igual ao n&iacute;vel atual n&atilde;o cria redu&ccedil;&atilde;o adicional report&aacute;vel. O dado
+                &eacute; &uacute;til como linha de base, mas n&atilde;o sustenta uma narrativa de melhoria. Para gerar
                 impacto ambiental positivo, a meta precisa superar o percentual atual.
             </p>
             <p th:if="${reducaoDigital}">
-                Reduzir a digitalização compromete a narrativa ESG, pois amplia a dependência de
-                materiais físicos e reduz ganhos ambientais. A recomendação é reposicionar a meta
-                para preservar ou ampliar os indicadores de redução.
+                Reduzir a digitaliza&ccedil;&atilde;o compromete a narrativa ESG, pois amplia a depend&ecirc;ncia de
+                materiais f&iacute;sicos e reduz ganhos ambientais. A recomenda&ccedil;&atilde;o &eacute; reposicionar a meta
+                para preservar ou ampliar os indicadores de redu&ccedil;&atilde;o.
             </p>
         </article>
 
         <article class="argument-card strategy">
             <h2>Diretoria</h2>
             <p th:if="${ganhoPositivo}">
-                Para a Diretoria, a meta simulada representa modernização da operação de benefícios.
+                Para a Diretoria, a meta simulada representa moderniza&ccedil;&atilde;o da opera&ccedil;&atilde;o de benef&iacute;cios.
                 O ganho de <strong th:text="${#numbers.formatDecimal(ganhoDigital, 1, 0)} + ' p.p.'">0 p.p.</strong>
-                não é apenas uma mudança de canal: é uma decisão que melhora escala, qualidade de
-                dados, governança da operação e velocidade para evoluir o pacote de benefícios.
+                n&atilde;o &eacute; apenas uma mudan&ccedil;a de canal: &eacute; uma decis&atilde;o que melhora escala, qualidade de
+                dados, governan&ccedil;a da opera&ccedil;&atilde;o e velocidade para evoluir o pacote de benef&iacute;cios.
             </p>
             <p th:if="${ganhoNeutro}">
-                Para a Diretoria, esta simulação ainda não configura uma decisão de transformação:
-                ela apenas preserva o estado atual. A recomendação é solicitar uma nova simulação
-                com aumento real de digitalização para criar ganhos operacionais, dados melhores e
-                uma história ESG defensável.
+                Para a Diretoria, esta simula&ccedil;&atilde;o ainda n&atilde;o configura uma decis&atilde;o de transforma&ccedil;&atilde;o:
+                ela apenas preserva o estado atual. A recomenda&ccedil;&atilde;o &eacute; solicitar uma nova simula&ccedil;&atilde;o
+                com aumento real de digitaliza&ccedil;&atilde;o para criar ganhos operacionais, dados melhores e
+                uma hist&oacute;ria ESG defens&aacute;vel.
             </p>
             <p th:if="${reducaoDigital}">
-                Para a Diretoria, reduzir a digitalização representa regressão operacional. A decisão
-                aumenta dependência física e reduz escalabilidade. O caminho recomendado é elevar a
-                meta, não reduzi-la.
+                Para a Diretoria, reduzir a digitaliza&ccedil;&atilde;o representa regress&atilde;o operacional. A decis&atilde;o
+                aumenta depend&ecirc;ncia f&iacute;sica e reduz escalabilidade. O caminho recomendado &eacute; elevar a
+                meta, n&atilde;o reduzi-la.
             </p>
         </article>
     </section>
 
     <section class="comparison-section">
         <div class="section-heading">
-            <span>Comparativo numérico</span>
-            <h2>Cenário atual versus cenário digital simulado</h2>
+            <span>Comparativo num&eacute;rico</span>
+            <h2>Cen&aacute;rio atual versus cen&aacute;rio digital simulado</h2>
         </div>
         <div class="report-table-wrap">
             <table class="report-table">
                 <thead>
                 <tr>
                     <th>Indicador</th>
-                    <th>Cenário atual</th>
-                    <th>Cenário simulado</th>
-                    <th>Redução adicional</th>
+                    <th>Cen&aacute;rio atual</th>
+                    <th>Cen&aacute;rio simulado</th>
+                    <th>Redu&ccedil;&atilde;o adicional</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>CO2e evitado em cartões</td>
+                    <td>CO2e evitado em cart&otilde;es</td>
                     <td th:text="${simulacao['tabCo2Atual']}">0 kg</td>
                     <td th:text="${simulacao['tabCo2Sim']}">0 kg</td>
                     <td th:text="${simulacao['co2']}">0 kg</td>
@@ -244,7 +244,7 @@
                     <td th:text="${simulacao['co2Transacional']}">0 kg</td>
                 </tr>
                 <tr>
-                    <td>Plástico evitado</td>
+                    <td>Pl&aacute;stico evitado</td>
                     <td th:text="${simulacao['tabPlasAtual']}">0 kg</td>
                     <td th:text="${simulacao['tabPlasSim']}">0 kg</td>
                     <td th:text="${simulacao['plastico']}">0 kg</td>
@@ -256,7 +256,7 @@
                     <td th:text="${simulacao['papel']}">0 kg</td>
                 </tr>
                 <tr>
-                    <td>Resíduos evitados</td>
+                    <td>Res&iacute;duos evitados</td>
                     <td th:text="${simulacao['tabResAtual']}">0 kg</td>
                     <td th:text="${simulacao['tabResSim']}">0 kg</td>
                     <td th:text="${simulacao['residuos']}">0 kg</td>
@@ -268,27 +268,27 @@
 
     <section class="recommendation">
         <div>
-            <span>Recomendação executiva</span>
-            <h2 th:if="${ganhoPositivo}">Avançar com a ampliação da digitalização dos benefícios</h2>
-            <h2 th:if="${ganhoNeutro}">Definir uma meta acima do nível atual</h2>
-            <h2 th:if="${reducaoDigital}">Rever a meta para evitar regressão digital</h2>
+            <span>Recomenda&ccedil;&atilde;o executiva</span>
+            <h2 th:if="${ganhoPositivo}">Avan&ccedil;ar com a amplia&ccedil;&atilde;o da digitaliza&ccedil;&atilde;o dos benef&iacute;cios</h2>
+            <h2 th:if="${ganhoNeutro}">Definir uma meta acima do n&iacute;vel atual</h2>
+            <h2 th:if="${reducaoDigital}">Rever a meta para evitar regress&atilde;o digital</h2>
             <p th:if="${ganhoPositivo}">
-                A recomendação é transformar a meta simulada em um plano progressivo: definir
-                ondas de migração, comunicar ganhos aos colaboradores, acompanhar adesão mensalmente
-                e usar os indicadores ambientais como reforço da proposta. A digitalização cria uma
-                convergência rara: melhora experiência, reduz atrito operacional, qualifica dados
-                para decisão e gera uma história ESG simples de explicar para lideranças e stakeholders.
+                A recomenda&ccedil;&atilde;o &eacute; transformar a meta simulada em um plano progressivo: definir
+                ondas de migra&ccedil;&atilde;o, comunicar ganhos aos colaboradores, acompanhar ades&atilde;o mensalmente
+                e usar os indicadores ambientais como refor&ccedil;o da proposta. A digitaliza&ccedil;&atilde;o cria uma
+                converg&ecirc;ncia rara: melhora experi&ecirc;ncia, reduz atrito operacional, qualifica dados
+                para decis&atilde;o e gera uma hist&oacute;ria ESG simples de explicar para lideran&ccedil;as e stakeholders.
             </p>
             <p th:if="${ganhoNeutro}">
-                A meta escolhida não altera a operação. Portanto, este relatório deve ser usado
-                como diagnóstico de base, não como defesa de impacto positivo. Para criar um caso
-                comercial e executivo, recomenda-se simular uma meta superior ao nível atual e
-                comparar os ganhos incrementais em custo operacional, experiência, dados e ESG.
+                A meta escolhida n&atilde;o altera a opera&ccedil;&atilde;o. Portanto, este relat&oacute;rio deve ser usado
+                como diagn&oacute;stico de base, n&atilde;o como defesa de impacto positivo. Para criar um caso
+                comercial e executivo, recomenda-se simular uma meta superior ao n&iacute;vel atual e
+                comparar os ganhos incrementais em custo operacional, experi&ecirc;ncia, dados e ESG.
             </p>
             <p th:if="${reducaoDigital}">
-                A meta escolhida reduz a digitalização e, por isso, não sustenta uma recomendação
-                positiva. O encaminhamento recomendado é refazer a simulação com uma meta acima do
-                nível atual, preservando a experiência digital e ampliando os ganhos comerciais,
+                A meta escolhida reduz a digitaliza&ccedil;&atilde;o e, por isso, n&atilde;o sustenta uma recomenda&ccedil;&atilde;o
+                positiva. O encaminhamento recomendado &eacute; refazer a simula&ccedil;&atilde;o com uma meta acima do
+                n&iacute;vel atual, preservando a experi&ecirc;ncia digital e ampliando os ganhos comerciais,
                 operacionais e ambientais.
             </p>
         </div>
@@ -300,9 +300,9 @@
 
     <footer class="report-footnote">
         <p>
-            Premissas: cálculos baseados nos parâmetros internos da Calculadora Eden para CO2e,
-            plástico, papel, transações anuais, vida útil de cartões, turnover e reemissão. Os
-            valores devem ser usados como estimativas executivas para tomada de decisão e podem
+            Premissas: c&aacute;lculos baseados nos par&acirc;metros internos da Calculadora Eden para CO2e,
+            pl&aacute;stico, papel, transa&ccedil;&otilde;es anuais, vida &uacute;til de cart&otilde;es, turnover e reemiss&atilde;o. Os
+            valores devem ser usados como estimativas executivas para tomada de decis&atilde;o e podem
             ser recalibrados para auditorias formais.
         </p>
     </footer>
