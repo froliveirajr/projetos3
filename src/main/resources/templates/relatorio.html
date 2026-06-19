@@ -25,10 +25,7 @@
             <img src="/images/eden-logo.png" alt="Eden">
         </a>
         <div class="topbar-right">
-            <label class="dashboard-search">
-                <span aria-hidden="true"></span>
-                <input type="search" th:placeholder="${nomeEmpresa}" placeholder="Buscar empresa">
-            </label>
+            <span class="company-name-pill" th:text="${nomeEmpresa}">Empresa</span>
             <a href="/logout" class="btn-logout-sm">SAIR</a>
         </div>
     </header>

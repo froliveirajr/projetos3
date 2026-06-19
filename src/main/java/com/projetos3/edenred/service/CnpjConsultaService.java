@@ -32,7 +32,7 @@ public class CnpjConsultaService {
                     .body(Map.class);
 
             if (resposta == null || resposta.isEmpty()) {
-                throw new IllegalStateException("Nao foi possivel obter dados para este CNPJ.");
+                throw new IllegalStateException("Não foi possível obter dados para este CNPJ.");
             }
 
             return new CnpjEmpresaDados(
@@ -47,7 +47,7 @@ public class CnpjConsultaService {
                     valor(resposta.get("uf")),
                     valor(resposta.get("descricao_situacao_cadastral")));
         } catch (RestClientException ex) {
-            throw new IllegalStateException("Nao foi possivel consultar o CNPJ agora. Tente novamente em instantes.");
+            throw new IllegalStateException("Não foi possível consultar o CNPJ agora. Tente novamente em instantes.");
         }
     }
 

@@ -46,6 +46,49 @@
         </div>
         <div th:if="${sucesso}" class="msg-sucesso" th:text="${sucesso}"></div>
 
+        <section class="demo-mode-section">
+            <div class="demo-mode-header">
+                <div>
+                    <h2 class="section-block-title">Modo Demonstra&ccedil;&atilde;o</h2>
+                    <p class="section-block-subtitle">Controle se os acessos sem login ficam dispon&iacute;veis para empresa e painel administrativo.</p>
+                </div>
+            </div>
+            <div class="demo-mode-grid">
+                <article class="demo-mode-card">
+                    <div class="demo-mode-copy">
+                        <span class="demo-mode-eyebrow">Empresa</span>
+                        <h3 th:text="${empresaDemoEnabled ? 'Demonstração ativa' : 'Demonstração desativada'}">Demonstra&ccedil;&atilde;o ativa</h3>
+                        <p>Libera o bot&atilde;o para abrir a jornada da empresa sem informar CNPJ e senha.</p>
+                    </div>
+                    <form action="/admin/demo-mode" method="POST" class="demo-mode-form">
+                        <input type="hidden" name="escopo" value="empresa">
+                        <input type="hidden" name="ativo" th:value="${!empresaDemoEnabled}">
+                        <button type="submit" class="btn-cadastrar btn-demo-toggle"
+                                th:classappend="${empresaDemoEnabled ? ' btn-demo-disable' : ' btn-demo-enable'}"
+                                th:text="${empresaDemoEnabled ? 'Desativar demo empresa' : 'Ativar demo empresa'}">
+                            Alternar demo empresa
+                        </button>
+                    </form>
+                </article>
+                <article class="demo-mode-card">
+                    <div class="demo-mode-copy">
+                        <span class="demo-mode-eyebrow">Administrativo</span>
+                        <h3 th:text="${adminDemoEnabled ? 'Demonstração ativa' : 'Demonstração desativada'}">Demonstra&ccedil;&atilde;o ativa</h3>
+                        <p>Libera o bot&atilde;o para abrir o painel administrativo sem credenciais.</p>
+                    </div>
+                    <form action="/admin/demo-mode" method="POST" class="demo-mode-form">
+                        <input type="hidden" name="escopo" value="admin">
+                        <input type="hidden" name="ativo" th:value="${!adminDemoEnabled}">
+                        <button type="submit" class="btn-cadastrar btn-demo-toggle"
+                                th:classappend="${adminDemoEnabled ? ' btn-demo-disable' : ' btn-demo-enable'}"
+                                th:text="${adminDemoEnabled ? 'Desativar demo admin' : 'Ativar demo admin'}">
+                            Alternar demo admin
+                        </button>
+                    </form>
+                </article>
+            </div>
+        </section>
+
         <!-- Cards de métricas da carteira -->
         <div class="dashboard-summary">
             <div class="summary-card">

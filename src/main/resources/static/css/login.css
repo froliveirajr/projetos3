@@ -260,6 +260,10 @@
     margin-top: var(--space-2xl);
 }
 
+.demo-access {
+    margin-top: var(--space-xl);
+}
+
 .admin-divider {
     display: flex;
     align-items: center;
@@ -300,6 +304,28 @@
     text-decoration: none;
     cursor: pointer;
     transition: transform 0.2s ease;
+}
+
+.btn-demo-login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 54px;
+    padding: 0 var(--space-2xl);
+    border-radius: 999px;
+    border: 1px solid rgba(0, 133, 104, 0.18);
+    background: rgba(0, 133, 104, 0.08);
+    color: var(--color-primary-action);
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.btn-demo-login:hover {
+    transform: translateY(-2px);
 }
 
 .btn-admin-login svg {

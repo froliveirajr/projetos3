@@ -25,6 +25,19 @@
     align-items: center;
 }
 
+.company-name-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1px solid rgba(37, 57, 44, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #24332a;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
 .topbar-right span {
     color: var(--color-primary-action) !important;
     font-weight: 600;
@@ -437,6 +450,7 @@
 }
 
 .result-card {
+    position: relative;
     background-color: var(--color-impact-card-high);
     color: var(--white);
     border-radius: 12px;
@@ -467,6 +481,50 @@
     font-size: 0.8rem;
     font-weight: 300;
     color: var(--color-forest-muted);
+}
+
+.info-trigger {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #008568;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    color: var(--color-primary-action);
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.info-popover {
+    position: absolute;
+    right: 12px;
+    bottom: 46px;
+    z-index: 3;
+    width: min(260px, calc(100vw - 48px));
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #24332a;
+    text-align: left;
+    border: 1px solid rgba(36, 66, 41, 0.12);
+}
+
+.info-popover strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.74rem;
+}
+
+.info-popover p {
+    margin: 0;
+    font-size: 0.74rem;
+    line-height: 1.45;
 }
 
 .actions {
@@ -590,49 +648,6 @@
     gap: 12px;
 }
 
-.impact-page .dashboard-search {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 230px;
-    height: 42px;
-    padding: 0 14px;
-    border: 1px solid rgba(37, 57, 44, 0.16);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #69766d;
-}
-
-.impact-page .dashboard-search span {
-    position: relative;
-    width: 14px;
-    height: 14px;
-    border: 2px solid currentColor;
-    border-radius: 50%;
-}
-
-.impact-page .dashboard-search span::after {
-    content: "";
-    position: absolute;
-    right: -6px;
-    bottom: -3px;
-    width: 7px;
-    height: 2px;
-    border-radius: 999px;
-    background: currentColor;
-    transform: rotate(45deg);
-}
-
-.impact-page .dashboard-search input {
-    width: 100%;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: #24332a;
-    font-size: 0.78rem;
-    font-weight: 700;
-}
-
 .impact-page .btn-logout-sm {
     display: inline-flex;
     align-items: center;
@@ -662,16 +677,17 @@
         justify-content: space-between;
     }
 
-    .impact-page .dashboard-search {
-        min-width: 0;
-        flex: 1;
-    }
 }
 
 @media (max-width: 640px) {
     .impact-page .topbar-right {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .impact-page .company-name-pill {
+        justify-content: center;
+        text-align: center;
     }
 
     .impact-page .btn-logout-sm {

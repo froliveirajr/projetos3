@@ -8,6 +8,7 @@ import com.projetos3.edenred.model.OportunidadeDTO;
 import com.projetos3.edenred.model.RelatorioDigitalizacao;
 import com.projetos3.edenred.repository.RelatorioDigitalizacaoRepository;
 import com.projetos3.edenred.service.CnpjConsultaService;
+import com.projetos3.edenred.service.DemoModeService;
 import com.projetos3.edenred.service.EmpresaService;
 import jakarta.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
@@ -31,13 +32,16 @@ public class AdminController {
     private final EmpresaService empresaService;
     private final RelatorioDigitalizacaoRepository relatorioRepository;
     private final CnpjConsultaService cnpjConsultaService;
+    private final DemoModeService demoModeService;
 
     public AdminController(EmpresaService empresaService,
                            RelatorioDigitalizacaoRepository relatorioRepository,
-                           CnpjConsultaService cnpjConsultaService) {
+                           CnpjConsultaService cnpjConsultaService,
+                           DemoModeService demoModeService) {
         this.empresaService = empresaService;
         this.relatorioRepository = relatorioRepository;
         this.cnpjConsultaService = cnpjConsultaService;
+        this.demoModeService = demoModeService;
     }
 
     private boolean isAdmin(HttpSession session) {
@@ -78,7 +82,7 @@ public class AdminController {
     public ResponseEntity<?> consultarCnpj(@RequestParam String cnpj, HttpSession session) {
         if (!isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("erro", "Sessao administrativa expirada."));
+                    .body(Map.of("erro", "Sessão administrativa expirada."));
         }
 
         try {
@@ -140,6 +144,8 @@ public class AdminController {
         List<RelatorioDigitalizacao> relatoriosRecentes = relatorioRepository.findTop10ByOrderByDataGeracaoDesc();
         model.addAttribute("relatoriosRecentes", relatoriosRecentes);
         model.addAttribute("totalRelatorios", relatorioRepository.count());
+        model.addAttribute("empresaDemoEnabled", demoModeService.isEmpresaDemoEnabled());
+        model.addAttribute("adminDemoEnabled", demoModeService.isAdminDemoEnabled());
     }
 
     private void popularParametrosPadrao(Model model) {
@@ -207,11 +213,11 @@ public class AdminController {
             recomendacao = "Migrar " + (int) Math.round(100 - e.getPorcentagemDigitalAtual())
                     + "% restantes para digital";
         } else if (!e.isMultibeneficio()) {
-            recomendacao = "Adotar cartao multibeneficio";
+            recomendacao = "Adotar cartão multibenefício";
         } else if (e.getNumeroBeneficios() < 3) {
-            recomendacao = "Expandir portfolio (atualmente " + e.getNumeroBeneficios() + " beneficios)";
+            recomendacao = "Expandir portfólio (atualmente " + e.getNumeroBeneficios() + " benefícios)";
         } else {
-            recomendacao = "Concluir migracao para digital";
+            recomendacao = "Concluir migração para digital";
         }
 
         int colabsMigrando = (int) (e.getColaboradores() * lacunaDigital);
@@ -324,5 +330,22 @@ public class AdminController {
 
         popularDadosAdmin(model);
         return "admin";
+    }
+
+    @PostMapping("/admin/demo-mode")
+    public String atualizarModoDemo(@RequestParam String escopo,
+                                    @RequestParam boolean ativo,
+                                    HttpSession session) {
+        if (!isAdmin(session)) {
+            return "redirect:/admin/login";
+        }
+
+        if ("empresa".equalsIgnoreCase(escopo)) {
+            demoModeService.setEmpresaDemoEnabled(ativo);
+        } else if ("admin".equalsIgnoreCase(escopo)) {
+            demoModeService.setAdminDemoEnabled(ativo);
+        }
+
+        return "redirect:/admin";
     }
 }

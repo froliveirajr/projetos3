@@ -11,13 +11,13 @@ public class BancoEmMemoria {
 
     static {
         empresas.add(new Empresa(
-                "12.345.678/0001-99", "TechCorp Solucoes", "senha123",
+                "12.345.678/0001-99", "TechCorp Soluções", "senha123",
                 5000, 3, true,
                 5.0, 0.15, 0.10, 8, 20.0
         ));
 
         empresas.add(new Empresa(
-                "98.765.432/0001-00", "Logistica Avancada", "senha456",
+                "98.765.432/0001-00", "Logística Avançada", "senha456",
                 850, 2, false,
                 4.0, 0.10, 0.05, 5, 65.0
         ));
@@ -34,32 +34,32 @@ public class BancoEmMemoria {
 
     public static void cadastrarEmpresa(Empresa empresa) throws DadosEmpresaException {
         if (empresa.getCnpj() == null || empresa.getCnpj().trim().isEmpty()) {
-            throw new DadosEmpresaException("CNPJ e obrigatorio.");
+            throw new DadosEmpresaException("CNPJ é obrigatório.");
         }
         if (!CnpjUtils.isValido(empresa.getCnpj())) {
-            throw new DadosEmpresaException("CNPJ invalido.");
+            throw new DadosEmpresaException("CNPJ inválido.");
         }
         if (empresa.getNome() == null || empresa.getNome().trim().isEmpty()) {
-            throw new DadosEmpresaException("Nome da empresa e obrigatorio.");
+            throw new DadosEmpresaException("Nome da empresa é obrigatório.");
         }
         if (empresa.getSenha() == null || empresa.getSenha().trim().isEmpty()) {
-            throw new DadosEmpresaException("Senha e obrigatoria.");
+            throw new DadosEmpresaException("Senha é obrigatória.");
         }
         if (empresa.getColaboradores() <= 0) {
-            throw new DadosEmpresaException("Numero de colaboradores deve ser maior que zero.");
+            throw new DadosEmpresaException("Número de colaboradores deve ser maior que zero.");
         }
         if (empresa.getNumeroBeneficios() <= 0) {
-            throw new DadosEmpresaException("Numero de beneficios deve ser maior que zero.");
+            throw new DadosEmpresaException("Número de benefícios deve ser maior que zero.");
         }
         if (empresa.getVidaUtilCartaoAnos() <= 0) {
-            throw new DadosEmpresaException("Vida util do cartao deve ser maior que zero.");
+            throw new DadosEmpresaException("Vida útil do cartão deve ser maior que zero.");
         }
 
         empresa.setCnpj(CnpjUtils.formatar(empresa.getCnpj()));
 
         for (Empresa e : empresas) {
             if (CnpjUtils.somenteDigitos(e.getCnpj()).equals(CnpjUtils.somenteDigitos(empresa.getCnpj()))) {
-                throw new DadosEmpresaException("CNPJ ja cadastrado no sistema.");
+                throw new DadosEmpresaException("CNPJ já cadastrado no sistema.");
             }
         }
 
@@ -77,15 +77,15 @@ public class BancoEmMemoria {
 
     public static Empresa autenticar(String cnpj, String senha) throws DadosEmpresaException {
         if (cnpj == null || cnpj.trim().isEmpty()) {
-            throw new DadosEmpresaException("CNPJ e obrigatorio.");
+            throw new DadosEmpresaException("CNPJ é obrigatório.");
         }
         if (senha == null || senha.trim().isEmpty()) {
-            throw new DadosEmpresaException("Senha e obrigatoria.");
+            throw new DadosEmpresaException("Senha é obrigatória.");
         }
 
         Empresa empresa = buscarPorCnpj(cnpj);
         if (empresa == null) {
-            throw new DadosEmpresaException("Empresa nao encontrada. Verifique o CNPJ.");
+            throw new DadosEmpresaException("Empresa não encontrada. Verifique o CNPJ.");
         }
         if (!empresa.getSenha().equals(senha)) {
             throw new DadosEmpresaException("Senha incorreta.");
@@ -118,14 +118,14 @@ public class BancoEmMemoria {
 
             if (!cnpjAntigoNormalizado.equals(CnpjUtils.somenteDigitos(novosDados.getCnpj()))
                     && buscarPorCnpj(novosDados.getCnpj()) != null) {
-                throw new DadosEmpresaException("Novo CNPJ ja cadastrado.");
+                throw new DadosEmpresaException("Novo CNPJ já cadastrado.");
             }
 
             empresas.set(i, novosDados);
             return;
         }
 
-        throw new DadosEmpresaException("Empresa nao encontrada para atualizacao.");
+        throw new DadosEmpresaException("Empresa não encontrada para atualização.");
     }
 
     public static String getAdminCnpj() {

@@ -5,6 +5,7 @@ target/
 !.env.example
 cookies.txt
 company_cookies.txt
+.codex-logs/
 *.zip
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

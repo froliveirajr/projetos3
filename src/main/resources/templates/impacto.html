@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/impacto.css?v=2">
+    <link rel="stylesheet" href="/css/impacto.css?v=4">
 </head>
 <body>
 <main class="impact-page">
@@ -19,10 +19,7 @@
             <img src="/images/eden-logo.png" alt="Eden">
         </a>
         <div class="topbar-right">
-            <label class="dashboard-search">
-                <span aria-hidden="true"></span>
-                <input type="search" th:placeholder="${nomeEmpresa}" placeholder="Buscar empresa">
-            </label>
+            <span class="company-name-pill" th:text="${nomeEmpresa}">Empresa</span>
             <a href="/logout" class="btn-logout-sm">SAIR</a>
         </div>
     </header>
@@ -32,22 +29,49 @@
     <section class="form-section" id="impacto-container">
         <div class="form-header">
             <h1 class="title">Impacto Ambiental <span>Atual</span></h1>
-            <p class="subtitle">Dados baseados no nível digital atual de <strong id="txt-digital">0%</strong></p>
+            <p class="subtitle">Dados baseados no n&iacute;vel digital atual de <strong id="txt-digital">0%</strong></p>
         </div>
 
         <div class="empresa-info">
             <div class="info-grid">
                 <div class="info-item"><p class="info-label">Colaboradores</p><p class="info-value" th:text="${colaboradores}">0</p></div>
-                <div class="info-item"><p class="info-label">Benefícios</p><p class="info-value" th:text="${numeroBeneficios}">0</p></div>
+                <div class="info-item"><p class="info-label">Benef&iacute;cios</p><p class="info-value" th:text="${numeroBeneficios}">0</p></div>
                 <div class="info-item"><p class="info-label">Tipo</p><p class="info-value" th:text="${multibeneficio ? 'Multi' : 'Separado'}">-</p></div>
                 <div class="info-item"><p class="info-label">Cart&otilde;es f&iacute;sicos</p><p class="info-value" th:text="${totalCartoes}">0</p></div>
             </div>
         </div>
 
         <div class="results-grid">
-            <div class="result-card"><p class="card-label">CO₂ Emitido</p><h2 class="card-value" id="res-co2">...</h2><p class="card-subtext">por ciclo de vida</p></div>
-            <div class="result-card"><p class="card-label">Plástico</p><h2 class="value card-value" id="res-plastico">...</h2><p class="card-subtext">em cartões físicos</p></div>
-            <div class="result-card"><p class="card-label">Emissões Logísticas</p><h2 class="card-value" id="res-logistica">...</h2><p class="card-subtext">na entrega dos cartões</p></div>
+            <div class="result-card">
+                <button type="button" class="info-trigger" data-info-target="impacto-co2-info" aria-label="Ver f&oacute;rmula de CO2 emitido">i</button>
+                <div class="info-popover" id="impacto-co2-info" hidden>
+                    <strong>Como calculamos</strong>
+                    <p id="formula-co2">Carregando f&oacute;rmula...</p>
+                </div>
+                <p class="card-label">CO2 Emitido</p>
+                <h2 class="card-value" id="res-co2">...</h2>
+                <p class="card-subtext">por ciclo de vida</p>
+            </div>
+            <div class="result-card">
+                <button type="button" class="info-trigger" data-info-target="impacto-plastico-info" aria-label="Ver f&oacute;rmula de pl&aacute;stico">i</button>
+                <div class="info-popover" id="impacto-plastico-info" hidden>
+                    <strong>Como calculamos</strong>
+                    <p id="formula-plastico">Carregando f&oacute;rmula...</p>
+                </div>
+                <p class="card-label">Pl&aacute;stico</p>
+                <h2 class="value card-value" id="res-plastico">...</h2>
+                <p class="card-subtext">em cart&otilde;es f&iacute;sicos</p>
+            </div>
+            <div class="result-card">
+                <button type="button" class="info-trigger" data-info-target="impacto-logistica-info" aria-label="Ver f&oacute;rmula de emiss&otilde;es log&iacute;sticas">i</button>
+                <div class="info-popover" id="impacto-logistica-info" hidden>
+                    <strong>Como calculamos</strong>
+                    <p id="formula-logistica">Carregando f&oacute;rmula...</p>
+                </div>
+                <p class="card-label">Emiss&otilde;es Log&iacute;sticas</p>
+                <h2 class="card-value" id="res-logistica">...</h2>
+                <p class="card-subtext">na entrega dos cart&otilde;es</p>
+            </div>
         </div>
 
         <div id="alert-banner" class="alert-banner" role="status"></div>
@@ -65,15 +89,49 @@
 </main>
 
 <script>
+    function initInfoBubbles() {
+        const triggers = document.querySelectorAll('.info-trigger');
+        const popovers = document.querySelectorAll('.info-popover');
+
+        function closeAll() {
+            popovers.forEach((popover) => {
+                popover.hidden = true;
+            });
+        }
+
+        triggers.forEach((trigger) => {
+            trigger.addEventListener('click', function(event) {
+                event.stopPropagation();
+                const popover = document.getElementById(trigger.dataset.infoTarget);
+                const isHidden = popover.hidden;
+                closeAll();
+                popover.hidden = !isHidden;
+            });
+        });
+
+        document.addEventListener('click', function() {
+            closeAll();
+        });
+
+        popovers.forEach((popover) => {
+            popover.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+    }
+
     async function calcularImpacto() {
         try {
             const resposta = await fetch('/calcular-ajax', { method: 'POST' });
             if (resposta.ok) {
                 const dados = await resposta.json();
-                
+
                 document.getElementById('res-co2').textContent = dados.co2;
                 document.getElementById('res-plastico').textContent = dados.plastico;
                 document.getElementById('res-logistica').textContent = dados.co2Transporte;
+                document.getElementById('formula-co2').textContent = dados.formulaCo2;
+                document.getElementById('formula-plastico').textContent = dados.formulaPlastico;
+                document.getElementById('formula-logistica').textContent = dados.formulaLogistica;
                 const digitalAtual = Number.parseFloat(dados.digitalAtual);
                 document.getElementById('txt-digital').textContent = Number.isInteger(digitalAtual) ? digitalAtual + "%" : dados.digitalAtual + "%";
 
@@ -83,15 +141,19 @@
                     document.getElementById('impacto-container').classList.add('condicao-ruim');
                     alertBanner.classList.add('alert-bad');
                     alertBanner.classList.remove('alert-good');
-                    alertBanner.textContent = '⚠ Nível de digitalização baixo! Sua empresa possui um impacto ambiental elevado.';
+                    alertBanner.textContent = 'Nível de digitalização baixo! Sua empresa possui um impacto ambiental elevado.';
                 } else {
                     alertBanner.classList.add('alert-good');
                     alertBanner.classList.remove('alert-bad');
                     alertBanner.textContent = 'Nível de digitalização alto. Sua empresa possui um impacto ambiental reduzido.';
                 }
             }
-        } catch (error) { console.error(error); }
+        } catch (error) {
+            console.error(error);
+        }
     }
+
+    initInfoBubbles();
     calcularImpacto();
 </script>
 </body>

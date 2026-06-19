@@ -31,6 +31,9 @@ public class ImpactoService {
         resposta.put("totalCartoes", CalculadoraMateriais.formatarNumero(cartoesFisicos));
         resposta.put("digitalAtual", String.valueOf(porcentagemDigital));
         resposta.put("condicaoRuim", String.valueOf(porcentagemDigital < 30));
+        resposta.put("formulaCo2", montarFormulaCo2Atual(cartoesFisicos));
+        resposta.put("formulaPlastico", montarFormulaPlasticoAtual(cartoesFisicos));
+        resposta.put("formulaLogistica", montarFormulaLogisticaAtual(cartoesFisicos));
 
         return resposta;
     }
@@ -58,6 +61,8 @@ public class ImpactoService {
         int cartoesDigitaisSimulados = calcularQuantidadePorPercentual(maxCartoes, alvoNormalizado);
         int transacoesDigitaisAtuais = calcularQuantidadePorPercentual(transacoesAnuais, atual);
         int transacoesDigitaisSimuladas = calcularQuantidadePorPercentual(transacoesAnuais, alvoNormalizado);
+        int cartoesDigitaisMudanca = Math.abs(cartoesDigitaisSimulados - cartoesDigitaisAtuais);
+        int transacoesDigitaisMudanca = Math.abs(transacoesDigitaisSimuladas - transacoesDigitaisAtuais);
 
         double co2AtualCartoes = CalculadoraCO2.calcularCO2PorCartoes(cartoesDigitaisAtuais);
         double plasticoAtual = CalculadoraMateriais.calcularPlastico(cartoesDigitaisAtuais);
@@ -125,8 +130,49 @@ public class ImpactoService {
         resposta.put("co2AnualTotal", CalculadoraMateriais.formatarPeso(co2AnualTotal));
         resposta.put("arvores", arvores);
         resposta.put("km", kmCarro);
+        resposta.put("formulaImpactoAtual", montarFormulaImpactoAtual(
+                cartoesFisicosAtuais, transacoesFisicasAtuais));
+        resposta.put("formulaImpactoEvitadoAtual", montarFormulaImpactoEvitadoAtual(
+                cartoesDigitaisAtuais, transacoesDigitaisAtuais));
+        resposta.put("formulaReducaoCo2", montarFormulaReducaoCo2(cartoesDigitaisMudanca));
+        resposta.put("formulaReducaoResiduos", montarFormulaReducaoResiduos(
+                cartoesDigitaisMudanca, transacoesDigitaisMudanca));
 
         return resposta;
+    }
+
+    private String montarFormulaCo2Atual(int cartoesFisicos) {
+        return "CO2 emitido = " + cartoesFisicos + " cartões físicos x 150 gCO2e por cartão "
+                + "(60 g de material + 50 g de fabricação + 40 g de transporte).";
+    }
+
+    private String montarFormulaPlasticoAtual(int cartoesFisicos) {
+        return "Plástico = " + cartoesFisicos + " cartões físicos x 7,5 g de plástico por cartão.";
+    }
+
+    private String montarFormulaLogisticaAtual(int cartoesFisicos) {
+        return "Emissões logísticas = " + cartoesFisicos + " cartões físicos x 40 gCO2e de transporte por cartão.";
+    }
+
+    private String montarFormulaImpactoAtual(int cartoesFisicosAtuais, int transacoesFisicasAtuais) {
+        return "CO2e atual = " + cartoesFisicosAtuais + " cartões físicos x 150 gCO2e. "
+                + "Resíduos atuais = (" + cartoesFisicosAtuais + " x 7,5 g de plástico) + ("
+                + transacoesFisicasAtuais + " transações físicas x 2 g de papel).";
+    }
+
+    private String montarFormulaImpactoEvitadoAtual(int cartoesDigitaisAtuais, int transacoesDigitaisAtuais) {
+        return "Impacto evitado atual = (" + cartoesDigitaisAtuais + " cartões digitais x 150 gCO2e) + ("
+                + transacoesDigitaisAtuais + " transações digitais x 2 g de papel e 0,42 gCO2e por transação).";
+    }
+
+    private String montarFormulaReducaoCo2(int cartoesDigitaisMudanca) {
+        return "Redução adicional de CO2e em cartões = " + cartoesDigitaisMudanca
+                + " cartões equivalentes x 150 gCO2e por cartão.";
+    }
+
+    private String montarFormulaReducaoResiduos(int cartoesDigitaisMudanca, int transacoesDigitaisMudanca) {
+        return "Redução adicional de resíduos = (" + cartoesDigitaisMudanca + " cartões x 7,5 g de plástico) + ("
+                + transacoesDigitaisMudanca + " transações x 2 g de papel).";
     }
 
     private int calcularQuantidadePorPercentual(int total, double percentual) {

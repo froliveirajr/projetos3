@@ -29,6 +29,19 @@
     align-items: center;
 }
 
+.company-name-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1px solid rgba(37, 57, 44, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #24332a;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
 .topbar-right span {
     color: var(--color-primary-action) !important;
     font-weight: 600;
@@ -194,15 +207,15 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
     border-radius: 3px;
 }
 
-/* Grade de Cards Estilo Figma */
-.results-grid-figma {
+/* Grade de cards */
+.results-grid-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-md);
     margin-bottom: var(--space-sm);
 }
 
-.results-grid-figma.row-top {
+.results-grid-cards.row-top {
     grid-template-columns: repeat(2, 1fr);
     width: 66%;
     margin-left: auto;
@@ -210,6 +223,7 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
 }
 
 .dark-card {
+    position: relative;
     background: var(--color-primary-action);
     color: var(--white);
     border-radius: 8px;
@@ -238,6 +252,50 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
 .dark-card .sub-label {
     font-size: 0.7rem;
     opacity: 0.7;
+}
+
+.info-trigger {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #008568;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    color: var(--color-primary-action);
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.info-popover {
+    position: absolute;
+    right: 12px;
+    bottom: 46px;
+    z-index: 4;
+    width: min(260px, calc(100vw - 48px));
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #24332a;
+    text-align: left;
+    border: 1px solid rgba(36, 66, 41, 0.12);
+}
+
+.info-popover strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.74rem;
+}
+
+.info-popover p {
+    margin: 0;
+    font-size: 0.74rem;
+    line-height: 1.45;
 }
 
 /* Equivalências */
@@ -504,8 +562,8 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
     padding: 72px var(--space-xl) var(--space-xl);
 }
 
-.dashboard-shell .results-grid-figma,
-.dashboard-shell .results-grid-figma.row-top {
+.dashboard-shell .results-grid-cards,
+.dashboard-shell .results-grid-cards.row-top {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
@@ -513,7 +571,7 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
     gap: var(--space-md);
 }
 
-.dashboard-shell .results-grid-figma.row-top {
+.dashboard-shell .results-grid-cards.row-top {
     margin-bottom: var(--space-md);
 }
 
@@ -605,8 +663,8 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
         grid-template-columns: 1fr;
     }
 
-    .dashboard-shell .results-grid-figma,
-    .dashboard-shell .results-grid-figma.row-top {
+    .dashboard-shell .results-grid-cards,
+    .dashboard-shell .results-grid-cards.row-top {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
@@ -629,8 +687,8 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
         padding: 66px var(--space-md) var(--space-md);
     }
 
-    .dashboard-shell .results-grid-figma,
-    .dashboard-shell .results-grid-figma.row-top {
+    .dashboard-shell .results-grid-cards,
+    .dashboard-shell .results-grid-cards.row-top {
         grid-template-columns: 1fr;
     }
 
@@ -741,50 +799,6 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
 
 .dashboard-app .topbar-right {
     gap: 12px;
-}
-
-.dashboard-search {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 230px;
-    height: 42px;
-    padding: 0 14px;
-    border: 1px solid rgba(37, 57, 44, 0.16);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #69766d;
-    box-shadow: 0 10px 30px rgba(34, 49, 39, 0.06);
-}
-
-.dashboard-search span {
-    width: 14px;
-    height: 14px;
-    border: 2px solid currentColor;
-    border-radius: 50%;
-    position: relative;
-}
-
-.dashboard-search span::after {
-    content: "";
-    position: absolute;
-    width: 7px;
-    height: 2px;
-    right: -6px;
-    bottom: -3px;
-    border-radius: 999px;
-    background: currentColor;
-    transform: rotate(45deg);
-}
-
-.dashboard-search input {
-    width: 100%;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: #24332a;
-    font-size: 0.78rem;
-    font-weight: 700;
 }
 
 .dashboard-app .btn-logout-sm {
@@ -957,8 +971,8 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
     gap: 10px;
 }
 
-.dashboard-app .results-grid-figma,
-.dashboard-app .results-grid-figma.row-top {
+.dashboard-app .results-grid-cards,
+.dashboard-app .results-grid-cards.row-top {
     display: contents;
 }
 
@@ -966,8 +980,8 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
     display: none;
 }
 
-.dashboard-app .results-grid-figma:not(.row-top),
-.dashboard-app .results-grid-figma.row-top {
+.dashboard-app .results-grid-cards:not(.row-top),
+.dashboard-app .results-grid-cards.row-top {
     margin: 0;
 }
 
@@ -1255,11 +1269,6 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
         justify-content: space-between;
     }
 
-    .dashboard-search {
-        min-width: 0;
-        flex: 1;
-    }
-
     .dashboard-steps {
         grid-template-columns: 1fr;
         gap: 8px;
@@ -1303,6 +1312,11 @@ input[type=range].sim-slider::-webkit-slider-runnable-track {
     .dashboard-app .topbar-right {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .dashboard-app .company-name-pill {
+        justify-content: center;
+        text-align: center;
     }
 
     .dashboard-app .btn-logout-sm {
